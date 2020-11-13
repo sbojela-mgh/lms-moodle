@@ -1,0 +1,63 @@
+/* Most of the layout is handled by html and the Foundation Framework.
+ * This includes fixing some IE quircks, you can use this file to do
+ * some fine tuning of the layout.
+ *
+ * E.g. Using media queries to do some layout changes. Recommended to start
+ * with layout and scale up (not Desktop and scaling down).
+ *
+ * DOESN'T DO MUCH HERE, COPY IT TO A CHILD THEME.
+ *
+ */
+
+/* ==============
+    MOBILE FIRST:
+    Default CSS rules should be designed for mobile firts.
+    Then alter using the media queries below.
+   ============== */
+.yui3-overlay { background: #eee; padding: 10px; border: 1px solid #ddd;}
+
+
+
+/* ====================
+    INTERMEDIATE: 
+    Override Mobile rules for landscape
+   ==================== */
+@media only screen and (min-width: 480px) {
+
+
+
+
+
+}
+
+/* ====================
+    WIDE: 
+    Override previous rules for Tablet size
+   ==================== */
+@media only screen and (min-width: 768px) {
+
+
+}
+
+/* ===============
+    LARGE
+    At the 900px mark browsers do something odd. 
+    Compensate for that here.
+   =============== */
+@media only screen and (min-width: 900px) {
+
+
+
+}
+
+
+/* ===============
+    Maximal Width
+    Go for wide!
+   =============== */
+@media only screen and (min-width: 1140px) {
+
+
+
+
+}
