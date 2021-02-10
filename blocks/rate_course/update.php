@@ -37,7 +37,7 @@ if (! $course = $DB->get_record("course", array("id"=>$id))) {
 }
 
 require_login($course, false);
-if (!$context = get_context_instance(CONTEXT_COURSE, $course->id)) {
+if (!$context = context_course::instance($course->id)) {
     print_error('nocontext');
 }
 
@@ -47,7 +47,7 @@ if (!$context = get_context_instance(CONTEXT_COURSE, $course->id)) {
 if ($form = data_submitted()) {
     if ($DB->count_records('block_rate_course',
             array('course'=>$COURSE->id, 'userid'=>$USER->id))) {
-        print_error('completed', 'block_rate_course');
+        print_error('completed', 'block_rate_course', $CFG->wwwroot.'/course/view.php?id='.$COURSE->id);
     }
 
     $completion = new stdClass;
