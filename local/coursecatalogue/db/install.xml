@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="local/coursecatalogue/db" VERSION="20210221" COMMENT="XMLDB file for Moodle local/coursecatalogue"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+  <TABLES>
+    <TABLE NAME="local_coursecatalogue" COMMENT="Default comment for local_coursecatalogue, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="custom_course_id" COMMENT="This table is to hold required values for our custom course id">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="obligatory" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Elective (E) or Mandatory (M)"/>
+        <FIELD NAME="coursetype" TYPE="char" LENGTH="1" NOTNULL="false" SEQUENCE="false" COMMENT="Live (L), Online (O), Recording (R)"/>
+        <FIELD NAME="course_id" TYPE="int" LENGTH="4" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="instance" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="This field is manually populated by a system admin/course creator"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+  </TABLES>
+</XMLDB>

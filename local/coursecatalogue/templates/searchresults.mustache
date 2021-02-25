@@ -1,0 +1,24 @@
+<div class="card">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Course Name</th>
+        <th>Course ID</th>
+        <th>Start Date</th>
+        <th>Tags</th>
+        <th>Instructor</th>
+        <th>Ratings</th>
+      </tr>
+    </thead>
+    {{#data}}
+      <tr>
+        <td>{{{firstname}}}</td>
+        <td>{{{lastname}}}</td>
+        <td>{{{email}}}</td>
+      </tr>
+    {{/data}}
+  </table>
+  {{^data}}
+  <div class="card-body"><p>There are no results</p></div>
+    {{/data}}
+</div>
