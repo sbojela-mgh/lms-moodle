@@ -29,7 +29,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$plugin->version = 2021021002;
+$plugin->version = 2021021001;
 $plugin->requires = 2020061501.05;
 $plugin->component = 'local_coursecatalogue';
 

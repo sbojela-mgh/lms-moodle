@@ -105,5 +105,6 @@ foreach ($rec as $record) {
  #$instructor = $record->firstname.' '.$record->lastname;
  $table->add_data(array($record->id, $name, date('M-d-yy h:mA', $record->startdate), $record->instructor));
 }
+
 $table->finish_output();
 echo $OUTPUT->footer();
