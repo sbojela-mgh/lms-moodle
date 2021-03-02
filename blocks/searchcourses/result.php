@@ -1,6 +1,10 @@
 <?php
-define('AJAX_SCRIPT', true);
 require_once('../../config.php');
+require_login();
+
+if(!defined('AJAX_SCRIPT')){
+    define('AJAX_SCRIPT', true);
+}
 require_once($CFG->libdir . '/datalib.php');
 global $CFG;
 $USER;
@@ -14,7 +18,7 @@ if (!empty($_GET['course_count'])) {
 }
 if (($_GET['my_courses_flag']) == "true") {
     $my_courses_flag    = $_GET['my_courses_flag'];
-    $courses['results'] = enrol_get_my_courses('id, shortname, modinfo', 'visible DESC,sortorder ASC', $course_count);
+    $courses['results'] = enrol_get_my_courses(array('id', 'shortname'), 'visible DESC,sortorder ASC', $course_count);
     //Once you have the results, filter the ones matching the search query
     $mycourses          = array();
     foreach ($courses['results'] as $objCourse) {

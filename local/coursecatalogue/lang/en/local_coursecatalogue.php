@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -15,18 +16,14 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version details
+ * Language EN
  *
- * @package    block
- * @subpackage searchcourses
- * @copyright  Created for University of Bath
+ * @package    local_coursecatalogue
+ * @copyright  2021 MGH DCR 
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
+ //This is to allow for more dynamic changes across this cutom plugin
 
-$plugin->version   = 2014122600;        // The current plugin version (Date: YYYYMMDDXX)
-$plugin->requires  = 2014041100;        // Requires this Moodle version
-$plugin->release  = 2014122600;
-$plugin->maturity = MATURITY_STABLE;
-$plugin->component = 'block_searchcourses'; // Full name of the plugin (used for diagnostics)
+$string['pluginname'] = 'Course Catalogue';
+$string['headername'] = 'Course Catalogue';
