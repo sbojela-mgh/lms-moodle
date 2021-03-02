@@ -4,12 +4,12 @@ unset($CFG);
 global $CFG;
 $CFG = new stdClass();
 
-$CFG->dbtype    = 'MariaDB';
+$CFG->dbtype    = 'mysqli';
 $CFG->dblibrary = 'native';
 $CFG->dbhost    = 'localhost';
-$CFG->dbname    = 'moodle_2';
+$CFG->dbname    = 'moodle';
 $CFG->dbuser    = 'root';
-$CFG->dbpass    = '';
+$CFG->dbpass    = 'root';
 $CFG->prefix    = 'mdl_';
 $CFG->dboptions = array (
   'dbpersist' => 0,
@@ -18,8 +18,8 @@ $CFG->dboptions = array (
   'dbcollation' => 'utf8_general_ci',
 );
 
-$CFG->wwwroot   = 'http://localhost/lms-moodle';
-$CFG->dataroot  = 'C:\xampp\htdocs\moodledata';
+$CFG->wwwroot   = 'http://localhost:8888/lms-moodle';
+$CFG->dataroot  = '/Applications/MAMP/htdocs/moodledata';
 $CFG->admin     = 'admin';
 
 $CFG->directorypermissions = 0777;

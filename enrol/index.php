@@ -97,9 +97,34 @@ $PAGE->navbar->add(get_string('enrolmentoptions','enrol'));
 
 echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('enrolmentoptions','enrol'));
+echo '<div style = "color: #008bb0; font-weight: bold; font-size: 24px;";>'.$course->fullname.'</div>';
+
+echo '<tr>'.'<span style = "font-weight: bold;
+font-size: 18px;">'.'Date/Time:'.'</span>'. date(' F d Y H:i:s', $course->startdate).'</tr>';
+
+$sql = "SELECT firstname FROM {user} as u
+JOIN {role_assignments} as ra ON ra.userid = u.id
+JOIN {role} as r ON ra.roleid = r.id
+JOIN {context} as con ON ra.contextid = con.id
+JOIN {course} as c ON c.id = con.instanceid AND con.contextlevel = 50
+WHERE r.shortname = 'editingteacher'";
+
+$teachers = $DB->get_records_sql($sql);
+ foreach($teachers as $teacher){
+ }
+echo '<div style = "font-weight: bold;
+font-size: 18px; margin-top: 10px;">'.'Instructor(s)'.':'.' '.'</div>'.$teacher->firstname.' '.$teacher->lastname;
+
+
+echo '<div style = "font-weight: bold;
+font-size: 18px; margin-top:10px;">'.'Description'.'</div>';
+
+echo '<div style = >'.$course->summary.'<div>';
+
 
 $courserenderer = $PAGE->get_renderer('core', 'course');
-echo $courserenderer->course_info_box($course);
+//adding a header named course description
+//echo $courserenderer->course_info_box($course);
 
 //TODO: find if future enrolments present and display some info
 
