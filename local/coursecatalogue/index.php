@@ -32,6 +32,7 @@ require_login();
 
 echo $OUTPUT->header();
 
+
 //echo '<hr><p>test <span style = "margin:50px">test 2</span></p></hr>';
 /**
  * This is just for testing
@@ -94,13 +95,13 @@ $courses = $DB->get_records_sql($sql);
   sort($courses);
 
 foreach($courses as $course){
-  
+  $url = new moodle_url('/course/view.php', array('id' => $course->id));
   echo '<br>';
-  echo '<tr>';
-  echo '<td>'.'<a href=/course/view.php?id=.$course->id.>'.$course->fullname.'</a>'.'<td>';
-  echo '<td>'.date('m-d-yy h:m', $course->startdate).'<td>';
+  echo '<tr>'; 
+  echo '<td>'.'<a href=/lms-moodle/course/view.php?id='.$course->id.'>'.$course->fullname.'</a>'.'<td>';
+  echo '<td>'.date('M-d-Y hA', $course->startdate).'<td>';
   //next line
-  echo '<br>';
+  
 
 $sql = "SELECT firstname FROM {user} as u
 JOIN {role_assignments} as ra ON ra.userid = u.id
@@ -112,9 +113,13 @@ WHERE r.shortname = 'editingteacher'";
 $teachers = $DB->get_records_sql($sql);
  foreach($teachers as $teacher){
    echo $teacher->firstname;
+   echo '<br>';
  }
-     
+ 
 };
+echo $OUTPUT->footer();
+echo '</tr>';
+
+
 //print_r($courses);
 
-echo $OUTPUT->footer();

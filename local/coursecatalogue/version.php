@@ -13,7 +13,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 //$plugin->version  = yyyymmddxx;
-$plugin->version  = 2021022507;
+$plugin->version  = 2021022508;
 $plugin->requires = 2020061501.05;
 
 $plugin->component = 'local_coursecatalogue';
