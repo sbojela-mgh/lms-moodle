@@ -90,12 +90,11 @@ echo '<th>Tags</th>';
 echo '<th>Ratings</th>';
 echo '</tr>';
 
-$sql = "SELECT * FROM {course} WHERE ID is not null";
+$sql = "SELECT * FROM {course} WHERE ID is not null and fullname <> 'Local Environment'";
 $courses = $DB->get_records_sql($sql);
   sort($courses);
 
 foreach($courses as $course){
-  $url = new moodle_url('/course/view.php', array('id' => $course->id));
   echo '<br>';
   echo '<tr>'; 
   echo '<td>'.'<a href=/lms-moodle/course/view.php?id='.$course->id.'>'.$course->fullname.'</a>'.'<td>';
@@ -103,7 +102,7 @@ foreach($courses as $course){
   //next line
   
 
-$sql = "SELECT firstname FROM {user} as u
+$sql = "SELECT u.firstname, u.lastname FROM {user} as u
 JOIN {role_assignments} as ra ON ra.userid = u.id
 JOIN {role} as r ON ra.roleid = r.id
 JOIN {context} as con ON ra.contextid = con.id
@@ -112,13 +111,34 @@ WHERE r.shortname = 'editingteacher'";
 
 $teachers = $DB->get_records_sql($sql);
  foreach($teachers as $teacher){
+
    echo $teacher->firstname;
-   echo '<br>';
+   echo ' ';
+   echo $teacher->lastname;   
+   echo ' ';   
+   
  }
+   echo '<td>';
  
+$sql = "SELECT t.name FROM mdl_tag AS t 
+JOIN mdl_tag_instance AS ti ON ti.tagid = t.id
+JOIN mdl_context AS ctx ON ctx.`contextlevel` = 50";
+
+$tags = $DB->get_records_sql($sql);
+foreach($tags as $tag){
+  echo $tag->name;
+}
+echo '<td>';
+
+$block = block_instance('rate_course');
+$block->display_rating($course->id);
+echo '</td>';
 };
-echo $OUTPUT->footer();
+
 echo '</tr>';
+
+echo $OUTPUT->footer();
+
 
 
 //print_r($courses);
