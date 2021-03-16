@@ -1,12 +1,12 @@
-
 <form action="index.php" method="GET">
+
 <div class="input-group mb-3">
   <div class="input-group-prepend">
     <label class="input-group-text" for="inputGroupSelect01">Month</label>
   </div>
   
   <select class="custom-select" id="month" name="month">
-    <option disabled selected value> </option>
+    <option selected value={{month}}>{{month}}</option>
     <option value="Jan">Jan</option>
     <option value="Feb">Feb</option>
     <option value="Mar">Mar</option>
@@ -24,7 +24,7 @@
     <label class="input-group-text" for="inputGroupSelect01">Year</label>
   </div>
   <select class="custom-select" id="year" name="year">
-    <option disabled selected value> </option>
+    <option selected value={{year}}>{{year}}</option>
     <option value="2021">2021</option>
     <option value="2020">2020</option>
     <option value="2019">2019</option>
@@ -34,47 +34,59 @@
     <label class="input-group-text" for="inputGroupSelect01">Tags</label>
   </div>
   <select class="custom-select" id="tags" name="tags">
-    <option disabled selected value> </option>
-    <option value="Bioinformatics">Bioinformatics</option>
-    <option value="Biostats">Biostats</option>
-    <option value="Best Practices and Operationalization">Best Practices and Operationalization</option>
-    <option value="Clinical Research">Clinical Research</option>
-    <option value="Communication and Collaboration">Communication and Collaboration</option>
-    <option value="Communicating Science">Communicating Science</option>
-    <option value="Compliance and Reporting">Compliance and Reporting</option>
-    <option value="Data Management">Data Management</option>
-    <option value="Ethics and Subject Safety">Ethics and Subject Safety</option>
-    <option value="Grants, Research Funding, and Fiscal Responsibility">Grants, Research Funding, and Fiscal Responsibility</option>
-    <option value="Global Health">Global Health</option>
-    <option value="Lab Research">Lab Research</option>
-    <option value="Personel Management">Personel Management</option>
-    <option value="Professional Development">Professional</option>
-    <option value="Project and Program Operations">Project and Program Operations</option>
-    <option value="Omics">Omics</option>
-    <option value="QI Program">QI Program</option>
-    <option value="RCR Program">RCR Program</option>
-    <option value="Qualitative and Mixed Methods Research">Qualitative and Mixed Methods Research</option>
-    <option value="Scientific Concepts, Design, and Analysis">Scientific Concepts, Design, and Analysis</option>
-    <option value="Regulatory Requirements">Regulatory Requirements</option>
+    <option selected value={{tags}}>{{tags}}</option>
+    <option value="bioinformatics">bioinformatics</option>
+    <option value="biostats">biostats</option>
+    <option value="best practices and operationalization">best practices and operationalization</option>
+    <option value="clinical research">clinical research</option>
+    <option value="communication and collaboration">communication and collaboration</option>
+    <option value="communicating science">communicating science</option>
+    <option value="compliance and reporting">compliance and reporting</option>
+    <option value="data management">data management</option>
+    <option value="ethics and subject safety">ethics and subject safety</option>
+    <option value="grants, research funding, and fiscal responsibility">grants, research funding, and fiscal responsibility</option>
+    <option value="global health">global health</option>
+    <option value="lab research">lab research</option>
+    <option value="personel management">personel management</option>
+    <option value="professional development">professional</option>
+    <option value="project and program operations">project and program operations</option>
+    <option value="omics">omics</option>
+    <option value="qi program">qi program</option>
+    <option value="rcr program">rcr program</option>
+    <option value="qualitative and mixed methods research">qualitative and mixed methods research</option>
+    <option value="scientific concepts, design, and analysis">scientific concepts, design, and analysis</option>
+    <option value="regulatory requirements">regulatory requirements</option>
     <option value="online">online</option>
-    </select>
+  </select>
+  <!--
   <div class="input-group-prepend">
     <label class="input-group-text" for="inputGroupSelect01">Ratings</label>
   </div>
   <select class="custom-select" id="stars" name="stars">
-    <option disabled selected value> </option>
+    <option selected value={{stars}}>{{stars}}</option>
     <option value="5">5</option>
     <option value="4">4</option>
     <option value="3">3</option>
     <option value="2">2</option>
     <option value="1">1</option>
   </select>
+  -->
+  <div class="input-group-prepend">
+    <label class="input-group-text" for="inputGroupSelect01">Sort By</label>
+  </div>
+  <select class="custom-select" id="tsort" name = "tsort">
+    <option selected value={{tsort}}>{{tsortname}}</option>
+    <option value="startdate">Start Date</option>
+    <option value="rating">Ratings</option>
+    <option value="fullname">Course Name</option>
+  </select>
 
-  <input type="text"  id="search" name="search" placeholder="Course Name">
+  <input type="text"  id="search" name="search" placeholder="Search">
 
   <div class="input-group-append">
-   <button type="submit" class="btn btn-outline-secondary" >Search</button>
+   <button type="submit" class="btn btn-outline-secondary">Search</button>
  </div>
- 
 </div>
 </form>
+
+  <button type="button" onclick="location.href='index.php'" class="btn btn-outline-secondary" style = "width: 100%; padding: 5px; margin-bottom: 5px;margin-top: -10px;">Reset</button>
