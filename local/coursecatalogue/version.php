@@ -15,6 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+<<<<<<< HEAD
 //$plugin->version = yyyymmddxx;
 
 /**
@@ -28,6 +29,11 @@
  * @copyright  1999 onwards Martin Dougiamas (http://dougiamas.com)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+=======
+//$plugin->version  = yyyymmddxx;
+$plugin->version  = 2021022508;
+$plugin->requires = 2020061501.05;
+>>>>>>> origin/lms-test
 
 $plugin->version = 2021021001;
 $plugin->requires = 2020061501.05;

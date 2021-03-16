@@ -98,10 +98,18 @@ $PAGE->navbar->add(get_string('enrolmentoptions','enrol'));
 echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('enrolmentoptions','enrol'));
 echo '<span style = "color: #1177d1; font-weight: bold; font-size: 24px;";>'.$course->fullname.'</span>';
+<<<<<<< HEAD
 echo ' ';
 $block = block_instance('rate_course');
 $block->display_rating($course->id);
 
+=======
+echo '<span style = "float: right;">';
+$block = block_instance('rate_course');
+$block->display_rating($course->id);
+echo '</span>';
+echo '<br/>';
+>>>>>>> origin/lms-test
 echo '<tr>'.'<span style = "font-weight: bold;
 font-size: 18px;">'.'Date/Time:'.'</span>'. date(' M-d-Y hA', $course->startdate).'</tr>';
 /*Retrieving the context instanceid to bring context into context for the 
@@ -109,6 +117,7 @@ the other retrievals to come*/
 $context = $DB->get_record_select('context', 'instanceid =?', array($course->id));
 //retrieving role assignments to bring into context all associated role_assignments
 $role_assignments = $DB->get_record_select('role_assignments', 'contextid =?', array($context->id));
+<<<<<<< HEAD
 
 $role = $DB->get_record_select('role', 'id =?', array($role_assignments->roleid));
 
@@ -116,6 +125,15 @@ $user = $DB->get_record_select('user', 'id =?', array($role_assignments->userid)
 
 echo '<br>';
 echo '<span style= "font-weight: bold;">' .'Instructor(s):'. '</span>'.' '. $user->firstname. ' '.$user->lastname;
+=======
+
+$role = $DB->get_record_select('role', 'id =?', array($role_assignments->roleid));
+
+$user = $DB->get_record_select('user', 'id =?', array($role_assignments->userid));
+
+echo '<br>';
+echo '<span style= "font-weight: bold; font-size: 18px;">' .'Instructor(s):'. '</span>'.' '. $user->firstname. ' '.$user->lastname;
+>>>>>>> origin/lms-test
 
 /*
 $sql = "SELECT firstname FROM {user} as u
@@ -133,17 +151,22 @@ font-size: 18px; margin-top: 10px;">'.'Instructor(s)'.':'.' '.'</div>'.$teacher-
 */
 
 echo '<div style = "font-weight: bold;
-font-size: 18px; margin-top:10px;">'.'Description'.'</div>';
+font-size: 18px; ">'.'Description'.'</div>';
 
-echo '<div style = >'.$course->summary.'<div>';
+echo '<div style ="margin:0px !important;" >'.$course->summary.'<div>';
 
 $sql = "SELECT t.name 
         FROM {tag} t, {tag_instance} t_i
         WHERE t.id = t_i.tagid AND t_i.itemid = ". $course->id;
 $tags = $DB->get_records_sql($sql);
 
+<<<<<<< HEAD
 echo '<span style= "font-weight: bold;">'.'Tags:'.' '.'</span>';
 echo '<br>';
+=======
+echo '<span style= "font-weight: bold; font-size: 18px;">'.'Tags:'.' '.'</span>';
+echo '<br/>';
+>>>>>>> origin/lms-test
 foreach($tags as $tag){
     echo '<span style="font-size: 22px;margin-left: 3px;">'.$tag->name.' '.'</span>';
     
