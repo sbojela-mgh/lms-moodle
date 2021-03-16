@@ -97,11 +97,27 @@ $PAGE->navbar->add(get_string('enrolmentoptions','enrol'));
 
 echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('enrolmentoptions','enrol'));
-echo '<div style = "color: #008bb0; font-weight: bold; font-size: 24px;";>'.$course->fullname.'</div>';
+echo '<span style = "color: #1177d1; font-weight: bold; font-size: 24px;";>'.$course->fullname.'</span>';
+echo ' ';
+$block = block_instance('rate_course');
+$block->display_rating($course->id);
 
 echo '<tr>'.'<span style = "font-weight: bold;
-font-size: 18px;">'.'Date/Time:'.'</span>'. date(' F d Y H:i:s', $course->startdate).'</tr>';
+font-size: 18px;">'.'Date/Time:'.'</span>'. date(' M-d-Y hA', $course->startdate).'</tr>';
+/*Retrieving the context instanceid to bring context into context for the 
+the other retrievals to come*/
+$context = $DB->get_record_select('context', 'instanceid =?', array($course->id));
+//retrieving role assignments to bring into context all associated role_assignments
+$role_assignments = $DB->get_record_select('role_assignments', 'contextid =?', array($context->id));
 
+$role = $DB->get_record_select('role', 'id =?', array($role_assignments->roleid));
+
+$user = $DB->get_record_select('user', 'id =?', array($role_assignments->userid));
+
+echo '<br>';
+echo '<span style= "font-weight: bold;">' .'Instructor(s):'. '</span>'.' '. $user->firstname. ' '.$user->lastname;
+
+/*
 $sql = "SELECT firstname FROM {user} as u
 JOIN {role_assignments} as ra ON ra.userid = u.id
 JOIN {role} as r ON ra.roleid = r.id
@@ -114,13 +130,24 @@ $teachers = $DB->get_records_sql($sql);
  }
 echo '<div style = "font-weight: bold;
 font-size: 18px; margin-top: 10px;">'.'Instructor(s)'.':'.' '.'</div>'.$teacher->firstname.' '.$teacher->lastname;
-
+*/
 
 echo '<div style = "font-weight: bold;
 font-size: 18px; margin-top:10px;">'.'Description'.'</div>';
 
 echo '<div style = >'.$course->summary.'<div>';
 
+$sql = "SELECT t.name 
+        FROM {tag} t, {tag_instance} t_i
+        WHERE t.id = t_i.tagid AND t_i.itemid = ". $course->id;
+$tags = $DB->get_records_sql($sql);
+
+echo '<span style= "font-weight: bold;">'.'Tags:'.' '.'</span>';
+echo '<br>';
+foreach($tags as $tag){
+    echo '<span style="font-size: 22px;margin-left: 3px;">'.$tag->name.' '.'</span>';
+    
+}
 
 $courserenderer = $PAGE->get_renderer('core', 'course');
 //adding a header named course description
@@ -145,5 +172,7 @@ if (!$forms) {
         notice(get_string('notenrollable', 'enrol'), $url);
     }
 }
+
+
 
 echo $OUTPUT->footer();

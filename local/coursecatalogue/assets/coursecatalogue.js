@@ -1,26 +1,15 @@
-require(['core/first', 'jquery', 'jqueryui', 'core/ajax'], function(core, $, bootstrap, ajax) {
+//These requires are set for our use
+require(['core/first', 'jquery','jqueryui', 'core/ajax'], function(core, $, bootstrap, ajax) {
+   
+    $(document).ready(function(){
+       
+        $('#search').click(function(){
+            searchusers();
+        });
 
-  $(document).ready(function() {
-    
-    var params = {};
-      window.location.search
-      .replace(/[?&]+([^&]+)=([^&]*)/gi, function(str, key, value) {
-        params[key] = value;
-      });
-      if (params['month']){
-        $('#month option[value=' + params['month']+ ']').attr('selected', 'selected');
-      }
-      if (params['year']){
-        $('#year option[value=' + params['year']+ ']').attr('selected', 'selected');
-      }
-    $('#search').click(function(){
-      searchcourses();
+        function searchusers() {
+            console.log('search users');
+            window.open("/local/coursecatalogue/index.php?month=" + $('#month').val() + "&year=" + $('#year').val(), '_self');
+        }
     });
-    
-    function searchcourses() {
-      console.log('search courses')
-      window.open("/lms-moodle/local/coursecatalogue/index.php?month=" + $('#month').val() + "&year=" + $('#year').val(), '_self')
-      
-    }
-  });
 });

@@ -2,24 +2,21 @@
   <table class="table table-striped">
     <thead>
       <tr>
-        <th>Course</th>
-        <th></th>
+        <th>Course Name</th>
+        <th>Course ID</th>
         <th>Start Date</th>
-        <th>Instructor</th>
         <th>Tags</th>
-        <th>Ratings</th>
-      
+        <th>Instructor</th>
+      </tr>
     </thead>
-    {{#data}}
+    {{#data}} 
       <tr>
-<<<<<<< HEAD
-        <td>{{{name}}}</td>
-        <td>{{{startdate}}}</td>
-        <td>{{{instructor}}}</td>
-=======
-        <td>{{{firstname}}}</td>
-      <td style="width:20px;"><a href="/local/coursecatalogue/graderdetail.php?grader={{id}}&month={{month}}&year={{year}}"><i class="fa fa-arrow-circle-right fa-2x"></i></td>
->>>>>>> origin/feature-sam
+      <td>{{{CourseName}}}</td>
+      <td>{{{CourseID}}}</td>
+      <td>{{{StartDate}}}</td>
+      <td>{{Tags}}</td>
+      <td>{{Instructor}}</td>
+      <td></td>
       </tr>
     {{/data}}
   </table>
