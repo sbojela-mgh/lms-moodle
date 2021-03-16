@@ -234,7 +234,7 @@ foreach($courses as $course){
 
   //echo '<br>';
   echo '<tr>'; 
-  echo '<td>'.'<a href=/lms-moodle/course/view.php?id='.$course->id.'>'.$course->fullname.'</a>'.'</td>';
+  echo '<td>'.'<a href=/course/view.php?id='.$course->id.'>'.$course->fullname.'</a>'.'</td>';
   if ($course->category == $online_course_category_id){ //category 32 corresponds to online courses
     echo '<td>On Demand</td>';
   }
