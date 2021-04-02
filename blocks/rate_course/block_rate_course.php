@@ -106,10 +106,13 @@ class block_rate_course extends block_list
      * @return int  rating.
      */
     public function get_rating($courseid) {
+
+        $sql = "SELECT c.name, c.id FROM {course} c WHERE c.id = $courseid";
+
+        
+
         global $CFG, $DB;
-        $sql = "SELECT AVG(rating) AS avg
-        FROM {block_rate_course}
-        WHERE course = $courseid";
+        $sql = "SELECT x.avg, x.name FROM (SELECT AVG(rating) AS avg, c.fullname as name FROM mdl_block_rate_course as r JOIN mdl_course as c ON c.id = r.course GROUP BY c.fullname) as x, mdl_course c WHERE x.name = c.fullname and c.id = $courseid";
 
         $avg = -1;
         if ($avgrec = $DB->get_record_sql($sql)) {
@@ -128,7 +131,13 @@ class block_rate_course extends block_list
      */
     public function display_rating($courseid, $return=false) {
         global $CFG, $DB, $OUTPUT;
-        $count = $DB->count_records('block_rate_course', array('course'=>$courseid));
+
+        $sql = "SELECT count(c.fullname) as cnt FROM mdl_course c, mdl_course c2 where c.id = $courseid and c.fullname = c2.fullname";
+        if ($rating_count = $DB->get_record_sql($sql)){
+            $count = $rating_count->cnt;
+        }
+        
+        //$count = $DB->count_records('block_rate_course', array('course'=>$courseid));
         $ratedby = '';
         if ($count > 0) {
             $ratedby = get_string ('rating_users', 'block_rate_course', $count);
@@ -137,6 +146,7 @@ class block_rate_course extends block_list
         $numstars = $this->get_rating( $courseid );
         if ($numstars == -1) {
             $alt = '';
+            $ratedby = '';
         } else if ($numstars == 0) {
             $alt = get_string( 'rating_alt0', 'block_rate_course' );
         } else {
@@ -144,7 +154,7 @@ class block_rate_course extends block_list
         }
 
         $avg = $this->get_rating($courseid);
-        $res = '<img src="'.$OUTPUT->pix_url('star'.$avg, 'block_rate_course').'" alt="'.$alt.'"/><br/>'.$ratedby;
+        $res = '<img src="'.$OUTPUT->pix_url('star'.$avg, 'block_rate_course').'" alt="'.$alt.'"/><br/>';
 
         if ($return) {
             return $res;
