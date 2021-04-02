@@ -86,7 +86,9 @@ if (is_enrolled($context, $USER, '', true)) {
         $destination = $SESSION->wantsurl;
         unset($SESSION->wantsurl);
     } else {
-        $destination = "$CFG->wwwroot/course/view.php?id=$course->id";
+        $destination = "$CFG->wwwroot/enrol/confirmation.php?id=$course->id";
+        //Original below
+        //$destination = "$CFG->wwwroot/course/view.php?id=$course->id";
     }
     redirect($destination);   // Bye!
 }
