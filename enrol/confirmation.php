@@ -108,7 +108,7 @@ echo'
     <a>You are now enrolled in: </br> </br>'.'<span style = "color: bisque; font-size: 18px">'.$course->fullname.'</span>'.'</a>
     <p style = "font-size: 16px;"><span style = "font-size: 21px;">Course Description:</span> </br> </br> <span style = "color: bisque;">'.$course->summary.'</span></p>
 
-<p style = "font-size: 18px; color;">You will receive an email to confirm your registration with OpenCourses.</p>
+<p style = "font-size: 18px; color;">You will receive an email confirming your enrollment with OpenCourses!</p>
 
 <p style = "font-size: 18px; color;">If you have any questions, contact 
 <span style ="font-size: 18px; color: bisque;">DCRCCRE@partners.edu.</span></p>
