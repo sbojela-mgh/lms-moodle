@@ -9,7 +9,7 @@ echo '
 
 <style>
 .body {
-  width: 550px;
+  width: 700px;
   height: 500px;
   padding: 25%;
   color: white;
@@ -28,14 +28,14 @@ echo '
   float: left;
   width: 29%;
   padding: 10px;
-  height: 400px;
+  height: 500px;
   background-color: white;
   margin-right: 1px; 
 }
 
 .column_2 {
   float: left;
-  width: 63%;
+  width: 65%;
   padding: 10px;
   height: 400px;
   margin-left: 1px;
@@ -55,17 +55,17 @@ function highlight(id)
 </head>
 
 
-<div style = "width: 600px;height: 500px;margin-left: 25%;margin-top: 10%; height:max-content; ">
+<div style = "width: 600px;height: 500px;margin-left: 20%;margin-top: 10%; height:max-content; ">
 <body >
 <div class = "body">
 
 <div style = "background-color: white;">
 <h1 style = " width: 100%; height: 59px; margin: 0px 0px 10px 0px; padding: 0px 0px 0px 8px; color: #13949C;">Enrollment Success !</h1>
 </div>
-<div class="row" style=" width: 100%; max-height: 400px; overflow: hidden; background-color: rgb(247, 247, 247);" >
+<div class="row" style=" width: 100%; height: 500px; overflow: hidden; background-color: rgb(247, 247, 247);" >
 
   <div class="column"/>
-    <a style = " font-size: 21px; font-weight: bold;line-height: 13px; color: #139497;">Save the Date!</a>
+    <a style = " font-size: 21px; font-weight: bold;line-height: 13px; color: #139497;">Save the Date!</a> </br> </br>
     ';
     
     
@@ -106,7 +106,7 @@ echo'
 <a href="/lms-moodle/enrol/ics.php?id='.$course->id.'"><button id="ical" class = "download" onmouseover="hey(this.id)" onmouseout="bye(this.id)">Add to Calendar</button></a>
   </div>
 
-  <div class="column_2" style="overflow: scroll; height: 400px; text-align: start; background-color: white;">
+  <div class="column_2" style="overflow: scroll; height: 500px; text-align: start; background-color: white;">
     <a><span style = "font-weight: bold;">You are now enrolled in:</span> </br> </br>'.'<span style = "color: black; font-size: 18px">'.$course->fullname.'</span>'.'</a>
     <p style = "font-size: 16px;"><span style = "font-size: 21px; font-weight: bold;">Course Description:</span> </br> </br> <span style = "color: black;">'.$course->summary.'</span></p>
 
