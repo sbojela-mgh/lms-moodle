@@ -120,7 +120,7 @@ echo'
 </div>
 </div>
 </body>
-<a href="./lms-moodle/course/view.php?id='.$course->id.'"><button id = "nextPage" onmouseover="hey(this.id)" onmouseout="bye(this.id)" class = "download"style = "float: right; margin-top: 5px;">Course Page</button></a>
+<a href="'.$CFG->wwwroot.'/course/view.php?id='.$course->id.'"><button id = "nextPage" onmouseover="hey(this.id)" onmouseout="bye(this.id)" class = "download"style = "float: right; margin-top: 5px;">Course Page</button></a>
 </div>
 </html>
 
