@@ -103,7 +103,7 @@ function bye(id)
 
 <?php
 echo'
-<a href="/lms-moodle/enrol/ics.php?id='.$course->id.'"><button id="ical" class = "download" onmouseover="hey(this.id)" onmouseout="bye(this.id)">Add to Calendar</button></a>
+<a href="'.$CFG->wwwroot.'/enrol/ics.php?id='.$course->id.'"><button id="ical" class = "download" onmouseover="hey(this.id)" onmouseout="bye(this.id)">Add to Calendar</button></a>
   </div>
 
   <div class="column_2" style="overflow: scroll; height: 500px; text-align: start; background-color: white;">
