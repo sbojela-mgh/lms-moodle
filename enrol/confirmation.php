@@ -65,7 +65,7 @@ function highlight(id)
 <div class="row" style=" width: 100%; height: 500px; overflow: hidden; background-color: rgb(247, 247, 247);" >
 
   <div class="column"/>
-    <a style = " font-size: 21px; font-weight: bold;line-height: 13px; color: #139497;">Save the Date!</a>
+    <a style = " font-size: 21px; font-weight: bold;line-height: 13px; color: #139497;">Save the Date!</a> </br> </br>
     ';
     
     
