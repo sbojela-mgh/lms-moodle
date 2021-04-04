@@ -34,6 +34,7 @@ if (!isloggedin()) {
         // A user that is not logged in has arrived directly on this page,
         // they should be redirected to the course page they are trying to enrol on after logging in.
         $SESSION->wantsurl = "$CFG->wwwroot/course/view.php?id=$id";
+        //"$CFG->wwwroot/enrol/confirmation.php?id=$course->id"
     }
     // do not use require_login here because we are usually coming from it,
     // it would also mess up the SESSION->wantsurl
@@ -83,12 +84,12 @@ foreach($enrolinstances as $instance) {
 // Check if user already enrolled
 if (is_enrolled($context, $USER, '', true)) {
     if (!empty($SESSION->wantsurl)) {
-        $destination = $SESSION->wantsurl;
+        $destination = "$CFG->wwwroot/enrol/confirmation.php?id=$course->id";
         unset($SESSION->wantsurl);
     } else {
-        $destination = "$CFG->wwwroot/enrol/confirmation.php?id=$course->id";
+        //$destination = "$CFG->wwwroot/enrol/confirmation.php?id=$course->id";
         //Original below
-        //$destination = "$CFG->wwwroot/course/view.php?id=$course->id";
+        $destination = "$CFG->wwwroot/course/view.php?id=$course->id";
     }
     redirect($destination);   // Bye!
 }
