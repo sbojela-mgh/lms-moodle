@@ -367,7 +367,7 @@ if ($on_demand_flag == 0){
     }
     //echo '<br>';
     echo '<tr>'; 
-    echo '<td>'.'<a href=/lms-moodle/course/view.php?id='.$course->id.'>'.$course->fullname.'</a>'.'</td>';
+    echo '<td>'.'<a href='.$CFG->wwwroot.'/course/view.php?id='.$course->id.'>'.$course->fullname.'</a>'.'</td>';
     //if ($course->category == $online_course_category_id){ //category 32 corresponds to online courses
     //  echo '<td>On Demand</td>';
     //}
@@ -766,7 +766,7 @@ else
     }
     //echo '<br>';
     echo '<tr>'; 
-    echo '<td>'.'<a href=/lms-moodle/course/view.php?id='.$course->id.'>'.$course->fullname.'</a>'.'</td>';
+    echo '<td>'.'<a href='.$CFG->wwwroot.'/course/view.php?id='.$course->id.'>'.$course->fullname.'</a>'.'</td>';
     if ($course->category == $online_course_category_id){ //category 32 corresponds to online courses
       echo '<td>On Demand</td>';
     }
@@ -943,7 +943,7 @@ else
     }
     //echo '<br>';
     echo '<tr>'; 
-    echo '<td>'.'<a href=/lms-moodle/course/view.php?id='.$course->id.'>'.$course->fullname.'</a>'.'</td>';
+    echo '<td>'.'<a href='.$CFG->wwwroot.'/course/view.php?id='.$course->id.'>'.$course->fullname.'</a>'.'</td>';
     //if ($course->category == $online_course_category_id){ //category 32 corresponds to online courses
     //  echo '<td>On Demand</td>';
     //}
