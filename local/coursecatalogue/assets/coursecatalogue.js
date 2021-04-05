@@ -21,7 +21,7 @@ require(['core/first', 'jquery', 'jqueryui', 'core/ajax'], function(core, $, boo
     
     function searchcourses() {
       console.log('search courses')
-      window.open("/lms-moodle/local/coursecatalogue/index.php?month=" + $('#month').val() + "&year=" + $('#year').val(), '_self')
+      window.open("/../local/coursecatalogue/index.php?month=" + $('#month').val() + "&year=" + $('#year').val(), '_self')
       
     }
   });
