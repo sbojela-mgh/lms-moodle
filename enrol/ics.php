@@ -36,7 +36,7 @@ $event = array(
 // PHP equiv format: Ymd\This
 
 function dateToCal($time) {
-	return date('Ymd\This', $time) . 'Z';
+	return date('Ymd\This', $time) . 'P';
 }
 
 // Build the ics file
