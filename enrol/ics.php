@@ -36,7 +36,8 @@ $event = array(
 // PHP equiv format: Ymd\This
 
 function dateToCal($time) {
-	return date('Ymd\This', $time) . 'P';
+    //return gmdate('D, d M Y H:i:s', time()) .'Z';
+	return gmdate('Ymd\This', $time) . 'Z';
 }
 
 // Build the ics file
@@ -58,7 +59,7 @@ END:VCALENDAR';
 //set correct content-type-header
 if($event['id']){
 	header('Content-type: text/calendar; charset=utf-8');
-	header('Content-Disposition: attachment; filename=mohawk-event.ics');
+	header('Content-Disposition: attachment; filename=DCR-Event.ics');
 	echo $ical;
 } else {
 	// If $id isn't set, then kick the user back to home. Do not pass go,
