@@ -81,12 +81,12 @@ for row in cursor:
 for i in to_update:
     #we use i[1] because that is where the course ID lies in our array of courses that need to be updated
     cursor.execute("UPDATE mdl_course SET category = " + categoryID + " WHERE id = "+ str(i[1]) + ";")
-    #link.commit()
+    link.commit()
 
 cursor.execute("UPDATE mdl_course_categories SET coursecount = coursecount + "  + str(len(to_update)) + " WHERE id = " + categoryID + ";")
 
 for i in to_update:
     cursor.execute("UPDATE mdl_course_categories SET coursecount = coursecount - 1 WHERE id = "+ str(i[0]) + ";")
-    #link.commit()
+    link.commit()
 
 link.close()
