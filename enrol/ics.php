@@ -9,13 +9,13 @@ $course = $DB->get_record('course', array('id'=>$id), '*', MUST_EXIST);
 $context = context_course::instance($course->id, MUST_EXIST);
 
 if (isset($_SESSION['username'])) {
-    $url = "page1.php";
+    $url = $CFG->wwwroot.'/course/view.php?id=' . $course->id;
     header('Location: ' . $url);
     exit();
 } else if (isset($_POST['username'])) {
     $username = $_POST['username'];
     $_SESSION['username'] = $username;
-    $url = "page1.php";
+    $url = $CFG->wwwroot.'/course/view.php?id=' . $course->id;
     header('Location: ' . $url);
     exit();
 }
@@ -25,7 +25,9 @@ $event = array(
 	'title' => $course->fullname,
 	'description' => $course->summary,
 	'datestart' => $course->startdate,
-	'dateend' => $course->enddate
+	'dateend' => $course->enddate,
+    'url' => $CFG->wwwroot.'/course/view.php?id=' . $course->id
+    //Maybe create a url value to transfer over???***
 );
 
 // Convert times to iCalendar format. They require a block for yyyymmdd and then another block
@@ -36,10 +38,12 @@ $event = array(
 // PHP equiv format: Ymd\This
 
 function dateToCal($time) {
-    //return gmdate('D, d M Y H:i:s', time()) .'Z';
-	return gmdate('Ymd\This', $time) . 'Z';
-}
 
+	return date('Ymd\THis', $time);
+}
+//Original URL;VALUE=URI: http://mydomain.com/events/' . $event['id'] . '
+//second URL;VALUE=URI: '.$CFG->wwwroot.'/course/view.php?id='.$course->id. '
+// third Original URL;VALUE=URI: '.$CFG->wwwroot.'/course/view.php?id=' . $event['id'] . '
 // Build the ics file
 $ical = 'BEGIN:VCALENDAR
 VERSION:2.0
@@ -50,8 +54,9 @@ DTEND:' . dateToCal($event['dateend']) . '
 UID:' . md5($event['title']) . '
 DTSTAMP:' . time() . '
 DESCRIPTION:' . addslashes($event['description']) . '
-URL;VALUE=URI: http://mydomain.com/events/' . $event['id'] . '
-SUMMARY:' . addslashes($event['title']) . '
+URL: '.$event['url'] . '
+LOCATION:' . addslashes($CFG->wwwroot.'/course/view.php?id='.$course->id) . '
+SUMMARY:' . addslashes($event['title']) . ' 
 DTSTART:' . dateToCal($event['datestart']) . '
 END:VEVENT
 END:VCALENDAR';
@@ -63,7 +68,6 @@ if($event['id']){
 	echo $ical;
 } else {
 	// If $id isn't set, then kick the user back to home. Do not pass go,
-        // and do not collect $200. Currently it's _very_ slow.
 	header('Location: /lms-moodle/index.php');
 }
 ?>
