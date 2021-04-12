@@ -551,7 +551,7 @@ if ($on_demand_flag == 0){
       echo '<td>On Demand</td>';
     }
     else{
-      echo '<td>'.date('M-d-Y hA', $course->startdate).'</td>';
+      echo '<td>'.date('M-d-Y h:i A', $course->startdate).'</td>';
     }
 
     //next line
