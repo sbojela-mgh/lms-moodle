@@ -372,7 +372,7 @@ if ($on_demand_flag == 0){
     //  echo '<td>On Demand</td>';
     //}
     
-    echo '<td>'.date('M-d-Y hA', $course->startdate).'</td>';
+    echo '<td>'.date('M-d-Y h:i A', $course->startdate).'</td>';
 
     //next line
     //echo '<td>'.$course->instructor.'</td>';
@@ -771,7 +771,7 @@ else
       echo '<td>On Demand</td>';
     }
     else{
-      echo '<td>'.date('M-d-Y hA', $course->startdate).'</td>';
+      echo '<td>'.date('M-d-Y h:i A', $course->startdate).'</td>';
     }
 
     //next line
@@ -948,7 +948,7 @@ else
     //  echo '<td>On Demand</td>';
     //}
     
-    echo '<td>'.date('M-d-Y hA', $course->startdate).'</td>';
+    echo '<td>'.date('M-d-Y h:i A', $course->startdate).'</td>';
 
     //next line
     //echo '<td>'.$course->instructor.'</td>';
