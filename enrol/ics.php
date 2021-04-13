@@ -38,6 +38,11 @@ $event = array(
 // PHP equiv format: Ymd\This
 
 function dateToCal($time) {
+<<<<<<< HEAD
+=======
+	return date('Ymd\This', $time) . 'P';
+}
+>>>>>>> 84fbc4d9 (timezone fix)
 
 	return date('Ymd\THis', $time);
 }
