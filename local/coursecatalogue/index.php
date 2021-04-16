@@ -137,7 +137,7 @@ $on_demand_flag = 0;
 if (isset($_GET['tsort'])){
   //echo("IM ALIVE!");
   $sort = $_GET['tsort'];
-  echo($sort);
+  //echo($sort);
   if ($sort == ''){
     $sql = "select * from {course} c left outer join (select r.course as course, avg(r.rating) as rating from {block_rate_course} r group by r.course) r on c.id = r.course";
   }
