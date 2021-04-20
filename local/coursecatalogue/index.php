@@ -116,6 +116,8 @@ foreach ($categories as $category) {
   }
 }
 
+echo("The On Demand ID used for reference is: " . $online_course_category_id);
+
 
 echo $OUTPUT->render_from_template('local_coursecatalogue/searchbar', $context);
 
@@ -266,8 +268,8 @@ if ($on_demand_flag == 0){
     echo '<tr>'; 
     echo '<td>'.'<a href='.$CFG->wwwroot.'/course/view.php?id='.$course->id.'>'.$course->fullname.'</a>'.'</td>';
     
-    
-    echo '<td>'.date('M-d-Y h:i A', $course->startdate).'</td>';
+
+    echo '<td>'.date('M-d-Y h:i A', $course->startdate). "This course has a category ID of: " . $course->category . '</td>';
 
     $sql = "SELECT u.firstname, u.lastname
             FROM {user} u, {role_assignments} r_a, {role} r, {enrol} e, {user_enrolments} u_e
@@ -414,10 +416,10 @@ if ($on_demand_flag == 0){
     echo '<tr>'; 
     echo '<td>'.'<a href='.$CFG->wwwroot.'/course/view.php?id='.$course->id.'>'.$course->fullname.'</a>'.'</td>';
     if ($course->category == $online_course_category_id){ 
-      echo '<td>On Demand</td>';
+      echo '<td>On Demand '. "This course has a category ID of: " . $course->category. ' </td>';
     }
     else{
-      echo '<td>'.date('M-d-Y h:i A', $course->startdate).'</td>';
+      echo '<td>'.date('M-d-Y h:i A', $course->startdate). "This course has a category ID of: " . $course->category . '</td>';
     }
 
     
@@ -568,10 +570,10 @@ else
     echo '<tr>'; 
     echo '<td>'.'<a href='.$CFG->wwwroot.'/course/view.php?id='.$course->id.'>'.$course->fullname.'</a>'.'</td>';
     if ($course->category == $online_course_category_id){ //category 32 corresponds to online courses
-      echo '<td>On Demand</td>';
+      echo '<td>On Demand '. "This course has a category ID of: " . $course->category. ' </td>';
     }
     else{
-      echo '<td>'.date('M-d-Y h:i A', $course->startdate).'</td>';
+      echo '<td>'.date('M-d-Y h:i A', $course->startdate). "This course has a category ID of: " . $course->category . '</td>';
     }
 
     //next line
@@ -732,7 +734,7 @@ else
     
 
     
-    echo '<td>'.date('M-d-Y h:i A', $course->startdate).'</td>';
+    echo '<td>'.date('M-d-Y h:i A', $course->startdate). "This course has a category ID of: " . $course->category . '</td>';
 
     
     
