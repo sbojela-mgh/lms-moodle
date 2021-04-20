@@ -103,20 +103,24 @@ if (isset($_GET['search'])) {
   $context = array_push_assoc($context, 'search', '');
 }
 
-$sql = "SELECT * from {course_categories}";
+$sql = "SELECT * from {course_categories} where name = 'Past Offerings'";
 $categories = $DB->get_records_sql($sql);
 $online_course_category_id = 0;
 $past_offerings_category_id = 0;
 foreach ($categories as $category) {
-  if ($category->name == "Past Offerings"){
-    $past_offerings_category_id = $category->id;
-  }
-  if ($category->name == "On Demand") {
-    $online_course_category_id = $category->id;
-  }
+  
+  $past_offerings_category_id = $category->id;
+  
+}
+$sql = "SELECT * from {course_categories} where name = 'On Demand'";
+$categories = $DB->get_records_sql($sql);
+foreach ($categories as $category){
+
+  $online_course_category_id = $category->id;
+  
 }
 
-$online_course_category_id = 32; //Hardcoded solution for now
+//$online_course_category_id = 32; //Hardcoded solution for now
 
 //echo("The On Demand ID used for reference is: " . $online_course_category_id);
 
