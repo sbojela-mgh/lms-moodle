@@ -158,7 +158,7 @@ if (isset($_GET['tsort'])){
     $sql = "select * from {course} c left outer join (select r.course as course, avg(r.rating) as rating from {block_rate_course} r group by r.course) r on c.id = r.course";
   } 
   else if ($sort == 'startdate') {
-    $on_demand_flag = 1;
+    $on_demand_flag = 0;
     $sql = "select * from {course} c left outer join (select r.course as course, avg(r.rating) as rating from {block_rate_course} r group by r.course) r on c.id = r.course order by ". $sort . " asc";
   } else {
   $sql = "select * from {course} c left outer join (select r.course as course, avg(r.rating) as rating from {block_rate_course} r group by r.course) r on c.id = r.course order by ". $sort . " asc";
