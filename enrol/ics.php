@@ -57,7 +57,7 @@ DTSTAMP:' . time() . '
 DESCRIPTION:' . addslashes($event['description']) . '
 URL: '.$event['url'] . '
 LOCATION:' . addslashes($CFG->wwwroot.'/course/view.php?id='.$course->id) . '
-SUMMARY:' . addslashes($event['summarry']) . ' 
+SUMMARY:' . addslashes($event['description']) . ' 
 DTSTART:' . dateToCal($event['datestart']) . '
 END:VEVENT
 END:VCALENDAR';
