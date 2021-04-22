@@ -23,6 +23,7 @@ if (isset($_SESSION['username'])) {
 $event = array(
 	'id' => $course->id,
 	'title' => $course->fullname,
+	'summarry' => $course->shortname,
 	'description' => $course->summary,
 	'datestart' => $course->startdate,
 	'dateend' => $course->enddate,
@@ -56,7 +57,7 @@ DTSTAMP:' . time() . '
 DESCRIPTION:' . addslashes($event['description']) . '
 URL: '.$event['url'] . '
 LOCATION:' . addslashes($CFG->wwwroot.'/course/view.php?id='.$course->id) . '
-SUMMARY:' . addslashes($event['title']) . ' 
+SUMMARY:' . addslashes($event['summarry']) . ' 
 DTSTART:' . dateToCal($event['datestart']) . '
 END:VEVENT
 END:VCALENDAR';
