@@ -295,7 +295,7 @@ if ($on_demand_flag == 0){
         break;
       } else {
         $teacher_counter += 1;
-        echo '\n';
+        echo '<br>';
       }
     }
     echo '</td>';
@@ -454,7 +454,7 @@ if ($on_demand_flag == 0){
         break;
       } else {
         $teacher_counter += 1;
-        echo '\n';
+        echo '<br>';
       }
     }
     echo '</td>';
@@ -614,7 +614,7 @@ else
         break;
       } else {
         $teacher_counter += 1;
-        echo '\n';
+        echo '<br>';
       }
     }
     echo '</td>';
@@ -780,7 +780,7 @@ else
         break;
       } else {
         $teacher_counter += 1;
-        echo '\n';
+        echo '<br>';
       }
     }
     echo '</td>';
