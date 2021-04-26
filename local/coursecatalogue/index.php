@@ -282,7 +282,8 @@ if ($on_demand_flag == 0){
             WHERE e.courseid = ". $course->id ." AND u.id = r_a.userid AND (r_a.roleid = 4 OR r_a.roleid = 3) AND u_e.userid = u.id AND e.id = u_e.enrolid";
             
     echo '<td>';
-    $teachers = $DB->get_records_sql($sql);  
+    $teachers = $DB->get_records_sql($sql);
+    $teacher_counter = 0;  
     foreach($teachers as $teacher){
   
       echo $teacher->firstname;
@@ -290,8 +291,10 @@ if ($on_demand_flag == 0){
       echo $teacher->lastname;   
       echo ' ';
       echo '</td>';
-      break;
-      
+      if ($teacher_counter == 1){
+        break;
+      }
+      $teacher_counter += 1;
     }
 
     
@@ -435,7 +438,8 @@ if ($on_demand_flag == 0){
             WHERE e.courseid = ". $course->id ." AND u.id = r_a.userid AND (r_a.roleid = 4 OR r_a.roleid = 3) AND u_e.userid = u.id AND e.id = u_e.enrolid";
             
     echo '<td>';
-    $teachers = $DB->get_records_sql($sql);  
+    $teachers = $DB->get_records_sql($sql);
+    $teacher_counter = 0;  
     foreach($teachers as $teacher){
   
       echo $teacher->firstname;
@@ -443,8 +447,10 @@ if ($on_demand_flag == 0){
       echo $teacher->lastname;   
       echo ' ';
       echo '</td>';
-      break;
-      
+      if ($teacher_counter == 1){
+        break;
+      }
+      $teacher_counter += 1;
     }
 
     
@@ -589,7 +595,8 @@ else
             WHERE e.courseid = ". $course->id ." AND u.id = r_a.userid AND (r_a.roleid = 4 OR r_a.roleid = 3) AND u_e.userid = u.id AND e.id = u_e.enrolid";
             
     echo '<td>';
-    $teachers = $DB->get_records_sql($sql);  
+    $teachers = $DB->get_records_sql($sql);
+    $teacher_counter = 0;  
     foreach($teachers as $teacher){
   
       echo $teacher->firstname;
@@ -597,8 +604,10 @@ else
       echo $teacher->lastname;   
       echo ' ';
       echo '</td>';
-      break;
-      
+      if ($teacher_counter == 1){
+        break;
+      }
+      $teacher_counter += 1;
     }
 
     
@@ -749,7 +758,8 @@ else
             WHERE e.courseid = ". $course->id ." AND u.id = r_a.userid AND (r_a.roleid = 4 OR r_a.roleid = 3) AND u_e.userid = u.id AND e.id = u_e.enrolid";
             
     echo '<td>';
-    $teachers = $DB->get_records_sql($sql);  
+    $teachers = $DB->get_records_sql($sql);
+    $teacher_counter = 0;  
     foreach($teachers as $teacher){
   
       echo $teacher->firstname;
@@ -757,8 +767,10 @@ else
       echo $teacher->lastname;   
       echo ' ';
       echo '</td>';
-      break;
-      
+      if ($teacher_counter == 1){
+        break;
+      }
+      $teacher_counter += 1;
     }
 
   
