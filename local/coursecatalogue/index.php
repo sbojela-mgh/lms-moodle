@@ -290,12 +290,15 @@ if ($on_demand_flag == 0){
       echo ' ';
       echo $teacher->lastname;   
       echo ' ';
-      echo '</td>';
-      if ($teacher_counter == 1){
+      //echo '</td>';
+      if ($teacher_counter == 1 or count($teachers) == 1){
         break;
+      } else {
+        $teacher_counter += 1;
+        echo '\n';
       }
-      $teacher_counter += 1;
     }
+    echo '</td>';
 
     
       
@@ -446,12 +449,15 @@ if ($on_demand_flag == 0){
       echo ' ';
       echo $teacher->lastname;   
       echo ' ';
-      echo '</td>';
-      if ($teacher_counter == 1){
+      //echo '</td>';
+      if ($teacher_counter == 1 or count($teachers) == 1){
         break;
+      } else {
+        $teacher_counter += 1;
+        echo '\n';
       }
-      $teacher_counter += 1;
     }
+    echo '</td>';
 
     
       
@@ -603,12 +609,15 @@ else
       echo ' ';
       echo $teacher->lastname;   
       echo ' ';
-      echo '</td>';
-      if ($teacher_counter == 1){
+      //echo '</td>';
+      if ($teacher_counter == 1 or count($teachers) == 1){
         break;
+      } else {
+        $teacher_counter += 1;
+        echo '\n';
       }
-      $teacher_counter += 1;
     }
+    echo '</td>';
 
     
       
@@ -766,12 +775,15 @@ else
       echo ' ';
       echo $teacher->lastname;   
       echo ' ';
-      echo '</td>';
-      if ($teacher_counter == 1){
+      //echo '</td>';
+      if ($teacher_counter == 1 or count($teachers) == 1){
         break;
+      } else {
+        $teacher_counter += 1;
+        echo '\n';
       }
-      $teacher_counter += 1;
     }
+    echo '</td>';
 
   
   #$sql = "SELECT t.name FROM mdl_tag AS t 
