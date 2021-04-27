@@ -290,6 +290,7 @@ if ($on_demand_flag == 0){
       echo ' ';
       echo $teacher->lastname;   
       echo ' ';
+      break;
       //echo '</td>';
     }
     echo '</td>';
@@ -443,6 +444,7 @@ if ($on_demand_flag == 0){
       echo ' ';
       echo $teacher->lastname;   
       echo ' ';
+      break;
       //echo '</td>';
     }
     echo '</td>';
@@ -598,6 +600,7 @@ else
       echo ' ';
       echo $teacher->lastname;   
       echo ' ';
+      break;
       //echo '</td>';
     }
     echo '</td>';
@@ -758,6 +761,7 @@ else
       echo ' ';
       echo $teacher->lastname;   
       echo ' ';
+      break;
       //echo '</td>';
     }
     echo '</td>';
