@@ -116,11 +116,12 @@ $role_assignments = $DB->get_record_select('role_assignments', 'contextid =?', a
 
 $role = $DB->get_record_select('role', 'id =?', array($role_assignments->roleid));
 
-$user = $DB->get_record_select('user', 'id =?', array($role_assignments->userid));
+$user = $DB->get_record_select('user', 'id =?', array($role_assignments->userid ));
 
 echo '<br>';
-echo '<span style= "font-weight: bold; font-size: 18px;">' .'Instructor(s):'. '</span>'.' '. $user->firstname. ' '.$user->lastname;
-
+if ($user != null){
+    echo '<span style= "font-weight: bold; font-size: 18px;">' .'Instructor:'. '</span>'.' '. $user->firstname. ' '.$user->lastname;
+}
 /*
 $sql = "SELECT firstname FROM {user} as u
 JOIN {role_assignments} as ra ON ra.userid = u.id
