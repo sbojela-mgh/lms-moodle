@@ -382,8 +382,7 @@ class enrol_self_plugin extends enrol_plugin {
         if (trim($instance->customtext1) !== '') {
             $message = $instance->customtext1;
             $key = array('{$a->coursename}', '{$a->profileurl}', '{$a->fullname}', '{$a->email}');
-            //fullname($user)
-            $value = array($a->coursename, $a->profileurl, 'DCR TEST HEADER NAME', $user->email);
+            $value = array($a->coursename, $a->profileurl, fullname($user), $user->email);
             $message = str_replace($key, $value, $message);
             if (strpos($message, '<') === false) {
                 // Plain text only.

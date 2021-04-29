@@ -23,7 +23,6 @@ if (isset($_SESSION['username'])) {
 $event = array(
 	'id' => $course->id,
 	'title' => $course->fullname,
-	'summarry' => $course->shortname,
 	'description' => $course->summary,
 	'datestart' => $course->startdate,
 	'dateend' => $course->enddate,
@@ -54,10 +53,10 @@ BEGIN:VEVENT
 DTEND:' . dateToCal($event['dateend']) . '
 UID:' . md5($event['title']) . '
 DTSTAMP:' . time() . '
-DESCRIPTION:' . addslashes($event['description']) . '
+DESCRIPTION:' . addslashes($event['']) . '
 URL: '.$event['url'] . '
 LOCATION:' . addslashes($CFG->wwwroot.'/course/view.php?id='.$course->id) . '
-SUMMARY:' . addslashes($event['description']) . ' 
+SUMMARY:' . addslashes($event['title']) . ' 
 DTSTART:' . dateToCal($event['datestart']) . '
 END:VEVENT
 END:VCALENDAR';
@@ -71,4 +70,3 @@ if($event['id']){
 	// If $id isn't set, then kick the user back to home. Do not pass go,
 	header('Location: /lms-moodle/index.php');
 }
-?>
