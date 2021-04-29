@@ -110,18 +110,27 @@ echo '<tr>'.'<span style = "font-weight: bold;
 font-size: 18px;">'.'Date/Time:'.'</span>'. date(' M-d-Y hA', $course->startdate).'</tr>';
 /*Retrieving the context instanceid to bring context into context for the 
 the other retrievals to come*/
-$context = $DB->get_record_select('context', 'instanceid =?', array($course->id));
+/*$context = $DB->get_record_select('context', 'instanceid =?', array($course->id));
 //retrieving role assignments to bring into context all associated role_assignments
 $role_assignments = $DB->get_record_select('role_assignments', 'contextid =?', array($context->id));
 
 $role = $DB->get_record_select('role', 'id =?', array($role_assignments->roleid));
 
 $user = $DB->get_record_select('user', 'id =?', array($role_assignments->userid ));
-
-echo '<br>';
-if ($user != null){
-    echo '<span style= "font-weight: bold; font-size: 18px;">' .'Instructor:'. '</span>'.' '. $user->firstname. ' '.$user->lastname;
+*/
+echo '</br>';
+$sql = "SELECT u.firstname, u.lastname
+            FROM {user} u, {role_assignments} r_a, {role} r, {enrol} e, {user_enrolments} u_e
+            WHERE e.courseid = ". $course->id ." AND u.id = r_a.userid AND (r_a.roleid = 4 OR r_a.roleid = 3) AND u_e.userid = u.id AND e.id = u_e.enrolid AND
+            u.id <> 3";
+            
+            $teachers = $DB->get_records_sql($sql); 
+            foreach($teachers as $teacher){
+          
+if ($teachers != null){
+    echo '<span style= "font-weight: bold; font-size: 18px;">' .'Instructor:'. '</span>'.' '. $teacher->firstname. ' '.$teacher->lastname;
 }
+            }
 /*
 $sql = "SELECT firstname FROM {user} as u
 JOIN {role_assignments} as ra ON ra.userid = u.id

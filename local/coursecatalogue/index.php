@@ -103,18 +103,26 @@ if (isset($_GET['search'])) {
   $context = array_push_assoc($context, 'search', '');
 }
 
-$sql = "SELECT * from {course_categories}";
+$sql = "SELECT * from {course_categories} where name = 'Past Offerings'";
 $categories = $DB->get_records_sql($sql);
 $online_course_category_id = 0;
 $past_offerings_category_id = 0;
 foreach ($categories as $category) {
-  if ($category->name == "Past Offerings"){
-    $past_offerings_category_id = $category->id;
-  }
-  if ($category->name == "On Demand") {
-    $online_course_category_id = $category->id;
-  }
+  
+  $past_offerings_category_id = $category->id;
+  
 }
+$sql = "SELECT * from {course_categories} where name = 'On Demand'";
+$categories = $DB->get_records_sql($sql);
+foreach ($categories as $category){
+
+  $online_course_category_id = $category->id;
+  
+}
+
+//$online_course_category_id = 32; //Hardcoded solution for now
+
+//echo("The On Demand ID used for reference is: " . $online_course_category_id);
 
 
 echo $OUTPUT->render_from_template('local_coursecatalogue/searchbar', $context);
@@ -150,7 +158,7 @@ if (isset($_GET['tsort'])){
     $sql = "select * from {course} c left outer join (select r.course as course, avg(r.rating) as rating from {block_rate_course} r group by r.course) r on c.id = r.course";
   } 
   else if ($sort == 'startdate') {
-    $on_demand_flag = 1;
+    $on_demand_flag = 0;
     $sql = "select * from {course} c left outer join (select r.course as course, avg(r.rating) as rating from {block_rate_course} r group by r.course) r on c.id = r.course order by ". $sort . " asc";
   } else {
   $sql = "select * from {course} c left outer join (select r.course as course, avg(r.rating) as rating from {block_rate_course} r group by r.course) r on c.id = r.course order by ". $sort . " asc";
@@ -266,25 +274,25 @@ if ($on_demand_flag == 0){
     echo '<tr>'; 
     echo '<td>'.'<a href='.$CFG->wwwroot.'/course/view.php?id='.$course->id.'>'.$course->fullname.'</a>'.'</td>';
     
-    
-    echo '<td>'.date('M-d-Y h:i A', $course->startdate).'</td>';
+
+    echo '<td>'.date('M-d-Y h:i A', $course->startdate). '</td>';
 
     $sql = "SELECT u.firstname, u.lastname
             FROM {user} u, {role_assignments} r_a, {role} r, {enrol} e, {user_enrolments} u_e
-            WHERE e.courseid = ". $course->id ." AND u.id = r_a.userid AND (r_a.roleid = 4 OR r_a.roleid = 3) AND u_e.userid = u.id AND e.id = u_e.enrolid";
+            WHERE e.courseid = ". $course->id ." AND u.id = r_a.userid AND (r_a.roleid = 4 OR r_a.roleid = 3) AND u_e.userid = u.id AND e.id = u_e.enrolid AND
+            u.id <> 3";
             
     echo '<td>';
-    $teachers = $DB->get_records_sql($sql);  
+    $teachers = $DB->get_records_sql($sql); 
     foreach($teachers as $teacher){
   
       echo $teacher->firstname;
       echo ' ';
       echo $teacher->lastname;   
       echo ' ';
-      echo '</td>';
-      break;
-      
+      //echo '</td>';
     }
+    echo '</td>';
 
     
       
@@ -417,27 +425,28 @@ if ($on_demand_flag == 0){
       echo '<td>On Demand</td>';
     }
     else{
-      echo '<td>'.date('M-d-Y h:i A', $course->startdate).'</td>';
+      echo '<td>'.date('M-d-Y h:i A', $course->startdate). '</td>';
     }
 
     
     
     $sql = "SELECT u.firstname, u.lastname
             FROM {user} u, {role_assignments} r_a, {role} r, {enrol} e, {user_enrolments} u_e
-            WHERE e.courseid = ". $course->id ." AND u.id = r_a.userid AND (r_a.roleid = 4 OR r_a.roleid = 3) AND u_e.userid = u.id AND e.id = u_e.enrolid";
+            WHERE e.courseid = ". $course->id ." AND u.id = r_a.userid AND (r_a.roleid = 4 OR r_a.roleid = 3) AND u_e.userid = u.id AND e.id = u_e.enrolid AND 
+            u.id <> 3";
             
     echo '<td>';
-    $teachers = $DB->get_records_sql($sql);  
+    $teachers = $DB->get_records_sql($sql); 
     foreach($teachers as $teacher){
   
       echo $teacher->firstname;
       echo ' ';
       echo $teacher->lastname;   
       echo ' ';
-      echo '</td>';
-      break;
-      
+      //echo '</td>';
     }
+    echo '</td>';
+
 
     
       
@@ -571,27 +580,27 @@ else
       echo '<td>On Demand</td>';
     }
     else{
-      echo '<td>'.date('M-d-Y h:i A', $course->startdate).'</td>';
+      echo '<td>'.date('M-d-Y h:i A', $course->startdate). '</td>';
     }
 
     //next line
     //echo '<td>'.$course->instructor.'</td>';
     $sql = "SELECT u.firstname, u.lastname
             FROM {user} u, {role_assignments} r_a, {role} r, {enrol} e, {user_enrolments} u_e
-            WHERE e.courseid = ". $course->id ." AND u.id = r_a.userid AND (r_a.roleid = 4 OR r_a.roleid = 3) AND u_e.userid = u.id AND e.id = u_e.enrolid";
+            WHERE e.courseid = ". $course->id ." AND u.id = r_a.userid AND (r_a.roleid = 4 OR r_a.roleid = 3) AND u_e.userid = u.id AND e.id = u_e.enrolid AND 
+            u.id <> 3";
             
     echo '<td>';
-    $teachers = $DB->get_records_sql($sql);  
+    $teachers = $DB->get_records_sql($sql); 
     foreach($teachers as $teacher){
   
       echo $teacher->firstname;
       echo ' ';
       echo $teacher->lastname;   
       echo ' ';
-      echo '</td>';
-      break;
-      
+      //echo '</td>';
     }
+    echo '</td>';
 
     
       
@@ -732,26 +741,26 @@ else
     
 
     
-    echo '<td>'.date('M-d-Y h:i A', $course->startdate).'</td>';
+    echo '<td>'.date('M-d-Y h:i A', $course->startdate). '</td>';
 
     
     
     $sql = "SELECT u.firstname, u.lastname
             FROM {user} u, {role_assignments} r_a, {role} r, {enrol} e, {user_enrolments} u_e
-            WHERE e.courseid = ". $course->id ." AND u.id = r_a.userid AND (r_a.roleid = 4 OR r_a.roleid = 3) AND u_e.userid = u.id AND e.id = u_e.enrolid";
+            WHERE e.courseid = ". $course->id ." AND u.id = r_a.userid AND (r_a.roleid = 4 OR r_a.roleid = 3) AND u_e.userid = u.id AND e.id = u_e.enrolid AND 
+            u.id <> 3";
             
     echo '<td>';
-    $teachers = $DB->get_records_sql($sql);  
+    $teachers = $DB->get_records_sql($sql); 
     foreach($teachers as $teacher){
   
       echo $teacher->firstname;
       echo ' ';
       echo $teacher->lastname;   
       echo ' ';
-      echo '</td>';
-      break;
-      
+      //echo '</td>';
     }
+    echo '</td>';
 
   
   #$sql = "SELECT t.name FROM mdl_tag AS t 
