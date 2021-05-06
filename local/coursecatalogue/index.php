@@ -107,6 +107,7 @@ $sql = "SELECT * from {course_categories} where name = 'Past Offerings'";
 $categories = $DB->get_records_sql($sql);
 $online_course_category_id = 0;
 $past_offerings_category_id = 0;
+$templates_course_category_id = 0;
 foreach ($categories as $category) {
   
   $past_offerings_category_id = $category->id;
@@ -117,6 +118,13 @@ $categories = $DB->get_records_sql($sql);
 foreach ($categories as $category){
 
   $online_course_category_id = $category->id;
+  
+}
+$sql = "SELECT * from {course_categories} where name = 'Templates'";
+$categories = $DB->get_records_sql($sql);
+foreach ($categories as $category){
+
+  $templates_course_category_id = $category->id;
   
 }
 
@@ -182,7 +190,10 @@ $courses = $DB->get_records_sql($sql);
 
 if ($on_demand_flag == 0){
   foreach($courses as $course){
-    if ($course->category == $past_offerings_category_id) { //if course is in 'past offerings' category (34), then check if user is enrolled, if (s)he is, then display, else skip
+    if ($course->category == $past_offerings_category_id) { //if course is in 'past offerings' category (34)
+      continue;
+    }
+    if ($course->category == $templates_course_category_id) { //if course is in 'templates'
       continue;
     }
     
@@ -332,6 +343,9 @@ if ($on_demand_flag == 0){
 
   foreach($courses as $course){
     if ($course->category == $past_offerings_category_id) { //if course is in 'past offerings' category (34), then check if user is enrolled, if (s)he is, then display, else skip
+      continue;
+    }
+    if ($course->category == $templates_course_category_id) { //if course is in 'templates'
       continue;
     }
     //echo $course->rating;
@@ -647,6 +661,9 @@ else
 
   foreach($courses as $course){
     if ($course->category == $past_offerings_category_id) { //if course is in 'past offerings' category (34), then check if user is enrolled, if (s)he is, then display, else skip
+      continue;
+    }
+    if ($course->category == $templates_course_category_id) { //if course is in 'templates'
       continue;
     }
     //echo $course->rating;
