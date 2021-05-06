@@ -279,24 +279,19 @@ if ($on_demand_flag == 0){
 
     $sql = "SELECT u.firstname, u.lastname
             FROM {user} u, {role_assignments} r_a, {role} r, {enrol} e, {user_enrolments} u_e
-            WHERE e.courseid = ". $course->id ." AND u.id = r_a.userid AND (r_a.roleid = 4 OR r_a.roleid = 3) AND u_e.userid = u.id AND e.id = u_e.enrolid";
+            WHERE e.courseid = ". $course->id ." AND u.id = r_a.userid AND (r_a.roleid = 4 OR r_a.roleid = 3) AND u_e.userid = u.id AND e.id = u_e.enrolid AND
+            u.id <> 3";
             
     echo '<td>';
-    $teachers = $DB->get_records_sql($sql);
-    $teacher_counter = 0;  
+    $teachers = $DB->get_records_sql($sql); 
     foreach($teachers as $teacher){
   
       echo $teacher->firstname;
       echo ' ';
       echo $teacher->lastname;   
       echo ' ';
+      break;
       //echo '</td>';
-      if ($teacher_counter == 1 or count($teachers) == 1){
-        break;
-      } else {
-        $teacher_counter += 1;
-        echo '<br>';
-      }
     }
     echo '</td>';
 
@@ -438,26 +433,22 @@ if ($on_demand_flag == 0){
     
     $sql = "SELECT u.firstname, u.lastname
             FROM {user} u, {role_assignments} r_a, {role} r, {enrol} e, {user_enrolments} u_e
-            WHERE e.courseid = ". $course->id ." AND u.id = r_a.userid AND (r_a.roleid = 4 OR r_a.roleid = 3) AND u_e.userid = u.id AND e.id = u_e.enrolid";
+            WHERE e.courseid = ". $course->id ." AND u.id = r_a.userid AND (r_a.roleid = 4 OR r_a.roleid = 3) AND u_e.userid = u.id AND e.id = u_e.enrolid AND 
+            u.id <> 3";
             
     echo '<td>';
-    $teachers = $DB->get_records_sql($sql);
-    $teacher_counter = 0;  
+    $teachers = $DB->get_records_sql($sql); 
     foreach($teachers as $teacher){
   
       echo $teacher->firstname;
       echo ' ';
       echo $teacher->lastname;   
       echo ' ';
+      break;
       //echo '</td>';
-      if ($teacher_counter == 1 or count($teachers) == 1){
-        break;
-      } else {
-        $teacher_counter += 1;
-        echo '<br>';
-      }
     }
     echo '</td>';
+
 
     
       
@@ -598,24 +589,19 @@ else
     //echo '<td>'.$course->instructor.'</td>';
     $sql = "SELECT u.firstname, u.lastname
             FROM {user} u, {role_assignments} r_a, {role} r, {enrol} e, {user_enrolments} u_e
-            WHERE e.courseid = ". $course->id ." AND u.id = r_a.userid AND (r_a.roleid = 4 OR r_a.roleid = 3) AND u_e.userid = u.id AND e.id = u_e.enrolid";
+            WHERE e.courseid = ". $course->id ." AND u.id = r_a.userid AND (r_a.roleid = 4 OR r_a.roleid = 3) AND u_e.userid = u.id AND e.id = u_e.enrolid AND 
+            u.id <> 3";
             
     echo '<td>';
-    $teachers = $DB->get_records_sql($sql);
-    $teacher_counter = 0;  
+    $teachers = $DB->get_records_sql($sql); 
     foreach($teachers as $teacher){
   
       echo $teacher->firstname;
       echo ' ';
       echo $teacher->lastname;   
       echo ' ';
+      break;
       //echo '</td>';
-      if ($teacher_counter == 1 or count($teachers) == 1){
-        break;
-      } else {
-        $teacher_counter += 1;
-        echo '<br>';
-      }
     }
     echo '</td>';
 
@@ -764,24 +750,19 @@ else
     
     $sql = "SELECT u.firstname, u.lastname
             FROM {user} u, {role_assignments} r_a, {role} r, {enrol} e, {user_enrolments} u_e
-            WHERE e.courseid = ". $course->id ." AND u.id = r_a.userid AND (r_a.roleid = 4 OR r_a.roleid = 3) AND u_e.userid = u.id AND e.id = u_e.enrolid";
+            WHERE e.courseid = ". $course->id ." AND u.id = r_a.userid AND (r_a.roleid = 4 OR r_a.roleid = 3) AND u_e.userid = u.id AND e.id = u_e.enrolid AND 
+            u.id <> 3";
             
     echo '<td>';
-    $teachers = $DB->get_records_sql($sql);
-    $teacher_counter = 0;  
+    $teachers = $DB->get_records_sql($sql); 
     foreach($teachers as $teacher){
   
       echo $teacher->firstname;
       echo ' ';
       echo $teacher->lastname;   
       echo ' ';
+      break;
       //echo '</td>';
-      if ($teacher_counter == 1 or count($teachers) == 1){
-        break;
-      } else {
-        $teacher_counter += 1;
-        echo '<br>';
-      }
     }
     echo '</td>';
 
