@@ -156,7 +156,7 @@ if (isset($_GET['tsort'])){
   //echo($sort);
   if ($sort == ''){
     $on_demand_flag = 0;
-    $sql = "select * from {course} c left outer join (select r.course as course, avg(r.rating) as rating from {block_rate_course} r group by r.course) r on c.id = r.course order by ". $sort . " asc";
+    $sql = "select * from {course} c left outer join (select r.course as course, avg(r.rating) as rating from {block_rate_course} r group by r.course) r on c.id = r.course order by startdate asc";
   }
   else if ($sort == 'rating') {
     $sql = "select * from mdl_course c left outer join (SELECT x.avg, x.name, c.id as course FROM (SELECT AVG(rating) AS avg, c.fullname as name FROM mdl_block_rate_course as r JOIN mdl_course as c ON c.id = r.course GROUP BY c.fullname) as x, mdl_course c WHERE x.name = c.fullname) r on c.id = r.course order by r.avg desc";
@@ -172,6 +172,13 @@ if (isset($_GET['tsort'])){
   } else {
   $sql = "select * from {course} c left outer join (select r.course as course, avg(r.rating) as rating from {block_rate_course} r group by r.course) r on c.id = r.course order by ". $sort . " asc";
   }
+}
+
+else //if tsort is not set at all, also default to sort by startdate
+
+{
+  $on_demand_flag = 0;
+  $sql = "select * from {course} c left outer join (select r.course as course, avg(r.rating) as rating from {block_rate_course} r group by r.course) r on c.id = r.course order by startdate asc";
 }
 //else{
 //  echo("I shoudln't be doing this");
