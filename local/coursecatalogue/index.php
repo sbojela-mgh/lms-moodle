@@ -104,12 +104,13 @@ if (isset($_GET['search'])) {
 }
 
 
-$categories = $DB->get_records_sql($sql);
+
 $online_course_category_id = 0;
 $past_offerings_category_id = 0;
 $templates_course_category_id = 0;
 $pending_course_category_id = 0;
 $sql = "SELECT * from {course_categories} where name = 'Past Offerings'";
+$categories = $DB->get_records_sql($sql);
 foreach ($categories as $category) {
   
   $past_offerings_category_id = $category->id;
