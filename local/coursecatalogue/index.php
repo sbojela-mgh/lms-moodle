@@ -103,10 +103,14 @@ if (isset($_GET['search'])) {
   $context = array_push_assoc($context, 'search', '');
 }
 
-$sql = "SELECT * from {course_categories} where name = 'Past Offerings'";
-$categories = $DB->get_records_sql($sql);
+
+
 $online_course_category_id = 0;
 $past_offerings_category_id = 0;
+$templates_course_category_id = 0;
+$pending_course_category_id = 0;
+$sql = "SELECT * from {course_categories} where name = 'Past Offerings'";
+$categories = $DB->get_records_sql($sql);
 foreach ($categories as $category) {
   
   $past_offerings_category_id = $category->id;
@@ -117,6 +121,20 @@ $categories = $DB->get_records_sql($sql);
 foreach ($categories as $category){
 
   $online_course_category_id = $category->id;
+  
+}
+$sql = "SELECT * from {course_categories} where name = 'Templates'";
+$categories = $DB->get_records_sql($sql);
+foreach ($categories as $category){
+
+  $templates_course_category_id = $category->id;
+  
+}
+$sql = "SELECT * from {course_categories} where name = 'Pending'";
+$categories = $DB->get_records_sql($sql);
+foreach ($categories as $category){
+
+  $pending_course_category_id = $category->id;
   
 }
 
@@ -147,7 +165,8 @@ if (isset($_GET['tsort'])){
   $sort = $_GET['tsort'];
   //echo($sort);
   if ($sort == ''){
-    $sql = "select * from {course} c left outer join (select r.course as course, avg(r.rating) as rating from {block_rate_course} r group by r.course) r on c.id = r.course";
+    $on_demand_flag = 0;
+    $sql = "select * from {course} c left outer join (select r.course as course, avg(r.rating) as rating from {block_rate_course} r group by r.course) r on c.id = r.course order by startdate asc";
   }
   else if ($sort == 'rating') {
     $sql = "select * from mdl_course c left outer join (SELECT x.avg, x.name, c.id as course FROM (SELECT AVG(rating) AS avg, c.fullname as name FROM mdl_block_rate_course as r JOIN mdl_course as c ON c.id = r.course GROUP BY c.fullname) as x, mdl_course c WHERE x.name = c.fullname) r on c.id = r.course order by r.avg desc";
@@ -163,6 +182,13 @@ if (isset($_GET['tsort'])){
   } else {
   $sql = "select * from {course} c left outer join (select r.course as course, avg(r.rating) as rating from {block_rate_course} r group by r.course) r on c.id = r.course order by ". $sort . " asc";
   }
+}
+
+else //if tsort is not set at all, also default to sort by startdate
+
+{
+  $on_demand_flag = 0;
+  $sql = "select * from {course} c left outer join (select r.course as course, avg(r.rating) as rating from {block_rate_course} r group by r.course) r on c.id = r.course order by startdate asc";
 }
 //else{
 //  echo("I shoudln't be doing this");
@@ -182,7 +208,13 @@ $courses = $DB->get_records_sql($sql);
 
 if ($on_demand_flag == 0){
   foreach($courses as $course){
-    if ($course->category == $past_offerings_category_id) { //if course is in 'past offerings' category (34), then check if user is enrolled, if (s)he is, then display, else skip
+    if ($course->category == $past_offerings_category_id) { //if course is in 'past offerings' category (34)
+      continue;
+    }
+    if ($course->category == $templates_course_category_id) { //if course is in 'templates'
+      continue;
+    }
+    if ($course->category == $pending_course_category_id) { //if course is in 'pending' category
       continue;
     }
     
@@ -332,6 +364,12 @@ if ($on_demand_flag == 0){
 
   foreach($courses as $course){
     if ($course->category == $past_offerings_category_id) { //if course is in 'past offerings' category (34), then check if user is enrolled, if (s)he is, then display, else skip
+      continue;
+    }
+    if ($course->category == $templates_course_category_id) { //if course is in 'templates'
+      continue;
+    }
+    if ($course->category == $pending_course_category_id) { //if course is in 'pending' category
       continue;
     }
     //echo $course->rating;
@@ -647,6 +685,12 @@ else
 
   foreach($courses as $course){
     if ($course->category == $past_offerings_category_id) { //if course is in 'past offerings' category (34), then check if user is enrolled, if (s)he is, then display, else skip
+      continue;
+    }
+    if ($course->category == $templates_course_category_id) { //if course is in 'templates'
+      continue;
+    }
+    if ($course->category == $pending_course_category_id) { //if course is in 'pending' category
       continue;
     }
     //echo $course->rating;
