@@ -103,11 +103,13 @@ if (isset($_GET['search'])) {
   $context = array_push_assoc($context, 'search', '');
 }
 
-$sql = "SELECT * from {course_categories} where name = 'Past Offerings'";
+
 $categories = $DB->get_records_sql($sql);
 $online_course_category_id = 0;
 $past_offerings_category_id = 0;
 $templates_course_category_id = 0;
+$pending_course_category_id = 0;
+$sql = "SELECT * from {course_categories} where name = 'Past Offerings'";
 foreach ($categories as $category) {
   
   $past_offerings_category_id = $category->id;
@@ -125,6 +127,13 @@ $categories = $DB->get_records_sql($sql);
 foreach ($categories as $category){
 
   $templates_course_category_id = $category->id;
+  
+}
+$sql = "SELECT * from {course_categories} where name = 'Pending'";
+$categories = $DB->get_records_sql($sql);
+foreach ($categories as $category){
+
+  $pending_course_category_id = $category->id;
   
 }
 
@@ -202,6 +211,9 @@ if ($on_demand_flag == 0){
       continue;
     }
     if ($course->category == $templates_course_category_id) { //if course is in 'templates'
+      continue;
+    }
+    if ($course->category == $pending_course_category_id) { //if course is in 'pending' category
       continue;
     }
     
@@ -354,6 +366,9 @@ if ($on_demand_flag == 0){
       continue;
     }
     if ($course->category == $templates_course_category_id) { //if course is in 'templates'
+      continue;
+    }
+    if ($course->category == $pending_course_category_id) { //if course is in 'pending' category
       continue;
     }
     //echo $course->rating;
@@ -672,6 +687,9 @@ else
       continue;
     }
     if ($course->category == $templates_course_category_id) { //if course is in 'templates'
+      continue;
+    }
+    if ($course->category == $pending_course_category_id) { //if course is in 'pending' category
       continue;
     }
     //echo $course->rating;
