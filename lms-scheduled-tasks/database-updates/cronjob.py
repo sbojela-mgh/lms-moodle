@@ -56,7 +56,19 @@ cursor.execute("SELECT c.id, c.name from mdl_course_categories c WHERE c.name = 
 for row in cursor:
     onDemandID = str(row[0])
 
-cursor.execute("SELECT c.category, c.id, c.enddate from mdl_course c WHERE category <> 0 AND category <> " + onDemandID  + " AND category <> " + categoryID + " AND c.enddate <=" + curTime + ";")
+cursor.execute("SELECT c.id, c.name from mdl_course_categories c WHERE c.name = 'Templates';")
+#grabbing the category ID of "Templates" category (we don't want to update courses with this category ID)
+
+for row in cursor:
+    templatesID = str(row[0])
+
+cursor.execute("SELECT c.id, c.name from mdl_course_categories c WHERE c.name = 'Pending';")
+#grabbing the category ID of "Pending" category (we don't want to update courses with this category ID)
+
+for row in cursor:
+    pendingID = str(row[0])
+
+cursor.execute("SELECT c.category, c.id, c.enddate from mdl_course c WHERE category <> 0 AND category <> " + onDemandID  + " AND category <> " + categoryID + " AND category <> " + templatesID + " AND category <> " + pendingID + " AND c.enddate <=" + curTime + ";")
 
 to_update = []
 #array where we add all the rows of courses that need to be updated
