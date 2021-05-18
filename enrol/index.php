@@ -117,7 +117,7 @@ echo '</span>';
 echo '<br/>';
 if ($course->category == $online_course_category_id){
     echo '<tr>'.'<span style = "font-weight: bold;
-    font-size: 18px;">'.'Date/Time:'.'</span>'. 'On Demand'.'</tr>';
+    font-size: 18px;">'.'Date/Time:'.'</span>'. ' On Demand'.'</tr>';
 } else {
     echo '<tr>'.'<span style = "font-weight: bold;
     font-size: 18px;">'.'Date/Time:'.'</span>'. date(' M-d-Y hA', $course->startdate).'</tr>';
