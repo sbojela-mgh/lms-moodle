@@ -40,6 +40,15 @@ if (!isloggedin()) {
     // it would also mess up the SESSION->wantsurl
     redirect(get_login_url());
 }
+$online_course_category_id = 0;
+$sql = "SELECT * from {course_categories} where name = 'On Demand'";
+$categories = $DB->get_records_sql($sql);
+foreach ($categories as $category){
+
+  $online_course_category_id = $category->id;
+  
+}
+
 
 $course = $DB->get_record('course', array('id'=>$id), '*', MUST_EXIST);
 $context = context_course::instance($course->id, MUST_EXIST);
@@ -106,8 +115,13 @@ $block = block_instance('rate_course');
 $block->display_rating($course->id);
 echo '</span>';
 echo '<br/>';
-echo '<tr>'.'<span style = "font-weight: bold;
-font-size: 18px;">'.'Date/Time:'.'</span>'. date(' M-d-Y hA', $course->startdate).'</tr>';
+if ($course->category == $online_course_category_id){
+    echo '<tr>'.'<span style = "font-weight: bold;
+    font-size: 18px;">'.'Date/Time:'.'</span>'. 'On Demand'.'</tr>';
+} else {
+    echo '<tr>'.'<span style = "font-weight: bold;
+    font-size: 18px;">'.'Date/Time:'.'</span>'. date(' M-d-Y hA', $course->startdate).'</tr>';
+}
 /*Retrieving the context instanceid to bring context into context for the 
 the other retrievals to come*/
 /*$context = $DB->get_record_select('context', 'instanceid =?', array($course->id));
