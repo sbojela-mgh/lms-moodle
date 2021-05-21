@@ -162,6 +162,8 @@ if (isset($_GET['order']) && $_GET['order'] == 'asc') {
   }
 }
 //this is to set up the URLs for each table header
+$original_get = $_GET;
+
 $query = $_GET;
 
 $query['tsort'] = 'fullname';
@@ -181,14 +183,34 @@ echo '<div class="card">';
 echo '<table class="table table-striped">';
 echo '<thead>';
 echo '<tr>';
+
 if ($fullname_desc == 1){
-  echo '<th><a href="index.php?'.$fullname_header.'&order=desc" >Course</a></th>';
+  $query = $original_get;
+  $query['order'] = 'desc';
+  $fullname_header = http_build_query($query);
+  echo '<th><a href="index.php?'.$fullname_header.'" >Course ▼</a></th>';
 } 
+else if ($fullname_desc == 0 && $_GET['order'] == 'desc' && $_GET['tsort'] == 'fullname') {
+  $query = $original_get;
+  $query['order'] = 'asc';
+  $fullname_header = http_build_query($query);
+  echo '<th><a href="index.php?'.$fullname_header.'" >Course ▲</a></th>';
+}
 else {
   echo '<th><a href="index.php?'.$fullname_header.'&order=asc" >Course</a></th>';
 }
+
 if ($startdate_desc == 1) {
-  echo '<th><a href="index.php?'.$startdate_header.'&order=desc" >Start Date</a></th>';
+  $query = $original_get;
+  $query['order'] = 'desc';
+  $startdate_header = http_build_query($query);
+  echo '<th><a href="index.php?'.$startdate_header.'" >Start Date ▼</a></th>';
+}
+else if ($startdate_desc == 0 && $_GET['order'] == 'desc' && $_GET['tsort'] == 'startdate') {
+  $query = $original_get;
+  $query['order'] = 'asc';
+  $startdate_header = http_build_query($query);
+  echo '<th><a href="index.php?'.$startdate_header.'" >Start Date ▲</a></th>';
 }
 else {
   echo '<th><a href="index.php?'.$startdate_header.'&order=asc" >Start Date</a></th>';
@@ -197,11 +219,21 @@ else {
 echo '<th>Main Instructor</th>';
 echo '<th>Tags</th>';
 if ($ratings_desc == 1) {
-  echo '<th><a href="index.php?'.$rating_header.'&order=desc">Ratings</a></th>';
+  $query = $original_get;
+  $query['order'] = 'desc';
+  $rating_header = http_build_query($query);
+  echo '<th><a href="index.php?'.$rating_header.'">Ratings ▼</a></th>';
+}
+else if ($ratings_desc == 0 && $_GET['order'] == 'desc' && $_GET['tsort'] == 'rating'){
+  $query = $original_get;
+  $query['order'] = 'asc';
+  $rating_header = http_build_query($query);
+  echo '<th><a href="index.php?'.$rating_header.'">Ratings ▲</a></th>';
 }
 else {
   echo '<th><a href="index.php?'.$rating_header.'&order=asc">Ratings</a></th>';
 }
+
 
 echo '</tr>';
 
