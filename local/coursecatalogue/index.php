@@ -199,6 +199,7 @@ else if ($fullname_desc == 0 && $_GET['order'] == 'desc' && $_GET['tsort'] == 'f
 else {
   $query = $original_get;
   $query['order'] = 'asc';
+  $query['tsort'] = 'fullname';
   $fullname_header = http_build_query($query);
   echo '<th><a href="index.php?'.$fullname_header.'" >Course</a></th>';
 }
@@ -218,6 +219,7 @@ else if ($startdate_desc == 0 && $_GET['order'] == 'desc' && $_GET['tsort'] == '
 else {
   $query = $original_get;
   $query['order'] = 'asc';
+  $query['tsort'] = 'startdate';
   $startdate_header = http_build_query($query);
   echo '<th><a href="index.php?'.$startdate_header.'" >Start Date</a></th>';
 }
@@ -239,6 +241,7 @@ else if ($ratings_desc == 0 && $_GET['order'] == 'desc' && $_GET['tsort'] == 'ra
 else {
   $query = $original_get;
   $query['order'] = 'asc';
+  $query['tsort'] = 'rating';
   $rating_header = http_build_query($query);
   echo '<th><a href="index.php?'.$rating_header.'">Ratings</a></th>';
 }
