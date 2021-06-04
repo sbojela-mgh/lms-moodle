@@ -342,7 +342,7 @@ if (isset($_GET['tsort'])){
       
       left outer join
       
-      (SELECT u.firstname, u.lastname, e.courseid FROM mdl_user u, mdl_role_assignments r_a, mdl_role r, mdl_enrol e, mdl_user_enrolments u_e WHERE u.id = r_a.userid AND (r_a.roleid = 4 OR r_a.roleid = 3) AND u_e.userid = u.id AND e.id = u_e.enrolid AND u.id <> 3 group by e.courseid, u.firstname, u.lastname
+      (SELECT u.firstname, u.lastname, e.courseid FROM mdl_user u, mdl_role_assignments r_a, mdl_role r, mdl_enrol e, mdl_user_enrolments u_e WHERE u.id = r_a.userid AND (r_a.roleid = 4 OR r_a.roleid = 3) AND u_e.userid = u.id AND e.id = u_e.enrolid AND u.firstname <> 'DCR' group by e.courseid, u.firstname, u.lastname
       ) instructors
       
       on courses.id = instructors.courseid order by instructors.firstname asc";
@@ -356,7 +356,7 @@ if (isset($_GET['tsort'])){
       
       left outer join
       
-      (SELECT u.firstname, u.lastname, e.courseid FROM mdl_user u, mdl_role_assignments r_a, mdl_role r, mdl_enrol e, mdl_user_enrolments u_e WHERE u.id = r_a.userid AND (r_a.roleid = 4 OR r_a.roleid = 3) AND u_e.userid = u.id AND e.id = u_e.enrolid AND u.id <> 3 group by e.courseid, u.firstname, u.lastname
+      (SELECT u.firstname, u.lastname, e.courseid FROM mdl_user u, mdl_role_assignments r_a, mdl_role r, mdl_enrol e, mdl_user_enrolments u_e WHERE u.id = r_a.userid AND (r_a.roleid = 4 OR r_a.roleid = 3) AND u_e.userid = u.id AND e.id = u_e.enrolid AND u.firstname <> 'DCR' group by e.courseid, u.firstname, u.lastname
       ) instructors
       
       on courses.id = instructors.courseid order by instructors.firstname  desc";
@@ -372,7 +372,7 @@ if (isset($_GET['tsort'])){
       
       left outer join
       
-      (SELECT u.firstname, u.lastname, e.courseid FROM mdl_user u, mdl_role_assignments r_a, mdl_role r, mdl_enrol e, mdl_user_enrolments u_e WHERE u.id = r_a.userid AND (r_a.roleid = 4 OR r_a.roleid = 3) AND u_e.userid = u.id AND e.id = u_e.enrolid AND u.id <> 3 group by e.courseid, u.firstname, u.lastname
+      (SELECT u.firstname, u.lastname, e.courseid FROM mdl_user u, mdl_role_assignments r_a, mdl_role r, mdl_enrol e, mdl_user_enrolments u_e WHERE u.id = r_a.userid AND (r_a.roleid = 4 OR r_a.roleid = 3) AND u_e.userid = u.id AND e.id = u_e.enrolid AND u.firstname <> 'DCR' group by e.courseid, u.firstname, u.lastname
       ) instructors
       
       on courses.id = instructors.courseid order by instructors.firstname asc";
@@ -512,8 +512,8 @@ if ($on_demand_flag == 0){
 
     $sql = "SELECT u.firstname, u.lastname
             FROM {user} u, {role_assignments} r_a, {role} r, {enrol} e, {user_enrolments} u_e
-            WHERE e.courseid = ". $course->id ." AND u.id = r_a.userid AND (r_a.roleid = 4 OR r_a.roleid = 3) AND u_e.userid = u.id AND e.id = u_e.enrolid AND
-            u.id <> 3";
+            WHERE e.courseid = ". $course->id ." AND u.id = r_a.userid AND (r_a.roleid = 4 OR r_a.roleid = 3) AND u_e.userid = u.id AND e.id = u_e.enrolid AND 
+            u.firstname <> 'DCR'";
             
     echo '<td>';
     $teachers = $DB->get_records_sql($sql); 
@@ -673,7 +673,7 @@ if ($on_demand_flag == 0){
     $sql = "SELECT u.firstname, u.lastname
             FROM {user} u, {role_assignments} r_a, {role} r, {enrol} e, {user_enrolments} u_e
             WHERE e.courseid = ". $course->id ." AND u.id = r_a.userid AND (r_a.roleid = 4 OR r_a.roleid = 3) AND u_e.userid = u.id AND e.id = u_e.enrolid AND 
-            u.id <> 3";
+            u.firstname <> 'DCR'";
             
     echo '<td>';
     $teachers = $DB->get_records_sql($sql); 
@@ -829,7 +829,7 @@ else
     $sql = "SELECT u.firstname, u.lastname
             FROM {user} u, {role_assignments} r_a, {role} r, {enrol} e, {user_enrolments} u_e
             WHERE e.courseid = ". $course->id ." AND u.id = r_a.userid AND (r_a.roleid = 4 OR r_a.roleid = 3) AND u_e.userid = u.id AND e.id = u_e.enrolid AND 
-            u.id <> 3";
+            u.firstname <> 'DCR'";
             
     echo '<td>';
     $teachers = $DB->get_records_sql($sql); 
@@ -996,7 +996,7 @@ else
     $sql = "SELECT u.firstname, u.lastname
             FROM {user} u, {role_assignments} r_a, {role} r, {enrol} e, {user_enrolments} u_e
             WHERE e.courseid = ". $course->id ." AND u.id = r_a.userid AND (r_a.roleid = 4 OR r_a.roleid = 3) AND u_e.userid = u.id AND e.id = u_e.enrolid AND 
-            u.id <> 3";
+            u.firstname <> 'DCR'";
             
     echo '<td>';
     $teachers = $DB->get_records_sql($sql); 
