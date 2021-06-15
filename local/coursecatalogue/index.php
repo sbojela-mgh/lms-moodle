@@ -149,6 +149,7 @@ echo $OUTPUT->render_from_template('local_coursecatalogue/searchbar', $context);
 $fullname_desc = 0;
 $startdate_desc = 0;
 $ratings_desc = 0; 
+$teacher_desc = 0;
 
 if (isset($_GET['order']) && $_GET['order'] == 'asc') {
   if ($_GET['tsort'] == 'fullname'){
@@ -159,6 +160,9 @@ if (isset($_GET['order']) && $_GET['order'] == 'asc') {
   }
   else if ($_GET['tsort'] == 'rating'){
     $ratings_desc = 1;
+  }
+  else if ($_GET['tsort'] == 'teacher') {
+    $teacher_desc = 1;
   }
 }
 //this is to set up the URLs for each table header
@@ -177,6 +181,10 @@ $startdate_header = http_build_query($query);
 $query['tsort'] = 'rating';
 
 $rating_header = http_build_query($query);
+
+$query['tsort'] = 'teacher';
+
+$teacher_header = http_build_query($query);
 //done setting up URLs for table headers, display table headers
 
 echo '<div class="card">';
@@ -197,7 +205,11 @@ else if ($fullname_desc == 0 && $_GET['order'] == 'desc' && $_GET['tsort'] == 'f
   echo '<th><a href="index.php?'.$fullname_header.'" >Course ▲</a></th>';
 }
 else {
-  echo '<th><a href="index.php?'.$fullname_header.'&order=asc" >Course</a></th>';
+  $query = $original_get;
+  $query['order'] = 'asc';
+  $query['tsort'] = 'fullname';
+  $fullname_header = http_build_query($query);
+  echo '<th><a href="index.php?'.$fullname_header.'" >Course</a></th>';
 }
 
 if ($startdate_desc == 1) {
@@ -213,10 +225,36 @@ else if ($startdate_desc == 0 && $_GET['order'] == 'desc' && $_GET['tsort'] == '
   echo '<th><a href="index.php?'.$startdate_header.'" >Start Date ▲</a></th>';
 }
 else {
-  echo '<th><a href="index.php?'.$startdate_header.'&order=asc" >Start Date</a></th>';
+  $query = $original_get;
+  $query['order'] = 'asc';
+  $query['tsort'] = 'startdate';
+  $startdate_header = http_build_query($query);
+  echo '<th><a href="index.php?'.$startdate_header.'" >Start Date</a></th>';
 }
 
-echo '<th>Main Instructor</th>';
+
+if ($teacher_desc == 1) {
+  $query = $original_get;
+  $query['order'] = 'desc';
+  $teacher_header = http_build_query($query);
+  echo '<th><a href="index.php?'.$teacher_header.'">Main Instructor ▼</a></th>';
+}
+else if ($teacher_desc == 0 && $_GET['order'] == 'desc' && $_GET['tsort'] == 'teacher'){
+  $query = $original_get;
+  $query['order'] = 'asc';
+  $teacher_header = http_build_query($query);
+  echo '<th><a href="index.php?'.$teacher_header.'">Main Instructor ▲</a></th>';
+}
+else {
+  $query = $original_get;
+  $query['order'] = 'asc';
+  $query['tsort'] = 'teacher';
+  $teacher_header = http_build_query($query);
+  echo '<th><a href="index.php?'.$teacher_header.'">Main Instructor</a></th>';
+}
+
+//echo '<th>Main Instructor</th>';
+
 echo '<th>Tags</th>';
 if ($ratings_desc == 1) {
   $query = $original_get;
@@ -231,7 +269,11 @@ else if ($ratings_desc == 0 && $_GET['order'] == 'desc' && $_GET['tsort'] == 'ra
   echo '<th><a href="index.php?'.$rating_header.'">Ratings ▲</a></th>';
 }
 else {
-  echo '<th><a href="index.php?'.$rating_header.'&order=asc">Ratings</a></th>';
+  $query = $original_get;
+  $query['order'] = 'asc';
+  $query['tsort'] = 'rating';
+  $rating_header = http_build_query($query);
+  echo '<th><a href="index.php?'.$rating_header.'">Ratings</a></th>';
 }
 
 
@@ -287,7 +329,55 @@ if (isset($_GET['tsort'])){
   else if ($sort == 'ondemand'){
     $on_demand_flag = 1;
     $sql = "select * from {course} c left outer join (select r.course as course, avg(r.rating) as rating from {block_rate_course} r group by r.course) r on c.id = r.course";
-  } 
+  }
+
+  else if ($sort = 'teacher'){
+    if (isset($_GET['order']) && $_GET['order'] == 'asc'){
+      $sql = "select * 
+      from
+      ( select * from mdl_course c 
+      left outer join (select r.course as course, avg(r.rating) as rating from mdl_block_rate_course r group by r.course) r 
+      on c.id = r.course
+       order by startdate asc) courses
+      
+      left outer join
+      
+      (SELECT u.firstname, u.lastname, e.courseid FROM mdl_user u, mdl_role_assignments r_a, mdl_role r, mdl_enrol e, mdl_user_enrolments u_e WHERE u.id = r_a.userid AND (r_a.roleid = 4 OR r_a.roleid = 3) AND u_e.userid = u.id AND e.id = u_e.enrolid AND u.firstname <> 'DCR' group by e.courseid, u.firstname, u.lastname
+      ) instructors
+      
+      on courses.id = instructors.courseid order by instructors.firstname asc";
+    } else if (isset($_GET['order']) && $_GET['order'] == 'desc'){
+      $sql = "select * 
+      from
+      ( select * from mdl_course c 
+      left outer join (select r.course as course, avg(r.rating) as rating from mdl_block_rate_course r group by r.course) r 
+      on c.id = r.course
+       order by startdate asc) courses
+      
+      left outer join
+      
+      (SELECT u.firstname, u.lastname, e.courseid FROM mdl_user u, mdl_role_assignments r_a, mdl_role r, mdl_enrol e, mdl_user_enrolments u_e WHERE u.id = r_a.userid AND (r_a.roleid = 4 OR r_a.roleid = 3) AND u_e.userid = u.id AND e.id = u_e.enrolid AND u.firstname <> 'DCR' group by e.courseid, u.firstname, u.lastname
+      ) instructors
+      
+      on courses.id = instructors.courseid order by instructors.firstname  desc";
+    }
+
+    else {
+      $sql = "select * 
+      from
+      ( select * from mdl_course c 
+      left outer join (select r.course as course, avg(r.rating) as rating from mdl_block_rate_course r group by r.course) r 
+      on c.id = r.course
+       order by startdate asc) courses
+      
+      left outer join
+      
+      (SELECT u.firstname, u.lastname, e.courseid FROM mdl_user u, mdl_role_assignments r_a, mdl_role r, mdl_enrol e, mdl_user_enrolments u_e WHERE u.id = r_a.userid AND (r_a.roleid = 4 OR r_a.roleid = 3) AND u_e.userid = u.id AND e.id = u_e.enrolid AND u.firstname <> 'DCR' group by e.courseid, u.firstname, u.lastname
+      ) instructors
+      
+      on courses.id = instructors.courseid order by instructors.firstname asc";
+    }
+  }
 
   else {
     $on_demand_flag = 0;
@@ -422,8 +512,8 @@ if ($on_demand_flag == 0){
 
     $sql = "SELECT u.firstname, u.lastname
             FROM {user} u, {role_assignments} r_a, {role} r, {enrol} e, {user_enrolments} u_e
-            WHERE e.courseid = ". $course->id ." AND u.id = r_a.userid AND (r_a.roleid = 4 OR r_a.roleid = 3) AND u_e.userid = u.id AND e.id = u_e.enrolid AND
-            u.id <> 3";
+            WHERE e.courseid = ". $course->id ." AND u.id = r_a.userid AND (r_a.roleid = 4 OR r_a.roleid = 3) AND u_e.userid = u.id AND e.id = u_e.enrolid AND 
+            u.firstname <> 'DCR'";
             
     echo '<td>';
     $teachers = $DB->get_records_sql($sql); 
@@ -583,7 +673,7 @@ if ($on_demand_flag == 0){
     $sql = "SELECT u.firstname, u.lastname
             FROM {user} u, {role_assignments} r_a, {role} r, {enrol} e, {user_enrolments} u_e
             WHERE e.courseid = ". $course->id ." AND u.id = r_a.userid AND (r_a.roleid = 4 OR r_a.roleid = 3) AND u_e.userid = u.id AND e.id = u_e.enrolid AND 
-            u.id <> 3";
+            u.firstname <> 'DCR'";
             
     echo '<td>';
     $teachers = $DB->get_records_sql($sql); 
@@ -739,7 +829,7 @@ else
     $sql = "SELECT u.firstname, u.lastname
             FROM {user} u, {role_assignments} r_a, {role} r, {enrol} e, {user_enrolments} u_e
             WHERE e.courseid = ". $course->id ." AND u.id = r_a.userid AND (r_a.roleid = 4 OR r_a.roleid = 3) AND u_e.userid = u.id AND e.id = u_e.enrolid AND 
-            u.id <> 3";
+            u.firstname <> 'DCR'";
             
     echo '<td>';
     $teachers = $DB->get_records_sql($sql); 
@@ -906,7 +996,7 @@ else
     $sql = "SELECT u.firstname, u.lastname
             FROM {user} u, {role_assignments} r_a, {role} r, {enrol} e, {user_enrolments} u_e
             WHERE e.courseid = ". $course->id ." AND u.id = r_a.userid AND (r_a.roleid = 4 OR r_a.roleid = 3) AND u_e.userid = u.id AND e.id = u_e.enrolid AND 
-            u.id <> 3";
+            u.firstname <> 'DCR'";
             
     echo '<td>';
     $teachers = $DB->get_records_sql($sql); 
