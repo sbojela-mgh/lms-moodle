@@ -12,7 +12,7 @@ echo '
 .body {
   width: 700px;
   height: 500px;
-  padding: 25%;
+  padding-top:100px;
   color: white;
   font-size: 21px;
 }
