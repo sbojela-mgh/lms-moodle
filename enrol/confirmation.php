@@ -6,6 +6,7 @@ echo '
 <html style = "background-color: rgb(247, 247, 247);">
 <head>
 <title>Confirmation</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 .body {
@@ -55,7 +56,7 @@ function highlight(id)
 </head>
 
 
-<div style = "width: 600px;height: 500px;margin-left: 20%;margin-top: 10%; height:max-content; ">
+<div style = "width: 600px;height: 500px;margin-left: auto; margin-right:auto; margin-top: auto; margin-bottom: auto; height:max-content; ">
 <body >
 <div class = "body">
 
@@ -86,7 +87,21 @@ function highlight(id)
 		header('Location: ' . $url);
 		exit();
 	}
-    echo '<a style = "font-size: 18px; color: black;">'.date(' D, M d, Y h:i A', $course->startdate).' - '.date(' h:i A', $course->enddate).'</a>';
+  $online_course_category_id = 0;
+  $sql = "SELECT * from {course_categories} where name = 'On Demand'";
+  $categories = $DB->get_records_sql($sql);
+  foreach ($categories as $category){
+  
+    $online_course_category_id = $category->id;
+    
+  }
+  if ($course->category == $online_course_category_id){
+    echo '<tr>'.'<span style = "font-weight: bold;
+    font-size: 18px; color: black;">'.'Date/Time: On Demand'.'</span>'.'</tr>';
+} else {
+    echo '<tr>'.'<span style = "font-weight: bold;
+    font-size: 18px; color: black;">'.'Date/Time:'. date(' M-d-Y hA', $course->startdate).'</span>'.'</tr>';
+}
 ?>
     <script>
 function hey(id)
