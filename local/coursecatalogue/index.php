@@ -20,36 +20,25 @@ require_once($CFG->dirroot.'/lib/moodlelib.php');
 require_once($CFG->dirroot . '/mod/data/lib.php');
 require_once($CFG->dirroot. "/lib/tablelib.php");
 
-
 global $USER, $DB, $CFG;
 
 $PAGE->set_url('/local/coursecatalogue/index.php');
 $PAGE->set_context(context_system::instance());
-
 
 require_login();
 
 $strpagetitle = get_string('pluginname', 'local_coursecatalogue');
 $strpageheading = get_string('headername', 'local_coursecatalogue');
 
-
 $PAGE->set_title($strpagetitle);
 $PAGE->set_heading($strpageheading);
 
-
-
-
-
 echo $OUTPUT->header();
-
-
 
 function array_push_assoc($array, $key, $value){
   $array[$key] = $value;
   return $array;
 }
-
-
 
 $context = array();
 if (isset($_GET['month'])) {
@@ -74,6 +63,24 @@ if (isset($_GET['stars'])) {
   $context = array_push_assoc($context, 'stars', $_GET['stars']);
 }else{
   $context = array_push_assoc($context, 'stars', '');
+}
+
+if (isset($_GET['department'])){
+  $dept = $_GET['department'];
+  switch($dept){ //so far we have 3 departments 1 -> DCR, 2 -> CFD, 3-> MGRI, check mdl_customfield_field options column for any new options
+    case "1":
+      $context = array_push_assoc($context, 'departmentname', "DCR");
+      break;
+    case "2":
+      $context = array_push_assoc($context, 'departmentname', "CFD");
+      break;
+    case "3":
+      $context = array_push_assoc($context, 'departmentname', "MGRI");
+      break;
+  }
+  $context = array_push_assoc($context, 'department', $_GET['department']);
+}else{
+  $context = array_push_assoc($context, 'department', '');
 }
 
 if (isset($_GET['tsort'])) {
@@ -138,13 +145,7 @@ foreach ($categories as $category){
   
 }
 
-//$online_course_category_id = 32; //Hardcoded solution for now
-
-//echo("The On Demand ID used for reference is: " . $online_course_category_id);
-
-
 echo $OUTPUT->render_from_template('local_coursecatalogue/searchbar', $context);
-
 
 $fullname_desc = 0;
 $startdate_desc = 0;
@@ -253,9 +254,9 @@ else {
   echo '<th><a href="index.php?'.$teacher_header.'">Main Instructor</a></th>';
 }
 
-//echo '<th>Main Instructor</th>';
-
 echo '<th>Tags</th>';
+echo '<th>Department</th>';
+
 if ($ratings_desc == 1) {
   $query = $original_get;
   $query['order'] = 'desc';
@@ -276,7 +277,6 @@ else {
   echo '<th><a href="index.php?'.$rating_header.'">Ratings</a></th>';
 }
 
-
 echo '</tr>';
 
 $sql = "SELECT * FROM {course} WHERE ID is not null and fullname <> 'Local Environment' AND ID <> 1";
@@ -284,61 +284,57 @@ $sql = "SELECT * FROM {course} WHERE ID is not null and fullname <> 'Local Envir
 $on_demand_flag = 0;
 
 if (isset($_GET['tsort'])){
-  //echo("IM ALIVE!");
+
   $sort = $_GET['tsort'];
-  //echo($sort);
-  
+
   if ($sort == 'rating') {
 
     if (isset($_GET['order']) && $_GET['order'] == 'asc'){
-      $sql = "select * from mdl_course c left outer join (SELECT x.avg, x.name, c.id as course FROM (SELECT AVG(rating) AS avg, c.fullname as name FROM mdl_block_rate_course as r JOIN mdl_course as c ON c.id = r.course GROUP BY c.fullname) as x, mdl_course c WHERE x.name = c.fullname) r on c.id = r.course order by r.avg desc";
+      $sql = "select * from mdl_course c left outer join (select r.course as course, avg(r.rating) as rating from mdl_block_rate_course r group by r.course) r on c.id = r.course left outer join (select cfd.instanceid as courseid, cfd.value as department from mdl_course c, mdl_customfield_field cf, mdl_customfield_data cfd where cfd.instanceid = c.id) x on x.courseid = c.id order by rating desc";
     } else if (isset($_GET['order']) && $_GET['order'] == 'desc'){
-      $sql = "select * from mdl_course c left outer join (SELECT x.avg, x.name, c.id as course FROM (SELECT AVG(rating) AS avg, c.fullname as name FROM mdl_block_rate_course as r JOIN mdl_course as c ON c.id = r.course GROUP BY c.fullname) as x, mdl_course c WHERE x.name = c.fullname) r on c.id = r.course order by r.avg asc";
+      $sql = "select * from mdl_course c left outer join (select r.course as course, avg(r.rating) as rating from mdl_block_rate_course r group by r.course) r on c.id = r.course left outer join (select cfd.instanceid as courseid, cfd.value as department from mdl_course c, mdl_customfield_field cf, mdl_customfield_data cfd where cfd.instanceid = c.id) x on x.courseid = c.id order by rating asc";
     }
 
     else {
-      $sql = "select * from mdl_course c left outer join (SELECT x.avg, x.name, c.id as course FROM (SELECT AVG(rating) AS avg, c.fullname as name FROM mdl_block_rate_course as r JOIN mdl_course as c ON c.id = r.course GROUP BY c.fullname) as x, mdl_course c WHERE x.name = c.fullname) r on c.id = r.course order by r.avg desc";
+      $sql = "select * from mdl_course c left outer join (select r.course as course, avg(r.rating) as rating from mdl_block_rate_course r group by r.course) r on c.id = r.course left outer join (select cfd.instanceid as courseid, cfd.value as department from mdl_course c, mdl_customfield_field cf, mdl_customfield_data cfd where cfd.instanceid = c.id) x on x.courseid = c.id order by rating desc";
     }
   }
 
   else if ($sort == 'startdate') {
     $on_demand_flag = 0;
     if (isset($_GET['order']) && $_GET['order'] == 'asc'){
-      $sql = "select * from {course} c left outer join (select r.course as course, avg(r.rating) as rating from {block_rate_course} r group by r.course) r on c.id = r.course order by startdate asc";
+      $sql = "select * from mdl_course c left outer join (select r.course as course, avg(r.rating) as rating from mdl_block_rate_course r group by r.course) r on c.id = r.course left outer join (select cfd.instanceid as courseid, cfd.value as department from mdl_course c, mdl_customfield_field cf, mdl_customfield_data cfd where cfd.instanceid = c.id) x on x.courseid = c.id order by startdate asc";
     } else if (isset($_GET['order']) && $_GET['order'] == 'desc'){
-      $sql = "select * from {course} c left outer join (select r.course as course, avg(r.rating) as rating from {block_rate_course} r group by r.course) r on c.id = r.course order by startdate desc";
+      $sql = "select * from mdl_course c left outer join (select r.course as course, avg(r.rating) as rating from mdl_block_rate_course r group by r.course) r on c.id = r.course left outer join (select cfd.instanceid as courseid, cfd.value as department from mdl_course c, mdl_customfield_field cf, mdl_customfield_data cfd where cfd.instanceid = c.id) x on x.courseid = c.id order by startdate desc";
     }
 
     else {
-      $sql = "select * from {course} c left outer join (select r.course as course, avg(r.rating) as rating from {block_rate_course} r group by r.course) r on c.id = r.course order by startdate asc";
+      $sql = "select * from mdl_course c left outer join (select r.course as course, avg(r.rating) as rating from mdl_block_rate_course r group by r.course) r on c.id = r.course left outer join (select cfd.instanceid as courseid, cfd.value as department from mdl_course c, mdl_customfield_field cf, mdl_customfield_data cfd where cfd.instanceid = c.id) x on x.courseid = c.id order by startdate asc";
     }
   }
 
   else if ($sort == 'fullname'){
     if (isset($_GET['order']) && $_GET['order'] == 'asc'){
-      $sql = "select * from {course} c left outer join (select r.course as course, avg(r.rating) as rating from {block_rate_course} r group by r.course) r on c.id = r.course order by fullname asc";
+      $sql = "select * from mdl_course c left outer join (select r.course as course, avg(r.rating) as rating from mdl_block_rate_course r group by r.course) r on c.id = r.course left outer join (select cfd.instanceid as courseid, cfd.value as department from mdl_course c, mdl_customfield_field cf, mdl_customfield_data cfd where cfd.instanceid = c.id) x on x.courseid = c.id order by fullname asc";
     } else if (isset($_GET['order']) && $_GET['order'] == 'desc'){
-      $sql = "select * from {course} c left outer join (select r.course as course, avg(r.rating) as rating from {block_rate_course} r group by r.course) r on c.id = r.course order by fullname desc";
+      $sql = "select * from mdl_course c left outer join (select r.course as course, avg(r.rating) as rating from mdl_block_rate_course r group by r.course) r on c.id = r.course left outer join (select cfd.instanceid as courseid, cfd.value as department from mdl_course c, mdl_customfield_field cf, mdl_customfield_data cfd where cfd.instanceid = c.id) x on x.courseid = c.id order by fullname desc";
     }
 
     else {
-      $sql = "select * from {course} c left outer join (select r.course as course, avg(r.rating) as rating from {block_rate_course} r group by r.course) r on c.id = r.course order by fullname asc";
+      $sql = "select * from mdl_course c left outer join (select r.course as course, avg(r.rating) as rating from mdl_block_rate_course r group by r.course) r on c.id = r.course left outer join (select cfd.instanceid as courseid, cfd.value as department from mdl_course c, mdl_customfield_field cf, mdl_customfield_data cfd where cfd.instanceid = c.id) x on x.courseid = c.id order by fullname asc";
     }
   }
 
   else if ($sort == 'ondemand'){
     $on_demand_flag = 1;
-    $sql = "select * from {course} c left outer join (select r.course as course, avg(r.rating) as rating from {block_rate_course} r group by r.course) r on c.id = r.course";
+    $sql = "select * from mdl_course c left outer join (select r.course as course, avg(r.rating) as rating from mdl_block_rate_course r group by r.course) r on c.id = r.course left outer join (select cfd.instanceid as courseid, cfd.value as department from mdl_course c, mdl_customfield_field cf, mdl_customfield_data cfd where cfd.instanceid = c.id) x on x.courseid = c.id";
   }
 
   else if ($sort = 'teacher'){
     if (isset($_GET['order']) && $_GET['order'] == 'asc'){
       $sql = "select * 
       from
-      ( select * from mdl_course c 
-      left outer join (select r.course as course, avg(r.rating) as rating from mdl_block_rate_course r group by r.course) r 
-      on c.id = r.course
-       order by startdate asc) courses
+      (select * from mdl_course c left outer join (select r.course as course, avg(r.rating) as rating from mdl_block_rate_course r group by r.course) r on c.id = r.course left outer join (select cfd.instanceid as courseid, cfd.value as department from mdl_course c, mdl_customfield_field cf, mdl_customfield_data cfd where cfd.instanceid = c.id) x on x.courseid = c.id) courses
       
       left outer join
       
@@ -349,10 +345,7 @@ if (isset($_GET['tsort'])){
     } else if (isset($_GET['order']) && $_GET['order'] == 'desc'){
       $sql = "select * 
       from
-      ( select * from mdl_course c 
-      left outer join (select r.course as course, avg(r.rating) as rating from mdl_block_rate_course r group by r.course) r 
-      on c.id = r.course
-       order by startdate asc) courses
+      (select * from mdl_course c left outer join (select r.course as course, avg(r.rating) as rating from mdl_block_rate_course r group by r.course) r on c.id = r.course left outer join (select cfd.instanceid as courseid, cfd.value as department from mdl_course c, mdl_customfield_field cf, mdl_customfield_data cfd where cfd.instanceid = c.id) x on x.courseid = c.id) courses
       
       left outer join
       
@@ -365,10 +358,7 @@ if (isset($_GET['tsort'])){
     else {
       $sql = "select * 
       from
-      ( select * from mdl_course c 
-      left outer join (select r.course as course, avg(r.rating) as rating from mdl_block_rate_course r group by r.course) r 
-      on c.id = r.course
-       order by startdate asc) courses
+      (select * from mdl_course c left outer join (select r.course as course, avg(r.rating) as rating from mdl_block_rate_course r group by r.course) r on c.id = r.course left outer join (select cfd.instanceid as courseid, cfd.value as department from mdl_course c, mdl_customfield_field cf, mdl_customfield_data cfd where cfd.instanceid = c.id) x on x.courseid = c.id) courses
       
       left outer join
       
@@ -381,7 +371,7 @@ if (isset($_GET['tsort'])){
 
   else {
     $on_demand_flag = 0;
-    $sql = "select * from {course} c left outer join (select r.course as course, avg(r.rating) as rating from {block_rate_course} r group by r.course) r on c.id = r.course order by startdate asc";
+    $sql = "select * from mdl_course c left outer join (select r.course as course, avg(r.rating) as rating from mdl_block_rate_course r group by r.course) r on c.id = r.course left outer join (select cfd.instanceid as courseid, cfd.value as department from mdl_course c, mdl_customfield_field cf, mdl_customfield_data cfd where cfd.instanceid = c.id) x on x.courseid = c.id order by startdate asc";
   }
 }
 
@@ -389,23 +379,10 @@ else //if tsort is not set at all, also default to sort by startdate
 
 {
   $on_demand_flag = 0;
-  $sql = "select * from {course} c left outer join (select r.course as course, avg(r.rating) as rating from {block_rate_course} r group by r.course) r on c.id = r.course order by startdate asc";
+  $sql = "select * from mdl_course c left outer join (select r.course as course, avg(r.rating) as rating from mdl_block_rate_course r group by r.course) r on c.id = r.course left outer join (select cfd.instanceid as courseid, cfd.value as department from mdl_course c, mdl_customfield_field cf, mdl_customfield_data cfd where cfd.instanceid = c.id) x on x.courseid = c.id order by startdate asc";
 }
-//else{
-//  echo("I shoudln't be doing this");
-//  $sql = "select * from {course} c left outer join (select r.course as course, avg(r.rating) as rating from {block_rate_course} r group by r.course) r on c.id = r.course";
-//}
-
-
-
-
-//echo($sql);
-
-
 
 $courses = $DB->get_records_sql($sql); 
-  
-
 
 if ($on_demand_flag == 0){
   foreach($courses as $course){
@@ -417,6 +394,14 @@ if ($on_demand_flag == 0){
     }
     if ($course->category == $pending_course_category_id) { //if course is in 'pending' category
       continue;
+    }
+
+    if (isset($_GET['department'])){
+      if ($_GET['department'] != ''){
+        if($_GET['department'] != $course->department) {
+          continue;
+        }
+      }
     }
     
     if (isset($_GET['month'])){ //this one is to filter out courses that don't match the month
@@ -505,8 +490,8 @@ if ($on_demand_flag == 0){
     }
     
     echo '<tr>'; 
+
     echo '<td>'.'<a href='.$CFG->wwwroot.'/course/view.php?id='.$course->id.'>'.$course->fullname.'</a>'.'</td>';
-    
 
     echo '<td>'.date('M-d-Y h:i A', $course->startdate). '</td>';
 
@@ -524,13 +509,9 @@ if ($on_demand_flag == 0){
       echo $teacher->lastname;   
       echo ' ';
       break;
-      //echo '</td>';
     }
     echo '</td>';
 
-    
-      
- 
     $sql = "SELECT t.name 
             FROM {tag} t, {tag_instance} t_i
             WHERE t.id = t_i.tagid AND t_i.itemid = ". $course->id;
@@ -540,6 +521,20 @@ if ($on_demand_flag == 0){
     foreach($tags as $tag){
       echo $tag->name;
       echo '<br>';
+    }
+    echo '</td>';
+
+    echo '<td>';
+    switch($course->department){ //so far we have 3 departments 1 -> DCR, 2 -> CFD, 3-> MGRI, check mdl_customfield_field options column for any new options
+      case "1":
+        echo "DCR";
+        break;
+      case "2":
+        echo "CFD";
+        break;
+      case "3":
+        echo "MGRI";
+        break;
     }
     echo '</td>';
 
@@ -557,12 +552,6 @@ if ($on_demand_flag == 0){
   echo '</tr>';
   }
 
-
-
-
-
-
-
   foreach($courses as $course){
     if ($course->category == $past_offerings_category_id) { //if course is in 'past offerings' category (34), then check if user is enrolled, if (s)he is, then display, else skip
       continue;
@@ -573,7 +562,15 @@ if ($on_demand_flag == 0){
     if ($course->category == $pending_course_category_id) { //if course is in 'pending' category
       continue;
     }
-    //echo $course->rating;
+
+    if (isset($_GET['department'])){
+      if ($_GET['department'] != ''){
+        if($_GET['department'] != $course->department) {
+          continue;
+        }
+      }
+    }
+
     if (isset($_GET['month'])){ //this one is to filter out courses that don't match the month
         if ($course->category == $online_course_category_id){ //category 32 corresponds to online courses
         }
@@ -583,9 +580,9 @@ if ($on_demand_flag == 0){
           }
           
         }
+
     }
     if (isset($_GET['tags'])){ //this one is to filter out courses that don't contain a particular tag we passed
-        //echo $_GET['tags'];
         $sql = "SELECT t.name 
           FROM {tag} t, {tag_instance} t_i
           WHERE t.id = t_i.tagid AND t_i.itemid = ". $course->id;
@@ -658,7 +655,6 @@ if ($on_demand_flag == 0){
     if ($course->category != $online_course_category_id){ 
       continue;
     }
-    //echo '<br>';
     echo '<tr>'; 
     echo '<td>'.'<a href='.$CFG->wwwroot.'/course/view.php?id='.$course->id.'>'.$course->fullname.'</a>'.'</td>';
     if ($course->category == $online_course_category_id){ 
@@ -667,8 +663,6 @@ if ($on_demand_flag == 0){
     else{
       echo '<td>'.date('M-d-Y h:i A', $course->startdate). '</td>';
     }
-
-    
     
     $sql = "SELECT u.firstname, u.lastname
             FROM {user} u, {role_assignments} r_a, {role} r, {enrol} e, {user_enrolments} u_e
@@ -684,16 +678,10 @@ if ($on_demand_flag == 0){
       echo $teacher->lastname;   
       echo ' ';
       break;
-      //echo '</td>';
     }
     echo '</td>';
 
-
     
-      
-  
-    
-
     $sql = "SELECT t.name 
             FROM {tag} t, {tag_instance} t_i
             WHERE t.id = t_i.tagid AND t_i.itemid = ". $course->id;
@@ -707,6 +695,20 @@ if ($on_demand_flag == 0){
     echo '</td>';
 
     echo '<td>';
+    switch($course->department){ //so far we have 3 departments 1 -> DCR, 2 -> CFD, 3-> MGRI, check mdl_customfield_field options column for any new options
+      case "1":
+        echo "DCR";
+        break;
+      case "2":
+        echo "CFD";
+        break;
+      case "3":
+        echo "MGRI";
+        break;
+    }
+    echo '</td>';
+
+    echo '<td>';
     $block = block_instance('rate_course');
     if ($block->get_rating($course->id) != -1){
       $block->display_rating($course->id);
@@ -716,17 +718,21 @@ if ($on_demand_flag == 0){
     }
     echo '</td>';
 
-
-  echo '</tr>';
+    echo '</tr>'; //end of row
   }
-  
   
   echo '</table>';
 }
 else
 {
   foreach($courses as $course){
-    
+    if (isset($_GET['department'])){
+      if ($_GET['department'] != ''){
+        if($_GET['department'] != $course->department) {
+          continue;
+        }
+      }
+    }
     
     if (isset($_GET['month'])){ //this one is to filter out courses that don't match the month
         if ($course->category == $online_course_category_id){ //category 32 corresponds to online courses
@@ -814,7 +820,7 @@ else
     if ($course->category != $online_course_category_id){ //category 32 corresponds to online courses
       continue;
     }
-    //echo '<br>';
+
     echo '<tr>'; 
     echo '<td>'.'<a href='.$CFG->wwwroot.'/course/view.php?id='.$course->id.'>'.$course->fullname.'</a>'.'</td>';
     if ($course->category == $online_course_category_id){ //category 32 corresponds to online courses
@@ -824,8 +830,6 @@ else
       echo '<td>'.date('M-d-Y h:i A', $course->startdate). '</td>';
     }
 
-    //next line
-    //echo '<td>'.$course->instructor.'</td>';
     $sql = "SELECT u.firstname, u.lastname
             FROM {user} u, {role_assignments} r_a, {role} r, {enrol} e, {user_enrolments} u_e
             WHERE e.courseid = ". $course->id ." AND u.id = r_a.userid AND (r_a.roleid = 4 OR r_a.roleid = 3) AND u_e.userid = u.id AND e.id = u_e.enrolid AND 
@@ -834,24 +838,13 @@ else
     echo '<td>';
     $teachers = $DB->get_records_sql($sql); 
     foreach($teachers as $teacher){
-  
       echo $teacher->firstname;
       echo ' ';
       echo $teacher->lastname;   
       echo ' ';
       break;
-      //echo '</td>';
     }
     echo '</td>';
-
-    
-      
-  
-    
-  
-  #$sql = "SELECT t.name FROM mdl_tag AS t 
-  #JOIN mdl_tag_instance AS ti ON ti.tagid = t.id
-  #JOIN mdl_context AS ctx ON ctx.contextlevel = 50";
 
     $sql = "SELECT t.name 
             FROM {tag} t, {tag_instance} t_i
@@ -866,6 +859,20 @@ else
     echo '</td>';
 
     echo '<td>';
+    switch($course->department){ //so far we have 3 departments 1 -> DCR, 2 -> CFD, 3-> MGRI, check mdl_customfield_field options column for any new options
+      case "1":
+        echo "DCR";
+        break;
+      case "2":
+        echo "CFD";
+        break;
+      case "3":
+        echo "MGRI";
+        break;
+    }
+    echo '</td>';
+
+    echo '<td>';
     $block = block_instance('rate_course');
     if ($block->get_rating($course->id) != -1){
       $block->display_rating($course->id);
@@ -874,15 +881,8 @@ else
       echo "No Reviews";
     }
     echo '</td>';
-
-
-  echo '</tr>';
+    echo '</tr>'; //end of row
   }
-
-
-
-
-
 
   foreach($courses as $course){
     if ($course->category == $past_offerings_category_id) { //if course is in 'past offerings' category (34), then check if user is enrolled, if (s)he is, then display, else skip
@@ -893,6 +893,14 @@ else
     }
     if ($course->category == $pending_course_category_id) { //if course is in 'pending' category
       continue;
+    }
+
+    if (isset($_GET['department'])){
+      if ($_GET['department'] != ''){
+        if($_GET['department'] != $course->department) {
+          continue;
+        }
+      }
     }
     //echo $course->rating;
     if (isset($_GET['month'])){ //this one is to filter out courses that don't match the month
@@ -960,17 +968,13 @@ else
     }
     if (isset($_GET['stars'])){
       if ($_GET['stars'] == ''){
-
-      }
-      else{
+        //empty if statement
+      } else {
         $block = block_instance('rate_course');
         
         $rating = $block->get_rating($course->id);
 
-        
         if (($_GET['stars'] > ($rating) / 2) || $rating == 0){
-
-          
           continue;
         }
       }
@@ -982,17 +986,11 @@ else
       continue;
     }
     
-    
     echo '<tr>'; 
     echo '<td>'.'<a href='.$CFG->wwwroot.'/course/view.php?id='.$course->id.'>'.$course->fullname.'</a>'.'</td>';
 
-    
-
-    
     echo '<td>'.date('M-d-Y h:i A', $course->startdate). '</td>';
 
-    
-    
     $sql = "SELECT u.firstname, u.lastname
             FROM {user} u, {role_assignments} r_a, {role} r, {enrol} e, {user_enrolments} u_e
             WHERE e.courseid = ". $course->id ." AND u.id = r_a.userid AND (r_a.roleid = 4 OR r_a.roleid = 3) AND u_e.userid = u.id AND e.id = u_e.enrolid AND 
@@ -1007,14 +1005,8 @@ else
       echo $teacher->lastname;   
       echo ' ';
       break;
-      //echo '</td>';
     }
     echo '</td>';
-
-  
-  #$sql = "SELECT t.name FROM mdl_tag AS t 
-  #JOIN mdl_tag_instance AS ti ON ti.tagid = t.id
-  #JOIN mdl_context AS ctx ON ctx.contextlevel = 50";
 
     $sql = "SELECT t.name 
             FROM {tag} t, {tag_instance} t_i
@@ -1025,6 +1017,20 @@ else
     foreach($tags as $tag){
       echo $tag->name;
       echo '<br>';
+    }
+    echo '</td>';
+
+    echo '<td>';
+    switch($course->department){ //so far we have 3 departments 1 -> DCR, 2 -> CFD, 3-> MGRI, check mdl_customfield_field options column for any new options
+      case "1":
+        echo "DCR";
+        break;
+      case "2":
+        echo "CFD";
+        break;
+      case "3":
+        echo "MGRI";
+        break;
     }
     echo '</td>';
 
@@ -1045,7 +1051,5 @@ else
 
   echo '</table>';
 }
-
-
 
 echo $OUTPUT->footer();
