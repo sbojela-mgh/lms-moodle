@@ -36,40 +36,64 @@
   </select>
   -->
   <div class="input-group-prepend">
-    <label class="input-group-text" for="inputGroupSelect01">Tags</label>
+    <label class="input-group-text" for="inputGroupSelect01">Competency</label>
   </div>
-  <select class="custom-select" id="tags" name="tags">
-    <option selected value={{tags}}>{{tags}}</option>
-    <option value="bioinformatics">bioinformatics</option>
-    <option value="biostats">biostats</option>
-    <option value="best practices and operationalization">best practices and operationalization</option>
-    <option value="clinical research">clinical research</option>
-    <option value="communication and collaboration">communication and collaboration</option>
-    <option value="communicating science">communicating science</option>
-    <option value="compliance and reporting">compliance and reporting</option>
-    <option value="data management">data management</option>
-    <option value="ethics and subject safety">ethics and subject safety</option>
-    <option value="grants, research funding, and fiscal responsibility">grants, research funding, and fiscal responsibility</option>
-    <option value="global health">global health</option>
-    <option value="lab research">lab research</option>
-    <option value="personel management">personel management</option>
-    <option value="professional development">professional</option>
-    <option value="project and program operations">project and program operations</option>
-    <option value="omics">omics</option>
-    <option value="qi program">qi program</option>
-    <option value="rcr program">rcr program</option>
-    <option value="qualitative and mixed methods research">qualitative and mixed methods research</option>
-    <option value="scientific concepts, design, and analysis">scientific concepts, design, and analysis</option>
-    <option value="regulatory requirements">regulatory requirements</option>
-    <option value="online">online</option>
+  <select class="custom-select" id="competency" name="competency">
+    <option selected value={{competency}}>{{competency}}</option>
+    <option value="clinical trials operations and gcps">Clinical Trials Operations and GCPs</option>
+    <option value="communication and teamwork">Communication and Teamwork</option>
+    <option value="ethical and participant safety">Ethical and Participant Safety</option>
+    <option value="responsible conduct of research">Responsible Conduct of Research</option>
+    <option value="well-being and professional ulfillment">Well-being and Professional Fulfillment</option>
+    <option value="leadership and professional development">Leadership and Professional Development</option>
+    <option value="diversity and inclusion">Diversity and Inclusion</option>
+    <option value="accurate recordkeeping">Accurate Recordkeeping</option>
+    <option value="regulations and compliance">Regulations and Compliance</option>
+    <option value="data management and informatics">Data Management and Informatics</option>
+    <option value="professional writing ">Professional Writing </option>
+    <option value="scientific concepts and study design">Scientific Concepts and Study Design</option>
+    <option value="project management">Project Management</option>
   </select>
+
   <div class="input-group-prepend">
     <label class="input-group-text" for="inputGroupSelect01">Department</label>
   </div>
   <select class="custom-select" id="department" name = "department">
     <option selected value={{department}}>{{departmentname}}</option>
-    <option value="1">DCR</option>
-    <!--<option value="2">CFD</option> //This is to be added back when the client gets on boarded-->
+    <option value="1">Department of Clinical Research</option>
+    <option value="2">Center for Faculty Developmemt</option>
+  </select>
+
+  <div class="input-group-prepend">
+    <label class="input-group-text" for="inputGroupSelect01">Programs</label>
+  </div>
+  <select class="custom-select" id="programs" name="programs">
+    <option selected value={{programs}}>{{programs}}</option>
+    <option value="responsible conduct of research">Responsible Conduct of Research</option>
+    <option value="learn something new">Learn Something New</option>
+    <option value="statistical genetics">Statistical Genetics</option>
+    <option value="clinical skills for researchers">Clinical Skills for Researchers</option>
+    <option value="research safety trainings">Research Safety Trainings</option>
+    <option value="qualitative and mixed methods ">Qualitative and Mixed Methods </option>
+  </select>
+
+  <div class="input-group-prepend">
+    <label class="input-group-text" for="inputGroupSelect01">Role</label>
+  </div>
+  <select class="custom-select" id="role" name="role">
+    <option selected value={{role}}>{{role}}</option>
+    <option value="investigator">Investigator</option>
+    <option value="research study staff">Research Study Staff</option>
+  </select>
+
+  <div class="input-group-prepend">
+    <label class="input-group-text" for="inputGroupSelect01">Level</label>
+  </div>
+  <select class="custom-select" id="level" name="level">
+    <option selected value={{level}}>{{level}}</option>
+    <option value="entry">Entry</option>
+    <option value="intermediate">Intermediate</option>
+    <option value="advanced">Advanced</option>
   </select>
   <!--
   <div class="input-group-prepend">
@@ -85,13 +109,11 @@
   </select>
   -->
   <div class="input-group-prepend">
-    <label class="input-group-text" for="inputGroupSelect01">Sort By</label>
+    <label class="input-group-text" for="inputGroupSelect01">Format</label>
   </div>
   <select class="custom-select" id="tsort" name = "tsort">
     <option selected value={{tsort}}>{{tsortname}}</option>
-    <option value="startdate">Start Date</option>
-    <option value="rating">Ratings</option>
-    <option value="fullname">Course Name</option>
+    <option value="livecourses">Live Courses</option>
     <option value="ondemand">On Demand</option>
   </select>
 

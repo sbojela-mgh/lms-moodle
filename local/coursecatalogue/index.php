@@ -53,10 +53,28 @@ if (isset($_GET['year'])) {
   $context = array_push_assoc($context, 'year', '');
 }
 
-if (isset($_GET['tags'])) {
-  $context = array_push_assoc($context, 'tags', $_GET['tags']);
+if (isset($_GET['competency'])) {
+  $context = array_push_assoc($context, 'competency', $_GET['competency']);
 }else{
-  $context = array_push_assoc($context, 'tags', '');
+  $context = array_push_assoc($context, 'competency', '');
+}
+
+if (isset($_GET['role'])) {
+  $context = array_push_assoc($context, 'role', $_GET['role']);
+}else{
+  $context = array_push_assoc($context, 'role', '');
+}
+
+if (isset($_GET['programs'])) {
+  $context = array_push_assoc($context, 'programs', $_GET['programs']);
+}else{
+  $context = array_push_assoc($context, 'programs', '');
+}
+
+if (isset($_GET['programs'])) {
+  $context = array_push_assoc($context, 'level', $_GET['level']);
+}else{
+  $context = array_push_assoc($context, 'level', '');
 }
 
 if (isset($_GET['stars'])) {
@@ -69,14 +87,15 @@ if (isset($_GET['department'])){
   $dept = $_GET['department'];
   switch($dept){ //so far we have 3 departments 1 -> DCR, 2 -> CFD, 3-> MGRI, check mdl_customfield_field options column for any new options
     case "1":
-      $context = array_push_assoc($context, 'departmentname', "DCR");
+      $context = array_push_assoc($context, 'departmentname', "Department of Clinical Research");
       break;
     case "2":
-      $context = array_push_assoc($context, 'departmentname', "CFD");
+      $context = array_push_assoc($context, 'departmentname', "Center for Faculty Developmemt");
       break;
-    case "3":
+    //not in use yet
+   /* case "3":
       $context = array_push_assoc($context, 'departmentname', "MGRI");
-      break;
+      break; */
   }
   $context = array_push_assoc($context, 'department', $_GET['department']);
 }else{
@@ -414,25 +433,89 @@ if ($on_demand_flag == 0){
           
         }
     }
-    if (isset($_GET['tags'])){ //this one is to filter out courses that don't contain a particular tag we passed
+    if (isset($_GET['competency'])){ //this one is to filter out courses that don't contain a particular tag we passed
         //echo $_GET['tags'];
         $sql = "SELECT t.name 
           FROM {tag} t, {tag_instance} t_i
           WHERE t.id = t_i.tagid AND t_i.itemid = ". $course->id;
 
         $tags = $DB->get_records_sql($sql);
-        $match_flag = 0; //as we iterate through all the tags assigned to a particular course, we wanna find a match
+        $match_flag = 0; //as we iterate through all the competency assigned to a particular course, we wanna find a match
         foreach ($tags as $tag){
-          if ($_GET['tags'] == $tag->name){ //if we find a match, we set the flag to 1
+          if ($_GET['competency'] == $tag->name){ //if we find a match, we set the flag to 1
               $match_flag = 1;
           }
         }
         if ($match_flag == 0){ //if we didn't find a match, skiip this iteration in the loop
-          if ($_GET['tags'] != ''){
+          if ($_GET['competency'] != ''){
             continue;
           }
         }
     }
+
+    //newly added tag named programs
+    if (isset($_GET['programs'])){ //this one is to filter out courses that don't contain a particular tag we passed
+      //echo $_GET['tags'];
+      $sql = "SELECT t.name 
+        FROM {tag} t, {tag_instance} t_i
+        WHERE t.id = t_i.tagid AND t_i.itemid = ". $course->id;
+
+      $tags = $DB->get_records_sql($sql);
+      $match_flag = 0; //as we iterate through all the tags assigned to a particular course, we wanna find a match
+      foreach ($tags as $tag){
+        if ($_GET['programs'] == $tag->name){ //if we find a match, we set the flag to 1
+            $match_flag = 1;
+        }
+      }
+      if ($match_flag == 0){ //if we didn't find a match, skiip this iteration in the loop
+        if ($_GET['programs'] != ''){
+          continue;
+        }
+      }
+    }
+
+      //newly added tag named roles
+      if (isset($_GET['role'])){ //this one is to filter out courses that don't contain a particular tag we passed
+        //echo $_GET['tags'];
+        $sql = "SELECT t.name 
+          FROM {tag} t, {tag_instance} t_i
+          WHERE t.id = t_i.tagid AND t_i.itemid = ". $course->id;
+  
+        $tags = $DB->get_records_sql($sql);
+        $match_flag = 0; //as we iterate through all the tags assigned to a particular course, we wanna find a match
+        foreach ($tags as $tag){
+          if ($_GET['role'] == $tag->name){ //if we find a match, we set the flag to 1
+              $match_flag = 1;
+          }
+        }
+        if ($match_flag == 0){ //if we didn't find a match, skiip this iteration in the loop
+          if ($_GET['role'] != ''){
+            continue;
+          }
+        }
+      }
+
+    //newly added tag named level
+    if (isset($_GET['level'])){ //this one is to filter out courses that don't contain a particular tag we passed
+      //echo $_GET['tags'];
+      $sql = "SELECT t.name 
+        FROM {tag} t, {tag_instance} t_i
+        WHERE t.id = t_i.tagid AND t_i.itemid = ". $course->id;
+
+      $tags = $DB->get_records_sql($sql);
+      $match_flag = 0; //as we iterate through all the tags assigned to a particular course, we wanna find a match
+      foreach ($tags as $tag){
+        if ($_GET['level'] == $tag->name){ //if we find a match, we set the flag to 1
+            $match_flag = 1;
+        }
+      }
+      if ($match_flag == 0){ //if we didn't find a match, skiip this iteration in the loop
+        if ($_GET['level'] != ''){
+          continue;
+        }
+      }
+    }
+
     if (isset($_GET['year'])){ //this one is to filter out anything that doesn't match the year
         if ($course->category == $online_course_category_id){ //category 32 corresponds to online courses
         }
@@ -527,10 +610,10 @@ if ($on_demand_flag == 0){
     echo '<td>';
     switch($course->department){ //so far we have 3 departments 1 -> DCR, 2 -> CFD, 3-> MGRI, check mdl_customfield_field options column for any new options
       case "1":
-        echo "DCR";
+        echo "Department of Clinical Research";
         break;
       case "2":
-        echo "CFD";
+        echo "Center for Faculty Staff";
         break;
       case "3":
         echo "MGRI";
@@ -697,14 +780,16 @@ if ($on_demand_flag == 0){
     echo '<td>';
     switch($course->department){ //so far we have 3 departments 1 -> DCR, 2 -> CFD, 3-> MGRI, check mdl_customfield_field options column for any new options
       case "1":
-        echo "DCR";
+        echo "Department of Clinical Research";
         break;
       case "2":
-        echo "CFD";
+        echo "Center for Faculty Developmemt";
         break;
+        /* Not in use yet
       case "3":
         echo "MGRI";
         break;
+        */
     }
     echo '</td>';
 
@@ -861,14 +946,16 @@ else
     echo '<td>';
     switch($course->department){ //so far we have 3 departments 1 -> DCR, 2 -> CFD, 3-> MGRI, check mdl_customfield_field options column for any new options
       case "1":
-        echo "DCR";
+        echo "Department of Clinical Research";
         break;
       case "2":
-        echo "CFD";
+        echo "Center for Faculty Developmemt";
         break;
+        /*
       case "3":
         echo "MGRI";
         break;
+        */
     }
     echo '</td>';
 
@@ -1023,14 +1110,15 @@ else
     echo '<td>';
     switch($course->department){ //so far we have 3 departments 1 -> DCR, 2 -> CFD, 3-> MGRI, check mdl_customfield_field options column for any new options
       case "1":
-        echo "DCR";
+        echo 'Department of Clinical Research';
         break;
       case "2":
-        echo "CFD";
+        echo 'Center for Faculty Developmemt';
         break;
-      case "3":
+      /*case "3":
         echo "MGRI";
         break;
+        */
     }
     echo '</td>';
 
