@@ -90,7 +90,7 @@ if (isset($_GET['department'])){
       $context = array_push_assoc($context, 'departmentname', "Department of Clinical Research");
       break;
     case "2":
-      $context = array_push_assoc($context, 'departmentname', "Center for Faculty Developmemt");
+      $context = array_push_assoc($context, 'departmentname', "Center for Faculty Development");
       break;
     //not in use yet
    /* case "3":
@@ -783,7 +783,7 @@ if ($on_demand_flag == 0){
         echo "Department of Clinical Research";
         break;
       case "2":
-        echo "Center for Faculty Developmemt";
+        echo "Center for Faculty Development";
         break;
         /* Not in use yet
       case "3":
@@ -949,7 +949,7 @@ else
         echo "Department of Clinical Research";
         break;
       case "2":
-        echo "Center for Faculty Developmemt";
+        echo "Center for Faculty Development";
         break;
         /*
       case "3":
@@ -1113,7 +1113,7 @@ else
         echo 'Department of Clinical Research';
         break;
       case "2":
-        echo 'Center for Faculty Developmemt';
+        echo 'Center for Faculty Development';
         break;
       /*case "3":
         echo "MGRI";
