@@ -52,6 +52,7 @@ if (isset($_GET['year'])) {
 }else{
   $context = array_push_assoc($context, 'year', '');
 }
+//no sort on commented attribute
 
 if (isset($_GET['competency'])) {
   $context = array_push_assoc($context, 'competency', $_GET['competency']);
@@ -71,7 +72,24 @@ if (isset($_GET['programs'])) {
   $context = array_push_assoc($context, 'programs', '');
 }
 
-if (isset($_GET['programs'])) {
+if (isset($_GET['level'])) {
+  $context = array_push_assoc($context, 'level', $_GET['level']);
+}else{
+  $context = array_push_assoc($context, 'level', '');
+}
+if (isset($_GET['level'])) {
+  $sort = $_GET['level'];
+  switch($sort){
+    case "entry":
+      $context = array_push_assoc($context, 'level', "Entry");
+      break;
+    case "intermediate":
+      $context = array_push_assoc($context, 'level', "Intermediate");
+      break; 
+    case "advanced":
+      $context = array_push_assoc($context, 'level', "Advanced");
+      break; 
+    }
   $context = array_push_assoc($context, 'level', $_GET['level']);
 }else{
   $context = array_push_assoc($context, 'level', '');
@@ -82,6 +100,7 @@ if (isset($_GET['stars'])) {
 }else{
   $context = array_push_assoc($context, 'stars', '');
 }
+
 
 if (isset($_GET['department'])){
   $dept = $_GET['department'];
@@ -105,19 +124,13 @@ if (isset($_GET['department'])){
 if (isset($_GET['tsort'])) {
   $sort = $_GET['tsort'];
   switch($sort){
-    case "fullname":
-      $context = array_push_assoc($context, 'tsortname', "Course Name");
-      break;
-    case "startdate":
-      $context = array_push_assoc($context, 'tsortname', "Start Date");
-      break;
-    case "rating":
-      $context = array_push_assoc($context, 'tsortname', "Ratings");
+    case "livecourses":
+      $context = array_push_assoc($context, 'tsortname', "Live Courses");
       break;
     case "ondemand":
       $context = array_push_assoc($context, 'tsortname', "On Demand");
-      break;
-  }
+      break; 
+    }
   $context = array_push_assoc($context, 'tsort', $_GET['tsort']);
 }else{
   $context = array_push_assoc($context, 'tsort', '');
@@ -142,6 +155,7 @@ foreach ($categories as $category) {
   $past_offerings_category_id = $category->id;
   
 }
+
 $sql = "SELECT * from {course_categories} where name = 'On Demand'";
 $categories = $DB->get_records_sql($sql);
 foreach ($categories as $category){
@@ -149,6 +163,7 @@ foreach ($categories as $category){
   $online_course_category_id = $category->id;
   
 }
+
 $sql = "SELECT * from {course_categories} where name = 'Templates'";
 $categories = $DB->get_records_sql($sql);
 foreach ($categories as $category){
@@ -349,6 +364,11 @@ if (isset($_GET['tsort'])){
     $sql = "select * from mdl_course c left outer join (select r.course as course, avg(r.rating) as rating from mdl_block_rate_course r group by r.course) r on c.id = r.course left outer join (select cfd.instanceid as courseid, cfd.value as department from mdl_course c, mdl_customfield_field cf, mdl_customfield_data cfd where cfd.instanceid = c.id) x on x.courseid = c.id";
   }
 
+  else if ($sort == 'livecourses'){
+    $on_demand_flag = 1;
+    $sql = "select * from mdl_course c left outer join (select r.course as course, avg(r.rating) as rating from mdl_block_rate_course r group by r.course) r on c.id = r.course left outer join (select cfd.instanceid as courseid, cfd.value as department from mdl_course c, mdl_customfield_field cf, mdl_customfield_data cfd where cfd.instanceid = c.id) x on x.courseid = c.id";
+  }
+
   else if ($sort = 'teacher'){
     if (isset($_GET['order']) && $_GET['order'] == 'asc'){
       $sql = "select * 
@@ -414,10 +434,10 @@ if ($on_demand_flag == 0){
     if ($course->category == $pending_course_category_id) { //if course is in 'pending' category
       continue;
     }
-
+    
     if (isset($_GET['department'])){
       if ($_GET['department'] != ''){
-        if($_GET['department'] != $course->department) {
+        if($_GET['department'] != $course->department){
           continue;
         }
       }
@@ -441,9 +461,10 @@ if ($on_demand_flag == 0){
 
         $tags = $DB->get_records_sql($sql);
         $match_flag = 0; //as we iterate through all the competency assigned to a particular course, we wanna find a match
+        $online_course_category_id=0;
         foreach ($tags as $tag){
           if ($_GET['competency'] == $tag->name){ //if we find a match, we set the flag to 1
-              $match_flag = 1;
+              $match_flag = 1;              ;
           }
         }
         if ($match_flag == 0){ //if we didn't find a match, skiip this iteration in the loop
@@ -515,7 +536,7 @@ if ($on_demand_flag == 0){
         }
       }
     }
-
+    
     if (isset($_GET['year'])){ //this one is to filter out anything that doesn't match the year
         if ($course->category == $online_course_category_id){ //category 32 corresponds to online courses
         }
@@ -829,7 +850,7 @@ else
           
         }
     }
-    if (isset($_GET['tags'])){ //this one is to filter out courses that don't contain a particular tag we passed
+    if (isset($_GET['competency'])){ //this one is to filter out courses that don't contain a particular tag we passed
         //echo $_GET['tags'];
         $sql = "SELECT t.name 
           FROM {tag} t, {tag_instance} t_i
@@ -838,12 +859,19 @@ else
         $tags = $DB->get_records_sql($sql);
         $match_flag = 0; //as we iterate through all the tags assigned to a particular course, we wanna find a match
         foreach ($tags as $tag){
-          if ($_GET['tags'] == $tag->name){ //if we find a match, we set the flag to 1
+          if ($_GET['competency'] == $tag->name){ //if we find a match, we set the flag to 1
+            if ($course->category == $online_course_category_id){//checking if course in context has an ondemand tag and also has a releavant competency
               $match_flag = 1;
+            }
+            else{
+              $match_flag = 1;
+              $online_course_category_id = 0;
+
+            }
           }
         }
         if ($match_flag == 0){ //if we didn't find a match, skiip this iteration in the loop
-          if ($_GET['tags'] != ''){
+          if ($_GET['competency'] != ''){
             continue;
           }
         }
