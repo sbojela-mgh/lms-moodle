@@ -182,7 +182,6 @@ if (isset($_GET['format'])) {
   $course_format_name = "'On Demand'";
 }
 
-echo $course_format_name;
 $sql = "SELECT * from {course_categories} where name =".$course_format_name;
 $categories = $DB->get_records_sql($sql);
 foreach ($categories as $category){
