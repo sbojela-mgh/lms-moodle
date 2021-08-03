@@ -145,6 +145,7 @@ if (isset($_GET['search'])) {
 
 
 $online_course_category_id = 0;
+$live_online_course_category_id = 0; //live course filter
 $past_offerings_category_id = 0;
 $templates_course_category_id = 0;
 $pending_course_category_id = 0;
@@ -155,12 +156,35 @@ foreach ($categories as $category) {
   $past_offerings_category_id = $category->id;
   
 }
+//Here, we are filtering the Live and On Demand parameter options
+if (isset($_GET['format'])) {
+  $format = $_GET['format'];
+  switch($sort){
+    case "ondemand":
+      $sql = "SELECT * from {course_categories} where name = 'Live Courses'";
+        $categories = $DB->get_records_sql($sql);
+        foreach ($categories as $category){
+          $live_online_course_category_id = $category->id;
+      break;}
+    case "livecourses":
+      $sql = "SELECT * from {course_categories} where name = 'On Demand'";
+      $categories = $DB->get_records_sql($sql);
+      foreach ($categories as $category){
+      $online_course_category_id = $category->id; 
+      break; }
+  }}
+  else{
+    $sql = "SELECT * from {course_categories} where name = 'On Demand'";
+    $categories = $DB->get_records_sql($sql);
+    foreach ($categories as $category){
+    $online_course_category_id = $category->id; }
+}
 
-$sql = "SELECT * from {course_categories} where name = 'On Demand'";
+$sql = "SELECT * from {course_categories} where name = 'Live Courses'";
 $categories = $DB->get_records_sql($sql);
 foreach ($categories as $category){
 
-  $online_course_category_id = $category->id;
+  $live_online_course_category_id = $category->id;
   
 }
 
@@ -546,6 +570,16 @@ if ($on_demand_flag == 0){
           }
         }
     }
+
+    if (isset($_GET['format'])){ //this one is to filter out anything that doesn't match the On Demand or Live Courses
+      if ($course->category == $live_online_course_category_id or $online_course_category_id){ //category 32 corresponds to online courses
+      }
+        else if ($_GET['format'] != ''){
+          continue;
+        }
+      }
+      
+
     if (isset($_GET['search'])){ // this one is to check for string patterns
       $course_name_flag = 0;
       $instructor_name_flag = 0; // these flags will be set to 1 if we fin any matches in our search
@@ -634,7 +668,7 @@ if ($on_demand_flag == 0){
         echo "Department of Clinical Research";
         break;
       case "2":
-        echo "Center for Faculty Staff";
+        echo "Center for Faculty Development";
         break;
       case "3":
         echo "MGRI";
