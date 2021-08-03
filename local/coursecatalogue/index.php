@@ -95,6 +95,12 @@ if (isset($_GET['level'])) {
   $context = array_push_assoc($context, 'level', '');
 }
 
+if (isset($_GET['format'])) {
+  $context = array_push_assoc($context, 'format', $_GET['format']);
+}else{
+  $context = array_push_assoc($context, 'format', '');
+}
+
 if (isset($_GET['stars'])) {
   $context = array_push_assoc($context, 'stars', $_GET['stars']);
 }else{
@@ -665,7 +671,7 @@ if ($on_demand_flag == 0){
     echo '<td>';
     switch($course->department){ //so far we have 3 departments 1 -> DCR, 2 -> CFD, 3-> MGRI, check mdl_customfield_field options column for any new options
       case "1":
-        echo "Department of Clinical Research";
+        echo "Division of Clinical Research";
         break;
       case "2":
         echo "Center for Faculty Development";
@@ -835,7 +841,7 @@ if ($on_demand_flag == 0){
     echo '<td>';
     switch($course->department){ //so far we have 3 departments 1 -> DCR, 2 -> CFD, 3-> MGRI, check mdl_customfield_field options column for any new options
       case "1":
-        echo "Department of Clinical Research";
+        echo "Division of Clinical Research";
         break;
       case "2":
         echo "Center for Faculty Development";
@@ -1008,7 +1014,7 @@ else
     echo '<td>';
     switch($course->department){ //so far we have 3 departments 1 -> DCR, 2 -> CFD, 3-> MGRI, check mdl_customfield_field options column for any new options
       case "1":
-        echo "Department of Clinical Research";
+        echo "Division of Clinical Research";
         break;
       case "2":
         echo "Center for Faculty Development";
@@ -1172,7 +1178,7 @@ else
     echo '<td>';
     switch($course->department){ //so far we have 3 departments 1 -> DCR, 2 -> CFD, 3-> MGRI, check mdl_customfield_field options column for any new options
       case "1":
-        echo 'Department of Clinical Research';
+        echo 'Division of Clinical Research';
         break;
       case "2":
         echo 'Center for Faculty Development';
