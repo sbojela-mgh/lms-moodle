@@ -163,30 +163,27 @@ foreach ($categories as $category) {
   
 }
 //Here, we are filtering the Live and On Demand parameter options
+
 if (isset($_GET['format'])) {
-  $format = $_GET['format'];
+  $sort = $_GET['format'];
   switch($sort){
-    case "ondemand":
-      $sql = "SELECT * from {course_categories} where name = 'Live Courses'";
-        $categories = $DB->get_records_sql($sql);
-        foreach ($categories as $category){
-          $live_online_course_category_id = $category->id;
-      break;}
     case "livecourses":
-      $sql = "SELECT * from {course_categories} where name = 'On Demand'";
-      $categories = $DB->get_records_sql($sql);
-      foreach ($categories as $category){
-      $online_course_category_id = $category->id; 
-      break; }
-  }}
-  else{
-    $sql = "SELECT * from {course_categories} where name = 'On Demand'";
-    $categories = $DB->get_records_sql($sql);
-    foreach ($categories as $category){
-    $online_course_category_id = $category->id; }
+      $course_format = array_push_assoc($course_format, 'format', "Live Courses");
+      $course_format_name = "'Live Courses'";
+      break;
+    case "ondemand":
+      $course_format = array_push_assoc($course_format, 'format', "On Demand");
+      $course_format_name = "'On Demand'";
+      break; 
+    }
+    $course_format = array_push_assoc($course_format, 'format', $_GET['format']);
+}else{
+  $course_format = array_push_assoc($course_format, 'format', 'On Demand');
+  $course_format_name = "'On Demand'";
 }
 
-$sql = "SELECT * from {course_categories} where name = 'Live Courses'";
+echo $course_format_name;
+$sql = "SELECT * from {course_categories} where name =".$course_format_name;
 $categories = $DB->get_records_sql($sql);
 foreach ($categories as $category){
 
