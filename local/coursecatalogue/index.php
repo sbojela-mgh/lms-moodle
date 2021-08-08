@@ -645,12 +645,29 @@ if ($on_demand_flag == 0){
     if ($course->category == $online_course_category_id){ //category
       continue;
     }
+    //bringing the categories into context
+    $category = $DB->get_record('course_categories',array('id'=>$course->category));
     
+    /*We're checking to see if a course category holds the name On demand, if it deems true
+    we replace the date with On Demand label. 
+    */
     echo '<tr>'; 
-
     echo '<td>'.'<a href='.$CFG->wwwroot.'/course/view.php?id='.$course->id.'>'.$course->fullname.'</a>'.'</td>';
-
+    if ( $category->name== 'On Demand'){
+      echo '<td>On Demand</td>';
+    }
+    else{
     echo '<td>'.date('M-d-Y h:i A', $course->startdate). '</td>';
+    }
+
+    //Testing
+    /*
+    foreach ($course as $a){
+      echo $a->category.' test';
+      unset($a);
+      }
+      */
+      //end
 
     $sql = "SELECT u.firstname, u.lastname
             FROM {user} u, {role_assignments} r_a, {role} r, {enrol} e, {user_enrolments} u_e
@@ -1156,8 +1173,13 @@ else
     
     echo '<tr>'; 
     echo '<td>'.'<a href='.$CFG->wwwroot.'/course/view.php?id='.$course->id.'>'.$course->fullname.'</a>'.'</td>';
-
-    echo '<td>'.date('M-d-Y h:i A', $course->startdate). '</td>';
+    
+    if ($course->category == $online_course_category_id){ 
+      echo '<td>On Demand</td>';
+    }
+    else{
+      echo '<td>'.date('M-d-Y h:i A', $course->startdate). '</td>';
+    }
 
     $sql = "SELECT u.firstname, u.lastname
             FROM {user} u, {role_assignments} r_a, {role} r, {enrol} e, {user_enrolments} u_e
