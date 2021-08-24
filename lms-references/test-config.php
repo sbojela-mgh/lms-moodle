@@ -19,7 +19,7 @@ $CFG->dboptions = array (
   'dbpersist' => 0,
   'dbport' => '',
   'dbsocket' => '',
-  'dbcollation' => 'utf8_general_ci',
+  'dbcollation' => 'utf8mb4_general_ci',
 );
 
 $CFG->wwwroot   = 'https://rc-lmsqa.partners.org';
