@@ -55,31 +55,36 @@ if (isset($_GET['year'])) {
 //no sort on commented attribute
 
 if (isset($_GET['competency'])) {
-  $context = array_push_assoc($context, 'competency', $_GET['competency']);
+  $selected_value = $_GET['competency'];
+  $context = array_push_assoc($context, 'competency', $selected_value);
 }else{
   $context = array_push_assoc($context, 'competency', '');
 }
 
 if (isset($_GET['role'])) {
-  $context = array_push_assoc($context, 'role', $_GET['role']);
+  $selected_value = $_GET['role'];
+  $context = array_push_assoc($context, 'role', $selected_value);
 }else{
   $context = array_push_assoc($context, 'role', '');
 }
 
 if (isset($_GET['programs'])) {
-  $context = array_push_assoc($context, 'programs', $_GET['programs']);
+  $selected_value = $_GET['programs'];
+  $context = array_push_assoc($context, 'programs', $selected_value);
 }else{
   $context = array_push_assoc($context, 'programs', '');
 }
 
 if (isset($_GET['level'])) {
-  $context = array_push_assoc($context, 'level', $_GET['level']);
+  $selected_value = $_GET['level'];
+  $context = array_push_assoc($context, 'level', $selected_value);
 }else{
   $context = array_push_assoc($context, 'level', '');
 }
 
 if (isset($_GET['stars'])) {
-    $context = array_push_assoc($context, 'stars', $_GET['stars']);
+  $selected_value = $_GET['stars'];
+  $context = array_push_assoc($context, 'stars', $selected_value);
   }else{
     $context = array_push_assoc($context, 'stars', '');
   }
@@ -112,7 +117,8 @@ if (isset($_GET['format'])) {
       $context = array_push_assoc($context, 'format', "Live Courses");
       break; 
     }
-  $context = array_push_assoc($context, 'format', $_GET['format']);
+  $selected_value = $_GET['format'];
+  $context = array_push_assoc($context, 'format', $selected_value);
 }else{
   $context = array_push_assoc($context, 'format', '');
 }
