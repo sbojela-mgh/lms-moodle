@@ -55,36 +55,31 @@ if (isset($_GET['year'])) {
 //no sort on commented attribute
 
 if (isset($_GET['competency'])) {
-  $selected_value = $_GET['competency'];
-  $context = array_push_assoc($context, 'competency', $selected_value);
+  $context = array_push_assoc($context, 'competency', $_GET['competency']);
 }else{
   $context = array_push_assoc($context, 'competency', '');
 }
 
 if (isset($_GET['role'])) {
-  $selected_value = $_GET['role'];
-  $context = array_push_assoc($context, 'role', $selected_value);
+  $context = array_push_assoc($context, 'role', $_GET['role']);
 }else{
   $context = array_push_assoc($context, 'role', '');
 }
 
 if (isset($_GET['programs'])) {
-  $selected_value = $_GET['programs'];
-  $context = array_push_assoc($context, 'programs', $selected_value);
+  $context = array_push_assoc($context, 'programs', $_GET['programs']);
 }else{
   $context = array_push_assoc($context, 'programs', '');
 }
 
 if (isset($_GET['level'])) {
-  $selected_value = $_GET['level'];
-  $context = array_push_assoc($context, 'level', $selected_value);
+  $context = array_push_assoc($context, 'level', $_GET['level']);
 }else{
   $context = array_push_assoc($context, 'level', '');
 }
 
 if (isset($_GET['stars'])) {
-  $selected_value = $_GET['stars'];
-  $context = array_push_assoc($context, 'stars', $selected_value);
+  $context = array_push_assoc($context, 'stars', $_GET['stars']);
   }else{
     $context = array_push_assoc($context, 'stars', '');
   }
@@ -321,20 +316,20 @@ if ($teacher_desc == 1) {
   $query = $original_get;
   $query['order'] = 'desc';
   $teacher_header = http_build_query($query);
-  echo '<th><a href="index.php?'.$teacher_header.'">Main Instructor ▼</a></th>';
+  echo '<th><a href="index.php?'.$teacher_header.'">Course Director ▼</a></th>';
 }
 else if ($teacher_desc == 0 && $_GET['order'] == 'desc' && $_GET['tsort'] == 'teacher'){
   $query = $original_get;
   $query['order'] = 'asc';
   $teacher_header = http_build_query($query);
-  echo '<th><a href="index.php?'.$teacher_header.'">Main Instructor ▲</a></th>';
+  echo '<th><a href="index.php?'.$teacher_header.'">Course Director ▲</a></th>';
 }
 else {
   $query = $original_get;
   $query['order'] = 'asc';
   $query['tsort'] = 'teacher';
   $teacher_header = http_build_query($query);
-  echo '<th><a href="index.php?'.$teacher_header.'">Main Instructor</a></th>';
+  echo '<th><a href="index.php?'.$teacher_header.'">Course Director</a></th>';
 }
 
 echo '<th>Tags</th>';
@@ -365,6 +360,10 @@ echo '</tr>';
 $sql = "SELECT * FROM {course} WHERE ID is not null and fullname <> 'Local Environment' AND ID <> 1";
 
 $on_demand_flag = 0;
+
+if (isset($_GET['competency']) || isset($_GET['department']) || isset($_GET['programs']) || isset($_GET['role']) || isset($_GET['level']) || isset($_GET['format']) || isset($_GET['search'])){
+  $on_demand_flag = 1;
+}
 
 if (isset($_GET['tsort'])){
 
