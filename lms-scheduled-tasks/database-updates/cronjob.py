@@ -46,6 +46,7 @@ curTime = str(int(time.time()))
 cursor.execute("SELECT c.id, c.name from mdl_course_categories c WHERE c.name = 'Past Offerings';")
 #grabbing the category ID of the "Past Offerings" category (we want to set the category of outdated courses to this category)
 
+categoryID = ''
 
 for row in cursor:
     categoryID = str(row[0])
@@ -53,17 +54,23 @@ for row in cursor:
 cursor.execute("SELECT c.id, c.name from mdl_course_categories c WHERE c.name = 'On Demand';")
 #grabbing the category ID of "On Demand" category (we don't want to update courses with this category ID)
 
+onDemandID =''
+
 for row in cursor:
     onDemandID = str(row[0])
 
 cursor.execute("SELECT c.id, c.name from mdl_course_categories c WHERE c.name = 'Templates';")
 #grabbing the category ID of "Templates" category (we don't want to update courses with this category ID)
 
+templatesID = ''
+
 for row in cursor:
     templatesID = str(row[0])
 
 cursor.execute("SELECT c.id, c.name from mdl_course_categories c WHERE c.name = 'Pending';")
 #grabbing the category ID of "Pending" category (we don't want to update courses with this category ID)
+
+pendingID = ''
 
 for row in cursor:
     pendingID = str(row[0])
