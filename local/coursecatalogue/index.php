@@ -77,7 +77,14 @@ if (isset($_GET['level'])) {
 }else{
   $context = array_push_assoc($context, 'level', '');
 }
-if (isset($_GET['level'])) {
+
+if (isset($_GET['stars'])) {
+  $context = array_push_assoc($context, 'stars', $_GET['stars']);
+  }else{
+    $context = array_push_assoc($context, 'stars', '');
+  }
+  
+  if (isset($_GET['level'])) {
   $sort = $_GET['level'];
   switch($sort){
     case "entry":
@@ -96,26 +103,29 @@ if (isset($_GET['level'])) {
 }
 
 if (isset($_GET['format'])) {
-  $context = array_push_assoc($context, 'format', $_GET['format']);
+  $sort = $_GET['format'];
+  switch($sort){
+    case "entry":
+      $context = array_push_assoc($context, 'format', "On Demand");
+      break;
+    case "intermediate":
+      $context = array_push_assoc($context, 'format', "Live Courses");
+      break; 
+    }
+  $selected_value = $_GET['format'];
+  $context = array_push_assoc($context, 'format', $selected_value);
 }else{
   $context = array_push_assoc($context, 'format', '');
 }
-
-if (isset($_GET['stars'])) {
-  $context = array_push_assoc($context, 'stars', $_GET['stars']);
-}else{
-  $context = array_push_assoc($context, 'stars', '');
-}
-
 
 if (isset($_GET['department'])){
   $dept = $_GET['department'];
   switch($dept){ //so far we have 3 departments 1 -> DCR, 2 -> CFD, 3-> MGRI, check mdl_customfield_field options column for any new options
     case "1":
-      $context = array_push_assoc($context, 'departmentname', "Department of Clinical Research");
+      $context = array_push_assoc($context, 'departmentname', "Center for Faculty Development");
       break;
     case "2":
-      $context = array_push_assoc($context, 'departmentname', "Center for Faculty Development");
+      $context = array_push_assoc($context, 'departmentname', "Division of Clinical Research");
       break;
     //not in use yet
    /* case "3":
@@ -128,67 +138,75 @@ if (isset($_GET['department'])){
 }
 
 if (isset($_GET['tsort'])) {
-  $sort = $_GET['tsort'];
-  switch($sort){
-    case "livecourses":
-      $context = array_push_assoc($context, 'tsortname', "Live Courses");
-      break;
-    case "ondemand":
-      $context = array_push_assoc($context, 'tsortname', "On Demand");
-      break; 
+    $sort = $_GET['tsort'];
+    switch($sort){
+      case "fullname":
+        $context = array_push_assoc($context, 'tsortname', "Course Name");
+        break;
+      case "startdate":
+        $context = array_push_assoc($context, 'tsortname', "Start Date");
+        break;
+      case "rating":
+        $context = array_push_assoc($context, 'tsortname', "Ratings");
+        break;
+      case "ondemand":
+        $context = array_push_assoc($context, 'tsortname', "On Demand");
+        break;
     }
-  $context = array_push_assoc($context, 'tsort', $_GET['tsort']);
-}else{
-  $context = array_push_assoc($context, 'tsort', '');
-}
+    $context = array_push_assoc($context, 'tsort', $_GET['tsort']);
+  }else{
+    $context = array_push_assoc($context, 'tsort', '');
+  }
 
-if (isset($_GET['search'])) {
-  $context = array_push_assoc($context, 'search', $_GET['search']);
-}else{
-  $context = array_push_assoc($context, 'search', '');
-}
+  if (isset($_GET['search'])) {
+    $context = array_push_assoc($context, 'search', $_GET['search']);
+  }else{
+    $context = array_push_assoc($context, 'search', '');
+  }
 
 
-
-$online_course_category_id = 0;
-$live_online_course_category_id = 0; //live course filter
-$past_offerings_category_id = 0;
-$templates_course_category_id = 0;
-$pending_course_category_id = 0;
-$sql = "SELECT * from {course_categories} where name = 'Past Offerings'";
-$categories = $DB->get_records_sql($sql);
-foreach ($categories as $category) {
+  $online_course_category_id = 0; //on demand courses
+  $live_online_course_category_id = 0; //live course filter
+  $past_offerings_category_id = 0;
+  $templates_course_category_id = 0;
+  $pending_course_category_id = 0;
+  $sql = "SELECT * from {course_categories} where name = 'Past Offerings'";
+  $categories = $DB->get_records_sql($sql);
+  foreach ($categories as $category) {
+    
+    $past_offerings_category_id = $category->id;
+    
+  }
+  //Here, we are filtering the Live and On Demand parameter options
   
-  $past_offerings_category_id = $category->id;
+  if (isset($_GET['format'])) {
+    $sort = $_GET['format'];
+    switch($sort){
+      case "live courses":
+        $course_format = array_push_assoc($course_format, 'format', "Live Courses");
+        $course_format_name = "'Live Courses'";
+        break;
+      case "on demand":
+        $course_format = array_push_assoc($course_format, 'format', "On Demand");
+        $course_format_name = "'On Demand'";
+        break; 
+      case "":
+        $course_format = array_push_assoc($course_format, 'format', "");
+        $course_format_name = "''";
+      }
+      $course_format = array_push_assoc($course_format, 'format', $_GET['format']);
+  }else{
+    $course_format = array_push_assoc($course_format, 'format', 'On Demand');
+    $course_format_name = "'On Demand'";
+  }
   
-}
-//Here, we are filtering the Live and On Demand parameter options
-
-if (isset($_GET['format'])) {
-  $sort = $_GET['format'];
-  switch($sort){
-    case "livecourses":
-      $course_format = array_push_assoc($course_format, 'format', "Live Courses");
-      $course_format_name = "'Live Courses'";
-      break;
-    case "ondemand":
-      $course_format = array_push_assoc($course_format, 'format', "On Demand");
-      $course_format_name = "'On Demand'";
-      break; 
-    }
-    $course_format = array_push_assoc($course_format, 'format', $_GET['format']);
-}else{
-  $course_format = array_push_assoc($course_format, 'format', 'On Demand');
-  $course_format_name = "'On Demand'";
-}
-
-$sql = "SELECT * from {course_categories} where name =".$course_format_name;
-$categories = $DB->get_records_sql($sql);
-foreach ($categories as $category){
-
-  $live_online_course_category_id = $category->id;
+  $sql = "SELECT * from {course_categories} where name =".$course_format_name;
+  $categories = $DB->get_records_sql($sql);
+  foreach ($categories as $category){
   
-}
+    $online_course_category_id = $category->id;
+    $live_online_course_category_id = $category->id;
+  }
 
 $sql = "SELECT * from {course_categories} where name = 'Templates'";
 $categories = $DB->get_records_sql($sql);
@@ -298,20 +316,20 @@ if ($teacher_desc == 1) {
   $query = $original_get;
   $query['order'] = 'desc';
   $teacher_header = http_build_query($query);
-  echo '<th><a href="index.php?'.$teacher_header.'">Main Instructor ▼</a></th>';
+  echo '<th><a href="index.php?'.$teacher_header.'">Course Director ▼</a></th>';
 }
 else if ($teacher_desc == 0 && $_GET['order'] == 'desc' && $_GET['tsort'] == 'teacher'){
   $query = $original_get;
   $query['order'] = 'asc';
   $teacher_header = http_build_query($query);
-  echo '<th><a href="index.php?'.$teacher_header.'">Main Instructor ▲</a></th>';
+  echo '<th><a href="index.php?'.$teacher_header.'">Course Director ▲</a></th>';
 }
 else {
   $query = $original_get;
   $query['order'] = 'asc';
   $query['tsort'] = 'teacher';
   $teacher_header = http_build_query($query);
-  echo '<th><a href="index.php?'.$teacher_header.'">Main Instructor</a></th>';
+  echo '<th><a href="index.php?'.$teacher_header.'">Course Director</a></th>';
 }
 
 echo '<th>Tags</th>';
@@ -342,6 +360,10 @@ echo '</tr>';
 $sql = "SELECT * FROM {course} WHERE ID is not null and fullname <> 'Local Environment' AND ID <> 1";
 
 $on_demand_flag = 0;
+
+if (isset($_GET['competency']) || isset($_GET['department']) || isset($_GET['programs']) || isset($_GET['role']) || isset($_GET['level']) || isset($_GET['format']) || isset($_GET['search'])){
+  $on_demand_flag = 1;
+}
 
 if (isset($_GET['tsort'])){
 
@@ -385,12 +407,12 @@ if (isset($_GET['tsort'])){
     }
   }
 
-  else if ($sort == 'ondemand'){
+  else if ($sort == 'on demand'){
     $on_demand_flag = 1;
     $sql = "select * from mdl_course c left outer join (select r.course as course, avg(r.rating) as rating from mdl_block_rate_course r group by r.course) r on c.id = r.course left outer join (select cfd.instanceid as courseid, cfd.value as department from mdl_course c, mdl_customfield_field cf, mdl_customfield_data cfd where cfd.instanceid = c.id) x on x.courseid = c.id";
   }
 
-  else if ($sort == 'livecourses'){
+  else if ($sort == 'live courses'){
     $on_demand_flag = 1;
     $sql = "select * from mdl_course c left outer join (select r.course as course, avg(r.rating) as rating from mdl_block_rate_course r group by r.course) r on c.id = r.course left outer join (select cfd.instanceid as courseid, cfd.value as department from mdl_course c, mdl_customfield_field cf, mdl_customfield_data cfd where cfd.instanceid = c.id) x on x.courseid = c.id";
   }
@@ -628,12 +650,29 @@ if ($on_demand_flag == 0){
     if ($course->category == $online_course_category_id){ //category
       continue;
     }
+    //bringing the categories into context
+    $category = $DB->get_record('course_categories',array('id'=>$course->category));
     
+    /*We're checking to see if a course category holds the name On demand, if it deems true
+    we replace the date with On Demand label. 
+    */
     echo '<tr>'; 
-
     echo '<td>'.'<a href='.$CFG->wwwroot.'/course/view.php?id='.$course->id.'>'.$course->fullname.'</a>'.'</td>';
-
+    if ( $category->name== 'On Demand'){
+      echo '<td>On Demand</td>';
+    }
+    else{
     echo '<td>'.date('M-d-Y h:i A', $course->startdate). '</td>';
+    }
+
+    //Testing
+    /*
+    foreach ($course as $a){
+      echo $a->category.' test';
+      unset($a);
+      }
+      */
+      //end
 
     $sql = "SELECT u.firstname, u.lastname
             FROM {user} u, {role_assignments} r_a, {role} r, {enrol} e, {user_enrolments} u_e
@@ -896,7 +935,7 @@ else
         $match_flag = 0; //as we iterate through all the tags assigned to a particular course, we wanna find a match
         foreach ($tags as $tag){
           if ($_GET['competency'] == $tag->name){ //if we find a match, we set the flag to 1
-            if ($course->category == $online_course_category_id){//checking if course in context has an ondemand tag and also has a releavant competency
+            if ($course->category == $online_course_category_id){//checking if course in context has an on demand tag and also has a releavant competency
               $match_flag = 1;
             }
             else{
@@ -1139,8 +1178,13 @@ else
     
     echo '<tr>'; 
     echo '<td>'.'<a href='.$CFG->wwwroot.'/course/view.php?id='.$course->id.'>'.$course->fullname.'</a>'.'</td>';
-
-    echo '<td>'.date('M-d-Y h:i A', $course->startdate). '</td>';
+    
+    if ($course->category == $online_course_category_id){ 
+      echo '<td>On Demand</td>';
+    }
+    else{
+      echo '<td>'.date('M-d-Y h:i A', $course->startdate). '</td>';
+    }
 
     $sql = "SELECT u.firstname, u.lastname
             FROM {user} u, {role_assignments} r_a, {role} r, {enrol} e, {user_enrolments} u_e
