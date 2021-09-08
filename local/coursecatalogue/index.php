@@ -706,10 +706,10 @@ if ($on_demand_flag == 0){
     echo '<td>';
     switch($course->department){ //so far we have 3 departments 1 -> DCR, 2 -> CFD, 3-> MGRI, check mdl_customfield_field options column for any new options
       case "1":
-        echo "Division of Clinical Research";
+        echo "Center for Faculty Development";
         break;
       case "2":
-        echo "Center for Faculty Development";
+        echo "Division of Clinical Research";
         break;
       case "3":
         echo "MGRI";
@@ -876,16 +876,14 @@ if ($on_demand_flag == 0){
     echo '<td>';
     switch($course->department){ //so far we have 3 departments 1 -> DCR, 2 -> CFD, 3-> MGRI, check mdl_customfield_field options column for any new options
       case "1":
-        echo "Division of Clinical Research";
-        break;
-      case "2":
         echo "Center for Faculty Development";
         break;
-        /* Not in use yet
+      case "2":
+        echo "Division of Clinical Research";
+        break;
       case "3":
         echo "MGRI";
         break;
-        */
     }
     echo '</td>';
 
@@ -1049,16 +1047,14 @@ else
     echo '<td>';
     switch($course->department){ //so far we have 3 departments 1 -> DCR, 2 -> CFD, 3-> MGRI, check mdl_customfield_field options column for any new options
       case "1":
-        echo "Division of Clinical Research";
-        break;
-      case "2":
         echo "Center for Faculty Development";
         break;
-        /*
+      case "2":
+        echo "Division of Clinical Research";
+        break;
       case "3":
         echo "MGRI";
         break;
-        */
     }
     echo '</td>';
 
@@ -1218,15 +1214,14 @@ else
     echo '<td>';
     switch($course->department){ //so far we have 3 departments 1 -> DCR, 2 -> CFD, 3-> MGRI, check mdl_customfield_field options column for any new options
       case "1":
-        echo 'Division of Clinical Research';
+        echo "Center for Faculty Development";
         break;
       case "2":
-        echo 'Center for Faculty Development';
+        echo "Division of Clinical Research";
         break;
-      /*case "3":
+      case "3":
         echo "MGRI";
         break;
-        */
     }
     echo '</td>';
 
