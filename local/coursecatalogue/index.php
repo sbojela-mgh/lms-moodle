@@ -122,10 +122,10 @@ if (isset($_GET['department'])){
   $dept = $_GET['department'];
   switch($dept){ //so far we have 3 departments 1 -> DCR, 2 -> CFD, 3-> MGRI, check mdl_customfield_field options column for any new options
     case "1":
-      $context = array_push_assoc($context, 'departmentname', "Division of Clinical Research");
+      $context = array_push_assoc($context, 'departmentname', "Center for Faculty Development");
       break;
     case "2":
-      $context = array_push_assoc($context, 'departmentname', "Center for Faculty Development");
+      $context = array_push_assoc($context, 'departmentname', "Division of Clinical Research");
       break;
     //not in use yet
    /* case "3":
