@@ -18,7 +18,7 @@ $CFG->dboptions = array (
   'dbcollation' => 'utf8mb4_general_ci',
 );
 
-$CFG->wwwroot   = 'http://rc-lmsdev.partners.org';
+$CFG->wwwroot   = 'https://rc-lmsdev.partners.org';
 $CFG->dataroot  = '/var/www/moodledata';
 $CFG->admin     = 'admin';
 
