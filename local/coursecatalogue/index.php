@@ -122,10 +122,10 @@ if (isset($_GET['department'])){
   $dept = $_GET['department'];
   switch($dept){ //so far we have 3 departments 1 -> DCR, 2 -> CFD, 3-> MGRI, check mdl_customfield_field options column for any new options
     case "1":
-      $context = array_push_assoc($context, 'departmentname', "Center for Faculty Development");
+      $context = array_push_assoc($context, 'departmentname', "Department of Clinical Research");
       break;
     case "2":
-      $context = array_push_assoc($context, 'departmentname', "Division of Clinical Research");
+      $context = array_push_assoc($context, 'departmentname', "Center for Faculty Development");
       break;
     //not in use yet
    /* case "3":
@@ -199,14 +199,20 @@ if (isset($_GET['tsort'])) {
     $course_format = array_push_assoc($course_format, 'format', 'On Demand');
     $course_format_name = "'On Demand'";
   }
-  
-  $sql = "SELECT * from {course_categories} where name =".$course_format_name;
-  $categories = $DB->get_records_sql($sql);
-  foreach ($categories as $category){
-  
-    $online_course_category_id = $category->id;
-    $live_online_course_category_id = $category->id;
-  }
+
+$sql = "SELECT * from {course_categories} where name ='On Demand'";
+$categories = $DB->get_records_sql($sql);
+foreach ($categories as $category){
+
+  $online_course_category_id = $category->id;
+}
+
+$sql = "SELECT * from {course_categories} where name ='Live Courses'";
+$categories = $DB->get_records_sql($sql);
+foreach ($categories as $category){
+
+  $live_online_course_category_id = $category->id;
+}
 
 $sql = "SELECT * from {course_categories} where name = 'Templates'";
 $categories = $DB->get_records_sql($sql);
@@ -361,10 +367,6 @@ $sql = "SELECT * FROM {course} WHERE ID is not null and fullname <> 'Local Envir
 
 $on_demand_flag = 0;
 
-if (isset($_GET['competency']) || isset($_GET['department']) || isset($_GET['programs']) || isset($_GET['role']) || isset($_GET['level']) || isset($_GET['format']) || isset($_GET['search'])){
-  $on_demand_flag = 1;
-}
-
 if (isset($_GET['tsort'])){
 
   $sort = $_GET['tsort'];
@@ -469,7 +471,11 @@ else //if tsort is not set at all, also default to sort by startdate
   $sql = "select * from mdl_course c left outer join (select r.course as course, avg(r.rating) as rating from mdl_block_rate_course r group by r.course) r on c.id = r.course left outer join (select cfd.instanceid as courseid, cfd.value as department from mdl_course c, mdl_customfield_field cf, mdl_customfield_data cfd where cfd.instanceid = c.id) x on x.courseid = c.id order by startdate asc";
 }
 
-$courses = $DB->get_records_sql($sql); 
+if ((isset($_GET['competency']) && $_GET['competency'] != '' ) || (isset($_GET['department']) && $_GET['department'] != '' ) || (isset($_GET['programs']) && $_GET['programs'] != '' ) || (isset($_GET['role']) && $_GET['role'] != '' ) || (isset($_GET['level']) && $_GET['level'] != '' ) || (isset($_GET['format']) && $_GET['format'] != '') || (isset($_GET['search']) && $_GET['search'] != '' ) ){
+  $on_demand_flag = 0;
+}
+
+$courses = $DB->get_records_sql($sql);
 
 if ($on_demand_flag == 0){
   foreach($courses as $course){
@@ -509,7 +515,7 @@ if ($on_demand_flag == 0){
 
         $tags = $DB->get_records_sql($sql);
         $match_flag = 0; //as we iterate through all the competency assigned to a particular course, we wanna find a match
-        $online_course_category_id=0;
+
         foreach ($tags as $tag){
           if ($_GET['competency'] == $tag->name){ //if we find a match, we set the flag to 1
               $match_flag = 1;              ;
@@ -596,12 +602,12 @@ if ($on_demand_flag == 0){
     }
 
     if (isset($_GET['format'])){ //this one is to filter out anything that doesn't match the On Demand or Live Courses
-      if ($course->category == $live_online_course_category_id or $online_course_category_id){ //category 32 corresponds to online courses
+      if ($course->category == $live_online_course_category_id || $online_course_category_id){ //category 32 corresponds to online courses
       }
         else if ($_GET['format'] != ''){
           continue;
         }
-      }
+    }
       
 
     if (isset($_GET['search'])){ // this one is to check for string patterns
@@ -658,11 +664,11 @@ if ($on_demand_flag == 0){
     */
     echo '<tr>'; 
     echo '<td>'.'<a href='.$CFG->wwwroot.'/course/view.php?id='.$course->id.'>'.$course->fullname.'</a>'.'</td>';
-    if ( $category->name== 'On Demand'){
+    if ($course->category == $online_course_category_id){
       echo '<td>On Demand</td>';
     }
     else{
-    echo '<td>'.date('M-d-Y h:i A', $course->startdate). '</td>';
+      echo '<td>'.date('M-d-Y h:i A', $course->startdate). '</td>';
     }
 
     //Testing
@@ -706,10 +712,10 @@ if ($on_demand_flag == 0){
     echo '<td>';
     switch($course->department){ //so far we have 3 departments 1 -> DCR, 2 -> CFD, 3-> MGRI, check mdl_customfield_field options column for any new options
       case "1":
-        echo "Center for Faculty Development";
+        echo "Division of Clinical Research";
         break;
       case "2":
-        echo "Division of Clinical Research";
+        echo "Center for Faculty Development";
         break;
       case "3":
         echo "MGRI";
@@ -876,14 +882,16 @@ if ($on_demand_flag == 0){
     echo '<td>';
     switch($course->department){ //so far we have 3 departments 1 -> DCR, 2 -> CFD, 3-> MGRI, check mdl_customfield_field options column for any new options
       case "1":
-        echo "Center for Faculty Development";
-        break;
-      case "2":
         echo "Division of Clinical Research";
         break;
+      case "2":
+        echo "Center for Faculty Development";
+        break;
+        /* Not in use yet
       case "3":
         echo "MGRI";
         break;
+        */
     }
     echo '</td>';
 
@@ -938,7 +946,6 @@ else
             }
             else{
               $match_flag = 1;
-              $online_course_category_id = 0;
 
             }
           }
@@ -1047,14 +1054,16 @@ else
     echo '<td>';
     switch($course->department){ //so far we have 3 departments 1 -> DCR, 2 -> CFD, 3-> MGRI, check mdl_customfield_field options column for any new options
       case "1":
-        echo "Center for Faculty Development";
-        break;
-      case "2":
         echo "Division of Clinical Research";
         break;
+      case "2":
+        echo "Center for Faculty Development";
+        break;
+        /*
       case "3":
         echo "MGRI";
         break;
+        */
     }
     echo '</td>';
 
@@ -1214,14 +1223,15 @@ else
     echo '<td>';
     switch($course->department){ //so far we have 3 departments 1 -> DCR, 2 -> CFD, 3-> MGRI, check mdl_customfield_field options column for any new options
       case "1":
-        echo "Center for Faculty Development";
+        echo 'Division of Clinical Research';
         break;
       case "2":
-        echo "Division of Clinical Research";
+        echo 'Center for Faculty Development';
         break;
-      case "3":
+      /*case "3":
         echo "MGRI";
         break;
+        */
     }
     echo '</td>';
 
