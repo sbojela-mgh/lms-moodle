@@ -120,7 +120,10 @@ if ($course->category == $online_course_category_id){
     font-size: 18px;">'.'Date/Time:'.'</span>'. ' On Demand'.'</tr>';
 } else {
     echo '<tr>'.'<span style = "font-weight: bold;
-    font-size: 18px;">'.'Date/Time:'.'</span>'. date(' M-d-Y hA', $course->startdate).'</tr>';
+    font-size: 18px;">'.'Start:'.'</span>'. date(' M-d-Y h:i A', $course->startdate).'</tr>';
+    echo '</br>';
+    echo '<tr>'.'<span style = "font-weight: bold;
+    font-size: 18px;">'.'End:'.'</span>'. date(' M-d-Y h:i A', $course->enddate).'</tr>';
 }
 /*Retrieving the context instanceid to bring context into context for the 
 the other retrievals to come*/
@@ -133,17 +136,21 @@ $role = $DB->get_record_select('role', 'id =?', array($role_assignments->roleid)
 $user = $DB->get_record_select('user', 'id =?', array($role_assignments->userid ));
 */
 echo '</br>';
+$iterator = 0;
 $sql = "SELECT u.firstname, u.lastname
-            FROM {user} u, {role_assignments} r_a, {role} r, {enrol} e, {user_enrolments} u_e
-            WHERE e.courseid = ". $course->id ." AND u.id = r_a.userid AND (r_a.roleid = 4 OR r_a.roleid = 3) AND u_e.userid = u.id AND e.id = u_e.enrolid AND
-            u.id <> 3";
+FROM {user} u, {role_assignments} r_a, {role} r, {enrol} e, {user_enrolments} u_e
+WHERE e.courseid = ". $course->id ." AND u.id = r_a.userid AND (r_a.roleid = 3) AND u_e.userid = u.id AND e.id = u_e.enrolid order by u_e.id asc";
             
             $teachers = $DB->get_records_sql($sql); 
             foreach($teachers as $teacher){
-          
+ //As we iterate through the loop, we add 1 to the iterartor variable until the system reaches 2. This method serves as an alternative to SQl's First/Top              
+if ($iterator ++ == 1){ 
 if ($teachers != null){
-    echo '<span style= "font-weight: bold; font-size: 18px;">' .'Instructor:'. '</span>'.' '. $teacher->firstname. ' '.$teacher->lastname;
+    //only when we reach the third instructor we will display the course instructor. 
+    echo '<span style= "font-weight: bold; font-size: 18px;">' .'Course Director:'. '</span>'.' '. $teacher->firstname. ' '.$teacher->lastname;
 }
+}
+
             }
 /*
 $sql = "SELECT firstname FROM {user} as u
