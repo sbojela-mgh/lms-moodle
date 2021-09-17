@@ -139,7 +139,7 @@ echo '</br>';
 $iterator = 0;
 $sql = "SELECT u.firstname, u.lastname
 FROM {user} u, {role_assignments} r_a, {role} r, {enrol} e, {user_enrolments} u_e
-WHERE e.courseid = ". $course->id ." AND u.id = r_a.userid AND (r_a.roleid = 3) AND u_e.userid = u.id AND e.id = u_e.enrolid order by u_e.id asc";
+WHERE e.courseid = ". $course->id ." AND u.id = r_a.userid AND (r_a.roleid = 3) AND u_e.userid = u.id AND e.id = u_e.enrolid order by u_e.id asc"; //need to order by id for appropriate order
             
             $teachers = $DB->get_records_sql($sql); 
             foreach($teachers as $teacher){
