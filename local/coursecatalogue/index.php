@@ -122,7 +122,7 @@ if (isset($_GET['department'])){
   $dept = $_GET['department'];
   switch($dept){ //so far we have 3 departments 1 -> DCR, 2 -> CFD, 3-> MGRI, check mdl_customfield_field options column for any new options
     case "1":
-      $context = array_push_assoc($context, 'departmentname', "Department of Clinical Research");
+      $context = array_push_assoc($context, 'departmentname', "Division of Clinical Research");
       break;
     case "2":
       $context = array_push_assoc($context, 'departmentname', "Center for Faculty Development");
@@ -374,13 +374,13 @@ if (isset($_GET['tsort'])){
   if ($sort == 'rating') {
 
     if (isset($_GET['order']) && $_GET['order'] == 'asc'){
-      $sql = "select * from mdl_course c left outer join (select r.course as course, avg(r.rating) as rating from mdl_block_rate_course r group by r.course) r on c.id = r.course left outer join (select cfd.instanceid as courseid, cfd.value as department from mdl_course c, mdl_customfield_field cf, mdl_customfield_data cfd where cfd.instanceid = c.id) x on x.courseid = c.id order by rating desc";
+      $sql = "select * from mdl_course c left outer join (SELECT x.avg, x.name, c.id as course FROM (SELECT AVG(rating) AS avg, c.fullname as name FROM mdl_block_rate_course as r JOIN mdl_course as c ON c.id = r.course GROUP BY c.fullname) as x, mdl_course c WHERE x.name = c.fullname) r on c.id = r.course order by r.avg desc";
     } else if (isset($_GET['order']) && $_GET['order'] == 'desc'){
-      $sql = "select * from mdl_course c left outer join (select r.course as course, avg(r.rating) as rating from mdl_block_rate_course r group by r.course) r on c.id = r.course left outer join (select cfd.instanceid as courseid, cfd.value as department from mdl_course c, mdl_customfield_field cf, mdl_customfield_data cfd where cfd.instanceid = c.id) x on x.courseid = c.id order by rating asc";
+      $sql = "select * from mdl_course c left outer join (SELECT x.avg, x.name, c.id as course FROM (SELECT AVG(rating) AS avg, c.fullname as name FROM mdl_block_rate_course as r JOIN mdl_course as c ON c.id = r.course GROUP BY c.fullname) as x, mdl_course c WHERE x.name = c.fullname) r on c.id = r.course order by r.avg asc";
     }
 
     else {
-      $sql = "select * from mdl_course c left outer join (select r.course as course, avg(r.rating) as rating from mdl_block_rate_course r group by r.course) r on c.id = r.course left outer join (select cfd.instanceid as courseid, cfd.value as department from mdl_course c, mdl_customfield_field cf, mdl_customfield_data cfd where cfd.instanceid = c.id) x on x.courseid = c.id order by rating desc";
+      $sql = "select * from mdl_course c left outer join (SELECT x.avg, x.name, c.id as course FROM (SELECT AVG(rating) AS avg, c.fullname as name FROM mdl_block_rate_course as r JOIN mdl_course as c ON c.id = r.course GROUP BY c.fullname) as x, mdl_course c WHERE x.name = c.fullname) r on c.id = r.course order by r.avg desc";
     }
   }
 
@@ -488,10 +488,17 @@ if ($on_demand_flag == 0){
     if ($course->category == $pending_course_category_id) { //if course is in 'pending' category
       continue;
     }
+
+    $sql = "select cfd.instanceid as courseid, cfd.value as department from mdl_customfield_field cf, mdl_customfield_data cfd where cfd.instanceid = ". $course->id;
+    $dept = $DB->get_records_sql($sql);
+    $department_id = "";
+    foreach ($dept as $d){
+      $department_id =  $d->department;
+    }
     
     if (isset($_GET['department'])){
       if ($_GET['department'] != ''){
-        if($_GET['department'] != $course->department){
+        if($_GET['department'] != $department_id){
           continue;
         }
       }
@@ -710,16 +717,17 @@ if ($on_demand_flag == 0){
     echo '</td>';
 
     echo '<td>';
-    switch($course->department){ //so far we have 3 departments 1 -> DCR, 2 -> CFD, 3-> MGRI, check mdl_customfield_field options column for any new options
+
+    switch($department_id){ //so far we have 3 departments 1 -> DCR, 2 -> CFD, 3-> MGRI, check mdl_customfield_field options column for any new options
       case "1":
         echo "Division of Clinical Research";
         break;
       case "2":
         echo "Center for Faculty Development";
         break;
-      case "3":
-        echo "MGRI";
-        break;
+      //case "3":
+        //echo "MGRI";
+        //break;
     }
     echo '</td>';
 
@@ -748,9 +756,16 @@ if ($on_demand_flag == 0){
       continue;
     }
 
+    $sql = "select cfd.instanceid as courseid, cfd.value as department from mdl_customfield_field cf, mdl_customfield_data cfd where cfd.instanceid = ". $course->id;
+    $dept = $DB->get_records_sql($sql);
+    $department_id = "";
+    foreach ($dept as $d){
+      $department_id =  $d->department;
+    }
+
     if (isset($_GET['department'])){
       if ($_GET['department'] != ''){
-        if($_GET['department'] != $course->department) {
+        if($_GET['department'] != $department_id) {
           continue;
         }
       }
@@ -880,18 +895,16 @@ if ($on_demand_flag == 0){
     echo '</td>';
 
     echo '<td>';
-    switch($course->department){ //so far we have 3 departments 1 -> DCR, 2 -> CFD, 3-> MGRI, check mdl_customfield_field options column for any new options
+    switch($department_id){ //so far we have 3 departments 1 -> DCR, 2 -> CFD, 3-> MGRI, check mdl_customfield_field options column for any new options
       case "1":
         echo "Division of Clinical Research";
         break;
       case "2":
         echo "Center for Faculty Development";
         break;
-        /* Not in use yet
-      case "3":
-        echo "MGRI";
-        break;
-        */
+      //case "3":
+        //echo "MGRI";
+        //break;
     }
     echo '</td>';
 
@@ -913,9 +926,17 @@ if ($on_demand_flag == 0){
 else
 {
   foreach($courses as $course){
+
+    $sql = "select cfd.instanceid as courseid, cfd.value as department from mdl_customfield_field cf, mdl_customfield_data cfd where cfd.instanceid = ". $course->id;
+    $dept = $DB->get_records_sql($sql);
+    $department_id = "";
+    foreach ($dept as $d){
+      $department_id =  $d->department;
+    }
+
     if (isset($_GET['department'])){
       if ($_GET['department'] != ''){
-        if($_GET['department'] != $course->department) {
+        if($_GET['department'] != $department_id) {
           continue;
         }
       }
@@ -1052,18 +1073,16 @@ else
     echo '</td>';
 
     echo '<td>';
-    switch($course->department){ //so far we have 3 departments 1 -> DCR, 2 -> CFD, 3-> MGRI, check mdl_customfield_field options column for any new options
+    switch($department_id){ //so far we have 3 departments 1 -> DCR, 2 -> CFD, 3-> MGRI, check mdl_customfield_field options column for any new options
       case "1":
         echo "Division of Clinical Research";
         break;
       case "2":
         echo "Center for Faculty Development";
         break;
-        /*
-      case "3":
-        echo "MGRI";
-        break;
-        */
+      //case "3":
+        //echo "MGRI";
+        //break;
     }
     echo '</td>';
 
@@ -1090,9 +1109,16 @@ else
       continue;
     }
 
+    $sql = "select cfd.instanceid as courseid, cfd.value as department from mdl_customfield_field cf, mdl_customfield_data cfd where cfd.instanceid = ". $course->id;
+    $dept = $DB->get_records_sql($sql);
+    $department_id = "";
+    foreach ($dept as $d){
+      $department_id =  $d->department;
+    }
+
     if (isset($_GET['department'])){
       if ($_GET['department'] != ''){
-        if($_GET['department'] != $course->department) {
+        if($_GET['department'] != $department_id) {
           continue;
         }
       }
@@ -1221,17 +1247,16 @@ else
     echo '</td>';
 
     echo '<td>';
-    switch($course->department){ //so far we have 3 departments 1 -> DCR, 2 -> CFD, 3-> MGRI, check mdl_customfield_field options column for any new options
+    switch($department_id){ //so far we have 3 departments 1 -> DCR, 2 -> CFD, 3-> MGRI, check mdl_customfield_field options column for any new options
       case "1":
-        echo 'Division of Clinical Research';
+        echo "Division of Clinical Research";
         break;
       case "2":
-        echo 'Center for Faculty Development';
+        echo "Center for Faculty Development";
         break;
-      /*case "3":
-        echo "MGRI";
-        break;
-        */
+      //case "3":
+        //echo "MGRI";
+        //break;
     }
     echo '</td>';
 
