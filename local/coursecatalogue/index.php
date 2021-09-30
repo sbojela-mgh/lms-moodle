@@ -727,6 +727,8 @@ if ($on_demand_flag == 0){
     $block = block_instance('rate_course');
     if ($block->get_rating($course->id) != -1){
       $block->display_rating($course->id);
+      echo $block->get_rating($course->id);
+      echo $course->fullname;
     }
     else{
       echo "No Reviews";
@@ -899,6 +901,8 @@ if ($on_demand_flag == 0){
     $block = block_instance('rate_course');
     if ($block->get_rating($course->id) != -1){
       $block->display_rating($course->id);
+      echo $block->get_rating($course->id);
+      echo $course->fullname;
     }
     else{
       echo "No Reviews";
@@ -1071,6 +1075,8 @@ else
     $block = block_instance('rate_course');
     if ($block->get_rating($course->id) != -1){
       $block->display_rating($course->id);
+      echo $block->get_rating($course->id);
+      echo $course->fullname;
     }
     else{
       echo "No Reviews";
@@ -1239,6 +1245,8 @@ else
     $block = block_instance('rate_course');
     if ($block->get_rating($course->id) != -1){
       $block->display_rating($course->id);
+      echo $block->get_rating($course->id);
+      echo $course->fullname;
     }
     else{
       echo "No Reviews";
