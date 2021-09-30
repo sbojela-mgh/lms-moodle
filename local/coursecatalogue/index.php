@@ -122,7 +122,7 @@ if (isset($_GET['department'])){
   $dept = $_GET['department'];
   switch($dept){ //so far we have 3 departments 1 -> DCR, 2 -> CFD, 3-> MGRI, check mdl_customfield_field options column for any new options
     case "1":
-      $context = array_push_assoc($context, 'departmentname', "Department of Clinical Research");
+      $context = array_push_assoc($context, 'departmentname', "Division of Clinical Research");
       break;
     case "2":
       $context = array_push_assoc($context, 'departmentname', "Center for Faculty Development");
@@ -488,10 +488,17 @@ if ($on_demand_flag == 0){
     if ($course->category == $pending_course_category_id) { //if course is in 'pending' category
       continue;
     }
+
+    $sql = "select cfd.instanceid as courseid, cfd.value as department from mdl_customfield_field cf, mdl_customfield_data cfd where cfd.instanceid = ". $course->id;
+    $dept = $DB->get_records_sql($sql);
+    $department_id = "";
+    foreach ($dept as $d){
+      $department_id =  $d->department;
+    }
     
     if (isset($_GET['department'])){
       if ($_GET['department'] != ''){
-        if($_GET['department'] != $course->department){
+        if($_GET['department'] != $department_id){
           continue;
         }
       }
@@ -710,16 +717,17 @@ if ($on_demand_flag == 0){
     echo '</td>';
 
     echo '<td>';
-    switch($course->department){ //so far we have 3 departments 1 -> DCR, 2 -> CFD, 3-> MGRI, check mdl_customfield_field options column for any new options
+
+    switch($department_id){ //so far we have 3 departments 1 -> DCR, 2 -> CFD, 3-> MGRI, check mdl_customfield_field options column for any new options
       case "1":
         echo "Division of Clinical Research";
         break;
       case "2":
         echo "Center for Faculty Development";
         break;
-      case "3":
-        echo "MGRI";
-        break;
+      //case "3":
+        //echo "MGRI";
+        //break;
     }
     echo '</td>';
 
@@ -727,8 +735,6 @@ if ($on_demand_flag == 0){
     $block = block_instance('rate_course');
     if ($block->get_rating($course->id) != -1){
       $block->display_rating($course->id);
-      echo $block->get_rating($course->id);
-      echo $course->fullname;
     }
     else{
       echo "No Reviews";
@@ -750,9 +756,16 @@ if ($on_demand_flag == 0){
       continue;
     }
 
+    $sql = "select cfd.instanceid as courseid, cfd.value as department from mdl_customfield_field cf, mdl_customfield_data cfd where cfd.instanceid = ". $course->id;
+    $dept = $DB->get_records_sql($sql);
+    $department_id = "";
+    foreach ($dept as $d){
+      $department_id =  $d->department;
+    }
+
     if (isset($_GET['department'])){
       if ($_GET['department'] != ''){
-        if($_GET['department'] != $course->department) {
+        if($_GET['department'] != $department_id) {
           continue;
         }
       }
@@ -882,18 +895,16 @@ if ($on_demand_flag == 0){
     echo '</td>';
 
     echo '<td>';
-    switch($course->department){ //so far we have 3 departments 1 -> DCR, 2 -> CFD, 3-> MGRI, check mdl_customfield_field options column for any new options
+    switch($department_id){ //so far we have 3 departments 1 -> DCR, 2 -> CFD, 3-> MGRI, check mdl_customfield_field options column for any new options
       case "1":
         echo "Division of Clinical Research";
         break;
       case "2":
         echo "Center for Faculty Development";
         break;
-        /* Not in use yet
-      case "3":
-        echo "MGRI";
-        break;
-        */
+      //case "3":
+        //echo "MGRI";
+        //break;
     }
     echo '</td>';
 
@@ -901,8 +912,6 @@ if ($on_demand_flag == 0){
     $block = block_instance('rate_course');
     if ($block->get_rating($course->id) != -1){
       $block->display_rating($course->id);
-      echo $block->get_rating($course->id);
-      echo $course->fullname;
     }
     else{
       echo "No Reviews";
@@ -917,9 +926,17 @@ if ($on_demand_flag == 0){
 else
 {
   foreach($courses as $course){
+
+    $sql = "select cfd.instanceid as courseid, cfd.value as department from mdl_customfield_field cf, mdl_customfield_data cfd where cfd.instanceid = ". $course->id;
+    $dept = $DB->get_records_sql($sql);
+    $department_id = "";
+    foreach ($dept as $d){
+      $department_id =  $d->department;
+    }
+
     if (isset($_GET['department'])){
       if ($_GET['department'] != ''){
-        if($_GET['department'] != $course->department) {
+        if($_GET['department'] != $department_id) {
           continue;
         }
       }
@@ -1056,18 +1073,16 @@ else
     echo '</td>';
 
     echo '<td>';
-    switch($course->department){ //so far we have 3 departments 1 -> DCR, 2 -> CFD, 3-> MGRI, check mdl_customfield_field options column for any new options
+    switch($department_id){ //so far we have 3 departments 1 -> DCR, 2 -> CFD, 3-> MGRI, check mdl_customfield_field options column for any new options
       case "1":
         echo "Division of Clinical Research";
         break;
       case "2":
         echo "Center for Faculty Development";
         break;
-        /*
-      case "3":
-        echo "MGRI";
-        break;
-        */
+      //case "3":
+        //echo "MGRI";
+        //break;
     }
     echo '</td>';
 
@@ -1075,8 +1090,6 @@ else
     $block = block_instance('rate_course');
     if ($block->get_rating($course->id) != -1){
       $block->display_rating($course->id);
-      echo $block->get_rating($course->id);
-      echo $course->fullname;
     }
     else{
       echo "No Reviews";
@@ -1096,9 +1109,16 @@ else
       continue;
     }
 
+    $sql = "select cfd.instanceid as courseid, cfd.value as department from mdl_customfield_field cf, mdl_customfield_data cfd where cfd.instanceid = ". $course->id;
+    $dept = $DB->get_records_sql($sql);
+    $department_id = "";
+    foreach ($dept as $d){
+      $department_id =  $d->department;
+    }
+
     if (isset($_GET['department'])){
       if ($_GET['department'] != ''){
-        if($_GET['department'] != $course->department) {
+        if($_GET['department'] != $department_id) {
           continue;
         }
       }
@@ -1227,17 +1247,16 @@ else
     echo '</td>';
 
     echo '<td>';
-    switch($course->department){ //so far we have 3 departments 1 -> DCR, 2 -> CFD, 3-> MGRI, check mdl_customfield_field options column for any new options
+    switch($department_id){ //so far we have 3 departments 1 -> DCR, 2 -> CFD, 3-> MGRI, check mdl_customfield_field options column for any new options
       case "1":
-        echo 'Division of Clinical Research';
+        echo "Division of Clinical Research";
         break;
       case "2":
-        echo 'Center for Faculty Development';
+        echo "Center for Faculty Development";
         break;
-      /*case "3":
-        echo "MGRI";
-        break;
-        */
+      //case "3":
+        //echo "MGRI";
+        //break;
     }
     echo '</td>';
 
@@ -1245,8 +1264,6 @@ else
     $block = block_instance('rate_course');
     if ($block->get_rating($course->id) != -1){
       $block->display_rating($course->id);
-      echo $block->get_rating($course->id);
-      echo $course->fullname;
     }
     else{
       echo "No Reviews";
