@@ -347,6 +347,7 @@ echo '</tr>';
 $sql = "SELECT * FROM {course} WHERE ID is not null and fullname <> 'Local Environment' AND ID <> 1";
 
 $on_demand_flag = 0;
+$teacher_sort_flag = 0;
 
 if (isset($_GET['tsort'])){
 
@@ -402,8 +403,10 @@ if (isset($_GET['tsort'])){
 
   else if ($sort = 'teacher'){
     if (isset($_GET['order']) && $_GET['order'] == 'asc'){
+      $teacher_sort_flag = 1;
       $sql = "select * from (select * from mdl_course c left outer join (select r.course as course, avg(r.rating) as rating from mdl_block_rate_course r group by r.course) r on c.id = r.course left outer join (select cfd.instanceid as courseid, cfd.value as department from mdl_course c, mdl_customfield_field cf, mdl_customfield_data cfd where cfd.instanceid = c.id) x on x.courseid = c.id) courses left outer join (SELECT c.id as courseid, u.firstname, u.lastname,r.shortname FROM mdl_course c JOIN mdl_context ct ON c.id = ct.instanceid JOIN mdl_role_assignments ra ON ra.contextid = ct.id JOIN mdl_user u ON u.id = ra.userid JOIN mdl_role r ON r.id = ra.roleid where r.shortname = 'coursedirector') instructors on courses.id = instructors.courseid ORDER BY `instructors`.`firstname` ASC";
     } else if (isset($_GET['order']) && $_GET['order'] == 'desc'){
+      $teacher_sort_flag = 1;
       $sql = "select * from (select * from mdl_course c left outer join (select r.course as course, avg(r.rating) as rating from mdl_block_rate_course r group by r.course) r on c.id = r.course left outer join (select cfd.instanceid as courseid, cfd.value as department from mdl_course c, mdl_customfield_field cf, mdl_customfield_data cfd where cfd.instanceid = c.id) x on x.courseid = c.id) courses left outer join (SELECT c.id as courseid, u.firstname, u.lastname,r.shortname FROM mdl_course c JOIN mdl_context ct ON c.id = ct.instanceid JOIN mdl_role_assignments ra ON ra.contextid = ct.id JOIN mdl_user u ON u.id = ra.userid JOIN mdl_role r ON r.id = ra.roleid where r.shortname = 'coursedirector') instructors on courses.id = instructors.courseid ORDER BY `instructors`.`firstname` DESC";
     }
 
@@ -619,15 +622,20 @@ if ($on_demand_flag == 0){
       }
       */
       //end
-
-    $sql = "SELECT c.id as courseid, u.firstname, u.lastname,r.shortname FROM mdl_course c JOIN mdl_context ct ON c.id = ct.instanceid JOIN mdl_role_assignments ra ON ra.contextid = ct.id JOIN mdl_user u ON u.id = ra.userid JOIN mdl_role r ON r.id = ra.roleid where r.shortname = 'coursedirector'";
-    $teacher = $DB->get_records_sql($sql);
-    echo '<td>';  
-    foreach($teachers as $teacher) {
-      if ($teacher->courseid == $course->id){
-        echo $course->firstname . " ". $course->lastname;
-        break;
+    echo '<td>';
+    if ($teacher_sort_flag == 0) {
+      $sql = "SELECT c.id as courseid, u.firstname, u.lastname,r.shortname FROM mdl_course c JOIN mdl_context ct ON c.id = ct.instanceid JOIN mdl_role_assignments ra ON ra.contextid = ct.id JOIN mdl_user u ON u.id = ra.userid JOIN mdl_role r ON r.id = ra.roleid where r.shortname = 'coursedirector'";
+      $teachers = $DB->get_records_sql($sql);
+        
+      foreach($teachers as $teacher) {
+        if ($teacher->courseid == $course->id){
+          echo $teacher->firstname . " " . $teacher->lastname;
+          break;
+        }
       }
+      
+    } else {
+      echo $course->firstname . " " . $course->lastname;
     }
     echo '</td>';
   
@@ -886,14 +894,20 @@ if ($on_demand_flag == 0){
       echo '<td>'.date('M-d-Y h:i A', $course->startdate). '</td>';
     }
 
-    $sql = "SELECT c.id as courseid, u.firstname, u.lastname,r.shortname FROM mdl_course c JOIN mdl_context ct ON c.id = ct.instanceid JOIN mdl_role_assignments ra ON ra.contextid = ct.id JOIN mdl_user u ON u.id = ra.userid JOIN mdl_role r ON r.id = ra.roleid where r.shortname = 'coursedirector'";
-    $teacher = $DB->get_records_sql($sql);
-    echo '<td>';  
-    foreach($teachers as $teacher) {
-      if ($teacher->courseid == $course->id){
-        echo $course->firstname . " ". $course->lastname;
-        break;
+    echo '<td>';
+    if ($teacher_sort_flag == 0) {
+      $sql = "SELECT c.id as courseid, u.firstname, u.lastname,r.shortname FROM mdl_course c JOIN mdl_context ct ON c.id = ct.instanceid JOIN mdl_role_assignments ra ON ra.contextid = ct.id JOIN mdl_user u ON u.id = ra.userid JOIN mdl_role r ON r.id = ra.roleid where r.shortname = 'coursedirector'";
+      $teachers = $DB->get_records_sql($sql);
+        
+      foreach($teachers as $teacher) {
+        if ($teacher->courseid == $course->id){
+          echo $teacher->firstname . " " . $teacher->lastname;
+          break;
+        }
       }
+      
+    } else {
+      echo $course->firstname . " " . $course->lastname;
     }
     echo '</td>';
     
@@ -1149,14 +1163,20 @@ else
       echo '<td>'.date('M-d-Y h:i A', $course->startdate). '</td>';
     }
             
-    $sql = "SELECT c.id as courseid, u.firstname, u.lastname,r.shortname FROM mdl_course c JOIN mdl_context ct ON c.id = ct.instanceid JOIN mdl_role_assignments ra ON ra.contextid = ct.id JOIN mdl_user u ON u.id = ra.userid JOIN mdl_role r ON r.id = ra.roleid where r.shortname = 'coursedirector'";
-    $teacher = $DB->get_records_sql($sql);
-    echo '<td>';  
-    foreach($teachers as $teacher) {
-      if ($teacher->courseid == $course->id){
-        echo $course->firstname . " ". $course->lastname;
-        break;
+    echo '<td>';
+    if ($teacher_sort_flag == 0) {
+      $sql = "SELECT c.id as courseid, u.firstname, u.lastname,r.shortname FROM mdl_course c JOIN mdl_context ct ON c.id = ct.instanceid JOIN mdl_role_assignments ra ON ra.contextid = ct.id JOIN mdl_user u ON u.id = ra.userid JOIN mdl_role r ON r.id = ra.roleid where r.shortname = 'coursedirector'";
+      $teachers = $DB->get_records_sql($sql);
+        
+      foreach($teachers as $teacher) {
+        if ($teacher->courseid == $course->id){
+          echo $teacher->firstname . " " . $teacher->lastname;
+          break;
+        }
       }
+      
+    } else {
+      echo $course->firstname . " " . $course->lastname;
     }
     echo '</td>';
 
@@ -1327,14 +1347,20 @@ else
       echo '<td>'.date('M-d-Y h:i A', $course->startdate). '</td>';
     }
 
-    $sql = "SELECT c.id as courseid, u.firstname, u.lastname,r.shortname FROM mdl_course c JOIN mdl_context ct ON c.id = ct.instanceid JOIN mdl_role_assignments ra ON ra.contextid = ct.id JOIN mdl_user u ON u.id = ra.userid JOIN mdl_role r ON r.id = ra.roleid where r.shortname = 'coursedirector'";
-    $teacher = $DB->get_records_sql($sql);
-    echo '<td>';  
-    foreach($teachers as $teacher) {
-      if ($teacher->courseid == $course->id){
-        echo $course->firstname . " ". $course->lastname;
-        break;
+    echo '<td>';
+    if ($teacher_sort_flag == 0) {
+      $sql = "SELECT c.id as courseid, u.firstname, u.lastname,r.shortname FROM mdl_course c JOIN mdl_context ct ON c.id = ct.instanceid JOIN mdl_role_assignments ra ON ra.contextid = ct.id JOIN mdl_user u ON u.id = ra.userid JOIN mdl_role r ON r.id = ra.roleid where r.shortname = 'coursedirector'";
+      $teachers = $DB->get_records_sql($sql);
+        
+      foreach($teachers as $teacher) {
+        if ($teacher->courseid == $course->id){
+          echo $teacher->firstname . " " . $teacher->lastname;
+          break;
+        }
       }
+      
+    } else {
+      echo $course->firstname . " " . $course->lastname;
     }
     echo '</td>';
 
