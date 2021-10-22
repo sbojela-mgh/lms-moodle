@@ -620,9 +620,16 @@ if ($on_demand_flag == 0){
       */
       //end
 
-      echo '<td>';  
-      echo $course->firstname . " ". $course->lastname;
-      echo '</td>';
+    $sql = "SELECT c.id as courseid, u.firstname, u.lastname,r.shortname FROM mdl_course c JOIN mdl_context ct ON c.id = ct.instanceid JOIN mdl_role_assignments ra ON ra.contextid = ct.id JOIN mdl_user u ON u.id = ra.userid JOIN mdl_role r ON r.id = ra.roleid where r.shortname = 'coursedirector'";
+    $teacher = $DB->get_records_sql($sql);
+    echo '<td>';  
+    foreach($teachers as $teacher) {
+      if ($teacher->courseid == $course->id){
+        echo $course->firstname . " ". $course->lastname;
+        break;
+      }
+    }
+    echo '</td>';
   
 
     $sql = "SELECT t.name 
@@ -878,9 +885,16 @@ if ($on_demand_flag == 0){
     else{
       echo '<td>'.date('M-d-Y h:i A', $course->startdate). '</td>';
     }
-    
+
+    $sql = "SELECT c.id as courseid, u.firstname, u.lastname,r.shortname FROM mdl_course c JOIN mdl_context ct ON c.id = ct.instanceid JOIN mdl_role_assignments ra ON ra.contextid = ct.id JOIN mdl_user u ON u.id = ra.userid JOIN mdl_role r ON r.id = ra.roleid where r.shortname = 'coursedirector'";
+    $teacher = $DB->get_records_sql($sql);
     echo '<td>';  
-    echo $course->firstname . " ". $course->lastname;
+    foreach($teachers as $teacher) {
+      if ($teacher->courseid == $course->id){
+        echo $course->firstname . " ". $course->lastname;
+        break;
+      }
+    }
     echo '</td>';
     
     $sql = "SELECT t.name 
@@ -1135,8 +1149,15 @@ else
       echo '<td>'.date('M-d-Y h:i A', $course->startdate). '</td>';
     }
             
+    $sql = "SELECT c.id as courseid, u.firstname, u.lastname,r.shortname FROM mdl_course c JOIN mdl_context ct ON c.id = ct.instanceid JOIN mdl_role_assignments ra ON ra.contextid = ct.id JOIN mdl_user u ON u.id = ra.userid JOIN mdl_role r ON r.id = ra.roleid where r.shortname = 'coursedirector'";
+    $teacher = $DB->get_records_sql($sql);
     echo '<td>';  
-    echo $course->firstname . " ". $course->lastname;
+    foreach($teachers as $teacher) {
+      if ($teacher->courseid == $course->id){
+        echo $course->firstname . " ". $course->lastname;
+        break;
+      }
+    }
     echo '</td>';
 
 
@@ -1306,8 +1327,15 @@ else
       echo '<td>'.date('M-d-Y h:i A', $course->startdate). '</td>';
     }
 
+    $sql = "SELECT c.id as courseid, u.firstname, u.lastname,r.shortname FROM mdl_course c JOIN mdl_context ct ON c.id = ct.instanceid JOIN mdl_role_assignments ra ON ra.contextid = ct.id JOIN mdl_user u ON u.id = ra.userid JOIN mdl_role r ON r.id = ra.roleid where r.shortname = 'coursedirector'";
+    $teacher = $DB->get_records_sql($sql);
     echo '<td>';  
-    echo $course->firstname . " ". $course->lastname;
+    foreach($teachers as $teacher) {
+      if ($teacher->courseid == $course->id){
+        echo $course->firstname . " ". $course->lastname;
+        break;
+      }
+    }
     echo '</td>';
 
 
