@@ -402,40 +402,13 @@ if (isset($_GET['tsort'])){
 
   else if ($sort = 'teacher'){
     if (isset($_GET['order']) && $_GET['order'] == 'asc'){
-      $sql = "select * 
-      from
-      (select * from mdl_course c left outer join (select r.course as course, avg(r.rating) as rating from mdl_block_rate_course r group by r.course) r on c.id = r.course left outer join (select cfd.instanceid as courseid, cfd.value as department from mdl_course c, mdl_customfield_field cf, mdl_customfield_data cfd where cfd.instanceid = c.id) x on x.courseid = c.id) courses
-      
-      left outer join
-      
-      (SELECT u.firstname, u.lastname, e.courseid FROM mdl_user u, mdl_role_assignments r_a, mdl_role r, mdl_enrol e, mdl_user_enrolments u_e WHERE u.id = r_a.userid AND (r_a.roleid = 4 OR r_a.roleid = 3) AND u_e.userid = u.id AND e.id = u_e.enrolid AND u.firstname <> 'DCR' group by e.courseid, u.firstname, u.lastname
-      ) instructors
-      
-      on courses.id = instructors.courseid order by instructors.firstname asc";
+      $sql = "select * from (select * from mdl_course c left outer join (select r.course as course, avg(r.rating) as rating from mdl_block_rate_course r group by r.course) r on c.id = r.course left outer join (select cfd.instanceid as courseid, cfd.value as department from mdl_course c, mdl_customfield_field cf, mdl_customfield_data cfd where cfd.instanceid = c.id) x on x.courseid = c.id) courses left outer join (SELECT c.id as courseid, u.firstname, u.lastname,r.shortname FROM mdl_course c JOIN mdl_context ct ON c.id = ct.instanceid JOIN mdl_role_assignments ra ON ra.contextid = ct.id JOIN mdl_user u ON u.id = ra.userid JOIN mdl_role r ON r.id = ra.roleid where r.shortname = 'coursedirector') instructors on courses.id = instructors.courseid ORDER BY `instructors`.`firstname` ASC";
     } else if (isset($_GET['order']) && $_GET['order'] == 'desc'){
-      $sql = "select * 
-      from
-      (select * from mdl_course c left outer join (select r.course as course, avg(r.rating) as rating from mdl_block_rate_course r group by r.course) r on c.id = r.course left outer join (select cfd.instanceid as courseid, cfd.value as department from mdl_course c, mdl_customfield_field cf, mdl_customfield_data cfd where cfd.instanceid = c.id) x on x.courseid = c.id) courses
-      
-      left outer join
-      
-      (SELECT u.firstname, u.lastname, e.courseid FROM mdl_user u, mdl_role_assignments r_a, mdl_role r, mdl_enrol e, mdl_user_enrolments u_e WHERE u.id = r_a.userid AND (r_a.roleid = 4 OR r_a.roleid = 3) AND u_e.userid = u.id AND e.id = u_e.enrolid AND u.firstname <> 'DCR' group by e.courseid, u.firstname, u.lastname
-      ) instructors
-      
-      on courses.id = instructors.courseid order by instructors.firstname  desc";
+      $sql = "select * from (select * from mdl_course c left outer join (select r.course as course, avg(r.rating) as rating from mdl_block_rate_course r group by r.course) r on c.id = r.course left outer join (select cfd.instanceid as courseid, cfd.value as department from mdl_course c, mdl_customfield_field cf, mdl_customfield_data cfd where cfd.instanceid = c.id) x on x.courseid = c.id) courses left outer join (SELECT c.id as courseid, u.firstname, u.lastname,r.shortname FROM mdl_course c JOIN mdl_context ct ON c.id = ct.instanceid JOIN mdl_role_assignments ra ON ra.contextid = ct.id JOIN mdl_user u ON u.id = ra.userid JOIN mdl_role r ON r.id = ra.roleid where r.shortname = 'coursedirector') instructors on courses.id = instructors.courseid ORDER BY `instructors`.`firstname` DESC";
     }
 
     else {
-      $sql = "select * 
-      from
-      (select * from mdl_course c left outer join (select r.course as course, avg(r.rating) as rating from mdl_block_rate_course r group by r.course) r on c.id = r.course left outer join (select cfd.instanceid as courseid, cfd.value as department from mdl_course c, mdl_customfield_field cf, mdl_customfield_data cfd where cfd.instanceid = c.id) x on x.courseid = c.id) courses
-      
-      left outer join
-      
-      (SELECT u.firstname, u.lastname, e.courseid FROM mdl_user u, mdl_role_assignments r_a, mdl_role r, mdl_enrol e, mdl_user_enrolments u_e WHERE u.id = r_a.userid AND (r_a.roleid = 4 OR r_a.roleid = 3) AND u_e.userid = u.id AND e.id = u_e.enrolid AND u.firstname <> 'DCR' group by e.courseid, u.firstname, u.lastname
-      ) instructors
-      
-      on courses.id = instructors.courseid order by instructors.firstname asc";
+      $sql = "select * from (select * from mdl_course c left outer join (select r.course as course, avg(r.rating) as rating from mdl_block_rate_course r group by r.course) r on c.id = r.course left outer join (select cfd.instanceid as courseid, cfd.value as department from mdl_course c, mdl_customfield_field cf, mdl_customfield_data cfd where cfd.instanceid = c.id) x on x.courseid = c.id) courses left outer join (SELECT c.id as courseid, u.firstname, u.lastname,r.shortname FROM mdl_course c JOIN mdl_context ct ON c.id = ct.instanceid JOIN mdl_role_assignments ra ON ra.contextid = ct.id JOIN mdl_user u ON u.id = ra.userid JOIN mdl_role r ON r.id = ra.roleid where r.shortname = 'coursedirector') instructors on courses.id = instructors.courseid ORDER BY `instructors`.`firstname` ASC";
     }
   }
 
@@ -570,11 +543,12 @@ if ($on_demand_flag == 0){
     }
 
     if (isset($_GET['format'])){ //this one is to filter out anything that doesn't match the On Demand or Live Courses
-      if ($course->category == $live_online_course_category_id){ //category 32 corresponds to online courses
+      if ($_GET['format'] == 'on demand' && $course->category != $online_course_category_id){ //category 32 corresponds to online courses
+        continue;
       }
-        else if ($_GET['format'] != ''){
-          continue;
-        }
+      else if ($_GET['format'] == 'live courses' && $course->category != $live_online_course_category_id) {
+        continue;
+      }
     }
       
 
@@ -646,26 +620,8 @@ if ($on_demand_flag == 0){
       */
       //end
 
-      $iterator = 0;
-      $sql = "SELECT u.firstname, u.lastname
-              FROM {user} u, {role_assignments} r_a, {role} r, {enrol} e, {user_enrolments} u_e
-              WHERE e.courseid = ". $course->id ." AND u.id = r_a.userid AND (r_a.roleid = 3) AND u_e.userid = u.id AND e.id = u_e.enrolid 
-              order by u_e.id asc"; //Swapped AND u.firstname <> 'DCR' for order by u_e.id asc because the order dictates the user that gets selected. 
-              
-      echo '<td>';
-      
-    
-        $teachers = $DB->get_records_sql($sql); 
-        foreach($teachers as $teacher){
-          $iterator ++;
-   //As we iterate through the loop, we add 1 to the iterartor variable until the system reaches 2. This method serves as an alternative to SQl's First/Top              
-  if ($iterator == 2){ 
-  if ($teachers != null){
-      //only when we reach the third instructor we will display the course instructor. 
-      echo $teacher->firstname. ' '.$teacher->lastname;
-  }
-  }
-      }
+      echo '<td>';  
+      echo $course->firstname . " ". $course->lastname;
       echo '</td>';
   
 
@@ -899,6 +855,15 @@ if ($on_demand_flag == 0){
     }
   }
 
+  if (isset($_GET['format'])){ //this one is to filter out anything that doesn't match the On Demand or Live Courses
+    if ($_GET['format'] == 'on demand' && $course->category != $online_course_category_id){ //category 32 corresponds to online courses
+      continue;
+    }
+    else if ($_GET['format'] == 'live courses' && $course->category != $live_online_course_category_id) {
+      continue;
+    }
+  }
+
     if ($course->id == 1){
       continue;
     }
@@ -914,29 +879,9 @@ if ($on_demand_flag == 0){
       echo '<td>'.date('M-d-Y h:i A', $course->startdate). '</td>';
     }
     
-    $iterator = 0;
-    $sql = "SELECT u.firstname, u.lastname
-            FROM {user} u, {role_assignments} r_a, {role} r, {enrol} e, {user_enrolments} u_e
-            WHERE e.courseid = ". $course->id ." AND u.id = r_a.userid AND (r_a.roleid = 3) AND u_e.userid = u.id AND e.id = u_e.enrolid 
-            order by u_e.id asc"; //Swapped AND u.firstname <> 'DCR' for order by u_e.id asc because the order dictates the user that gets selected. 
-            
-    echo '<td>';
-    
-  
-      $teachers = $DB->get_records_sql($sql); 
-      foreach($teachers as $teacher){
-        $iterator ++;
- //As we iterate through the loop, we add 1 to the iterartor variable until the system reaches 2. This method serves as an alternative to SQl's First/Top              
-if ($iterator == 2){ 
-if ($teachers != null){
-    //only when we reach the third instructor we will display the course instructor. 
-    echo $teacher->firstname. ' '.$teacher->lastname;
-}
-}
-    }
+    echo '<td>';  
+    echo $course->firstname . " ". $course->lastname;
     echo '</td>';
-
-
     
     $sql = "SELECT t.name 
             FROM {tag} t, {tag_instance} t_i
@@ -1164,6 +1109,15 @@ else
     }
   }
 
+  if (isset($_GET['format'])){ //this one is to filter out anything that doesn't match the On Demand or Live Courses
+    if ($_GET['format'] == 'on demands' && $course->category != $online_course_category_id){ //category 32 corresponds to online courses
+      continue;
+    }
+    else if ($_GET['format'] == 'live courses' && $course->category != $live_online_course_category_id) {
+      continue;
+    }
+  }
+
 
     if ($course->id == 1){
       continue;
@@ -1180,27 +1134,9 @@ else
     else{
       echo '<td>'.date('M-d-Y h:i A', $course->startdate). '</td>';
     }
-
-    $iterator = 0;
-    $sql = "SELECT u.firstname, u.lastname
-            FROM {user} u, {role_assignments} r_a, {role} r, {enrol} e, {user_enrolments} u_e
-            WHERE e.courseid = ". $course->id ." AND u.id = r_a.userid AND (r_a.roleid = 3) AND u_e.userid = u.id AND e.id = u_e.enrolid 
-            order by u_e.id asc"; //Swapped AND u.firstname <> 'DCR' for order by u_e.id asc because the order dictates the user that gets selected. 
             
-    echo '<td>';
-    
-  
-      $teachers = $DB->get_records_sql($sql); 
-      foreach($teachers as $teacher){
-        $iterator ++;
- //As we iterate through the loop, we add 1 to the iterartor variable until the system reaches 2. This method serves as an alternative to SQl's First/Top              
-if ($iterator == 2){ 
-if ($teachers != null){
-    //only when we reach the third instructor we will display the course instructor. 
-    echo $teacher->firstname. ' '.$teacher->lastname;
-}
-}
-    }
+    echo '<td>';  
+    echo $course->firstname . " ". $course->lastname;
     echo '</td>';
 
 
@@ -1344,6 +1280,15 @@ if ($teachers != null){
         }
       }
     }
+    if (isset($_GET['format'])){ //this one is to filter out anything that doesn't match the On Demand or Live Courses
+      if ($_GET['format'] == 'on demand' && $course->category != $online_course_category_id){ //category 32 corresponds to online courses
+        continue;
+      }
+      else if ($_GET['format'] == 'live courses' && $course->category != $live_online_course_category_id) {
+        continue;
+      }
+    }
+
     if ($course->id == 1){
       continue;
     }
@@ -1361,26 +1306,8 @@ if ($teachers != null){
       echo '<td>'.date('M-d-Y h:i A', $course->startdate). '</td>';
     }
 
-    $iterator = 0;
-    $sql = "SELECT u.firstname, u.lastname
-            FROM {user} u, {role_assignments} r_a, {role} r, {enrol} e, {user_enrolments} u_e
-            WHERE e.courseid = ". $course->id ." AND u.id = r_a.userid AND (r_a.roleid = 3) AND u_e.userid = u.id AND e.id = u_e.enrolid 
-            order by u_e.id asc"; //Swapped AND u.firstname <> 'DCR' for order by u_e.id asc because the order dictates the user that gets selected. 
-            
-    echo '<td>';
-    
-  
-      $teachers = $DB->get_records_sql($sql); 
-      foreach($teachers as $teacher){
-        $iterator ++;
- //As we iterate through the loop, we add 1 to the iterartor variable until the system reaches 2. This method serves as an alternative to SQl's First/Top              
-if ($iterator == 2){ 
-if ($teachers != null){
-    //only when we reach the third instructor we will display the course instructor. 
-    echo $teacher->firstname. ' '.$teacher->lastname;
-}
-}
-    }
+    echo '<td>';  
+    echo $course->firstname . " ". $course->lastname;
     echo '</td>';
 
 
