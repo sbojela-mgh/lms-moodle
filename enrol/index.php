@@ -136,22 +136,22 @@ $role = $DB->get_record_select('role', 'id =?', array($role_assignments->roleid)
 $user = $DB->get_record_select('user', 'id =?', array($role_assignments->userid ));
 */
 echo '</br>';
-$iterator = 0;
-$sql = "SELECT u.firstname, u.lastname
-FROM {user} u, {role_assignments} r_a, {role} r, {enrol} e, {user_enrolments} u_e
-WHERE e.courseid = ". $course->id ." AND u.id = r_a.userid AND (r_a.roleid = 3) AND u_e.userid = u.id AND e.id = u_e.enrolid order by u_e.id asc"; //need to order by id for appropriate order
-            
-            $teachers = $DB->get_records_sql($sql); 
-            foreach($teachers as $teacher){
- //As we iterate through the loop, we add 1 to the iterartor variable until the system reaches 2. This method serves as an alternative to SQl's First/Top              
-if ($iterator ++ == 1){ 
-if ($teachers != null){
-    //only when we reach the third instructor we will display the course instructor. 
-    echo '<span style= "font-weight: bold; font-size: 18px;">' .'Course Director:'. '</span>'.' '. $teacher->firstname. ' '.$teacher->lastname;
-}
-}
-
-            }
+//The script stems from an effort made by Miguel Castrillo
+//The purpose if to grab the user with the Course director role
+if ($teacher_sort_flag == 0) {
+    $sql = "SELECT c.id as courseid, u.firstname, u.lastname,r.shortname FROM mdl_course c JOIN mdl_context ct ON c.id = ct.instanceid JOIN mdl_role_assignments ra ON ra.contextid = ct.id JOIN mdl_user u ON u.id = ra.userid JOIN mdl_role r ON r.id = ra.roleid where r.shortname = 'coursedirector'";
+    $teachers = $DB->get_records_sql($sql);
+      
+    foreach($teachers as $teacher) {
+      if ($teacher->courseid == $course->id){
+        echo '<span style="font-weight: bold; color black;">Course Director:</span>'.' '.$teacher->firstname . " " . $teacher->lastname;
+        break;
+      }
+    }
+    
+  } else {
+    echo '<span style="font-weight: bold; color black;">Course Director:</span>'.' '.$course->firstname . " " . $course->lastname;
+  }
 /*
 $sql = "SELECT firstname FROM {user} as u
 JOIN {role_assignments} as ra ON ra.userid = u.id
