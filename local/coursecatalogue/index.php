@@ -102,22 +102,6 @@ if (isset($_GET['stars'])) {
   $context = array_push_assoc($context, 'level', '');
 }
 
-if (isset($_GET['format'])) {
-  $sort = $_GET['format'];
-  switch($sort){
-    case "entry":
-      $context = array_push_assoc($context, 'format', "On Demand");
-      break;
-    case "intermediate":
-      $context = array_push_assoc($context, 'format', "Live Courses");
-      break; 
-    }
-  $selected_value = $_GET['format'];
-  $context = array_push_assoc($context, 'format', $selected_value);
-}else{
-  $context = array_push_assoc($context, 'format', '');
-}
-
 if (isset($_GET['department'])){
   $dept = $_GET['department'];
   switch($dept){ //so far we have 3 departments 1 -> DCR, 2 -> CFD, 3-> MGRI, check mdl_customfield_field options column for any new options
@@ -183,21 +167,18 @@ if (isset($_GET['tsort'])) {
     $sort = $_GET['format'];
     switch($sort){
       case "live courses":
-        $course_format = array_push_assoc($course_format, 'format', "Live Courses");
-        $course_format_name = "'Live Courses'";
+        $context = array_push_assoc($context, 'format', "Live Courses");
         break;
       case "on demand":
-        $course_format = array_push_assoc($course_format, 'format', "On Demand");
-        $course_format_name = "'On Demand'";
+        $context = array_push_assoc($context, 'format', "On Demand");
         break; 
       case "":
-        $course_format = array_push_assoc($course_format, 'format', "");
-        $course_format_name = "''";
+        $context = array_push_assoc($context, 'format', "");
+        break;
       }
-      $course_format = array_push_assoc($course_format, 'format', $_GET['format']);
+      $context = array_push_assoc($context, 'format', $_GET['format']);
   }else{
-    $course_format = array_push_assoc($course_format, 'format', 'On Demand');
-    $course_format_name = "'On Demand'";
+    $context = array_push_assoc($context, 'format', '');
   }
 
 $sql = "SELECT * from {course_categories} where name ='On Demand'";
@@ -366,6 +347,7 @@ echo '</tr>';
 $sql = "SELECT * FROM {course} WHERE ID is not null and fullname <> 'Local Environment' AND ID <> 1";
 
 $on_demand_flag = 0;
+$teacher_sort_flag = 0;
 
 if (isset($_GET['tsort'])){
 
@@ -387,80 +369,55 @@ if (isset($_GET['tsort'])){
   else if ($sort == 'startdate') {
     $on_demand_flag = 0;
     if (isset($_GET['order']) && $_GET['order'] == 'asc'){
-      $sql = "select * from mdl_course c left outer join (select r.course as course, avg(r.rating) as rating from mdl_block_rate_course r group by r.course) r on c.id = r.course left outer join (select cfd.instanceid as courseid, cfd.value as department from mdl_course c, mdl_customfield_field cf, mdl_customfield_data cfd where cfd.instanceid = c.id) x on x.courseid = c.id order by startdate asc";
+      $sql = "select * from mdl_course c left outer join (select r.course as course, avg(r.rating) as rating from mdl_block_rate_course r group by r.course) r on c.id = r.course order by startdate asc";
     } else if (isset($_GET['order']) && $_GET['order'] == 'desc'){
-      $sql = "select * from mdl_course c left outer join (select r.course as course, avg(r.rating) as rating from mdl_block_rate_course r group by r.course) r on c.id = r.course left outer join (select cfd.instanceid as courseid, cfd.value as department from mdl_course c, mdl_customfield_field cf, mdl_customfield_data cfd where cfd.instanceid = c.id) x on x.courseid = c.id order by startdate desc";
+      $sql = "select * from mdl_course c left outer join (select r.course as course, avg(r.rating) as rating from mdl_block_rate_course r group by r.course) r on c.id = r.course order by startdate desc";
     }
 
     else {
-      $sql = "select * from mdl_course c left outer join (select r.course as course, avg(r.rating) as rating from mdl_block_rate_course r group by r.course) r on c.id = r.course left outer join (select cfd.instanceid as courseid, cfd.value as department from mdl_course c, mdl_customfield_field cf, mdl_customfield_data cfd where cfd.instanceid = c.id) x on x.courseid = c.id order by startdate asc";
+      $sql = "select * from mdl_course c left outer join (select r.course as course, avg(r.rating) as rating from mdl_block_rate_course r group by r.course) r on c.id = r.course order by startdate asc";
     }
   }
 
   else if ($sort == 'fullname'){
     if (isset($_GET['order']) && $_GET['order'] == 'asc'){
-      $sql = "select * from mdl_course c left outer join (select r.course as course, avg(r.rating) as rating from mdl_block_rate_course r group by r.course) r on c.id = r.course left outer join (select cfd.instanceid as courseid, cfd.value as department from mdl_course c, mdl_customfield_field cf, mdl_customfield_data cfd where cfd.instanceid = c.id) x on x.courseid = c.id order by fullname asc";
+      $sql = "select * from mdl_course c left outer join (select r.course as course, avg(r.rating) as rating from mdl_block_rate_course r group by r.course) r on c.id = r.course order by fullname asc";
     } else if (isset($_GET['order']) && $_GET['order'] == 'desc'){
-      $sql = "select * from mdl_course c left outer join (select r.course as course, avg(r.rating) as rating from mdl_block_rate_course r group by r.course) r on c.id = r.course left outer join (select cfd.instanceid as courseid, cfd.value as department from mdl_course c, mdl_customfield_field cf, mdl_customfield_data cfd where cfd.instanceid = c.id) x on x.courseid = c.id order by fullname desc";
+      $sql = "select * from mdl_course c left outer join (select r.course as course, avg(r.rating) as rating from mdl_block_rate_course r group by r.course) r on c.id = r.course order by fullname desc";
     }
 
     else {
-      $sql = "select * from mdl_course c left outer join (select r.course as course, avg(r.rating) as rating from mdl_block_rate_course r group by r.course) r on c.id = r.course left outer join (select cfd.instanceid as courseid, cfd.value as department from mdl_course c, mdl_customfield_field cf, mdl_customfield_data cfd where cfd.instanceid = c.id) x on x.courseid = c.id order by fullname asc";
+      $sql = "select * from mdl_course c left outer join (select r.course as course, avg(r.rating) as rating from mdl_block_rate_course r group by r.course) r on c.id = r.course order by fullname asc";
     }
   }
 
   else if ($sort == 'on demand'){
     $on_demand_flag = 1;
-    $sql = "select * from mdl_course c left outer join (select r.course as course, avg(r.rating) as rating from mdl_block_rate_course r group by r.course) r on c.id = r.course left outer join (select cfd.instanceid as courseid, cfd.value as department from mdl_course c, mdl_customfield_field cf, mdl_customfield_data cfd where cfd.instanceid = c.id) x on x.courseid = c.id";
+    $sql = "select * from mdl_course c left outer join (select r.course as course, avg(r.rating) as rating from mdl_block_rate_course r group by r.course) r on c.id = r.course";
   }
 
   else if ($sort == 'live courses'){
     $on_demand_flag = 1;
-    $sql = "select * from mdl_course c left outer join (select r.course as course, avg(r.rating) as rating from mdl_block_rate_course r group by r.course) r on c.id = r.course left outer join (select cfd.instanceid as courseid, cfd.value as department from mdl_course c, mdl_customfield_field cf, mdl_customfield_data cfd where cfd.instanceid = c.id) x on x.courseid = c.id";
+    $sql = "select * from mdl_course c left outer join (select r.course as course, avg(r.rating) as rating from mdl_block_rate_course r group by r.course) r on c.id = r.course";
   }
 
   else if ($sort = 'teacher'){
     if (isset($_GET['order']) && $_GET['order'] == 'asc'){
-      $sql = "select * 
-      from
-      (select * from mdl_course c left outer join (select r.course as course, avg(r.rating) as rating from mdl_block_rate_course r group by r.course) r on c.id = r.course left outer join (select cfd.instanceid as courseid, cfd.value as department from mdl_course c, mdl_customfield_field cf, mdl_customfield_data cfd where cfd.instanceid = c.id) x on x.courseid = c.id) courses
-      
-      left outer join
-      
-      (SELECT u.firstname, u.lastname, e.courseid FROM mdl_user u, mdl_role_assignments r_a, mdl_role r, mdl_enrol e, mdl_user_enrolments u_e WHERE u.id = r_a.userid AND (r_a.roleid = 4 OR r_a.roleid = 3) AND u_e.userid = u.id AND e.id = u_e.enrolid AND u.firstname <> 'DCR' group by e.courseid, u.firstname, u.lastname
-      ) instructors
-      
-      on courses.id = instructors.courseid order by instructors.firstname asc";
+      $teacher_sort_flag = 1;
+      $sql = "select * from (select * from mdl_course c left outer join (select r.course as course, avg(r.rating) as rating from mdl_block_rate_course r group by r.course) r on c.id = r.course left outer join (select cfd.instanceid as courseid, cfd.value as department from mdl_course c, mdl_customfield_field cf, mdl_customfield_data cfd where cfd.instanceid = c.id) x on x.courseid = c.id) courses left outer join (SELECT c.id as courseid, u.firstname, u.lastname,r.shortname FROM mdl_course c JOIN mdl_context ct ON c.id = ct.instanceid JOIN mdl_role_assignments ra ON ra.contextid = ct.id JOIN mdl_user u ON u.id = ra.userid JOIN mdl_role r ON r.id = ra.roleid where r.shortname = 'coursedirector') instructors on courses.id = instructors.courseid ORDER BY `instructors`.`firstname` ASC";
     } else if (isset($_GET['order']) && $_GET['order'] == 'desc'){
-      $sql = "select * 
-      from
-      (select * from mdl_course c left outer join (select r.course as course, avg(r.rating) as rating from mdl_block_rate_course r group by r.course) r on c.id = r.course left outer join (select cfd.instanceid as courseid, cfd.value as department from mdl_course c, mdl_customfield_field cf, mdl_customfield_data cfd where cfd.instanceid = c.id) x on x.courseid = c.id) courses
-      
-      left outer join
-      
-      (SELECT u.firstname, u.lastname, e.courseid FROM mdl_user u, mdl_role_assignments r_a, mdl_role r, mdl_enrol e, mdl_user_enrolments u_e WHERE u.id = r_a.userid AND (r_a.roleid = 4 OR r_a.roleid = 3) AND u_e.userid = u.id AND e.id = u_e.enrolid AND u.firstname <> 'DCR' group by e.courseid, u.firstname, u.lastname
-      ) instructors
-      
-      on courses.id = instructors.courseid order by instructors.firstname  desc";
+      $teacher_sort_flag = 1;
+      $sql = "select * from (select * from mdl_course c left outer join (select r.course as course, avg(r.rating) as rating from mdl_block_rate_course r group by r.course) r on c.id = r.course left outer join (select cfd.instanceid as courseid, cfd.value as department from mdl_course c, mdl_customfield_field cf, mdl_customfield_data cfd where cfd.instanceid = c.id) x on x.courseid = c.id) courses left outer join (SELECT c.id as courseid, u.firstname, u.lastname,r.shortname FROM mdl_course c JOIN mdl_context ct ON c.id = ct.instanceid JOIN mdl_role_assignments ra ON ra.contextid = ct.id JOIN mdl_user u ON u.id = ra.userid JOIN mdl_role r ON r.id = ra.roleid where r.shortname = 'coursedirector') instructors on courses.id = instructors.courseid ORDER BY `instructors`.`firstname` DESC";
     }
 
     else {
-      $sql = "select * 
-      from
-      (select * from mdl_course c left outer join (select r.course as course, avg(r.rating) as rating from mdl_block_rate_course r group by r.course) r on c.id = r.course left outer join (select cfd.instanceid as courseid, cfd.value as department from mdl_course c, mdl_customfield_field cf, mdl_customfield_data cfd where cfd.instanceid = c.id) x on x.courseid = c.id) courses
-      
-      left outer join
-      
-      (SELECT u.firstname, u.lastname, e.courseid FROM mdl_user u, mdl_role_assignments r_a, mdl_role r, mdl_enrol e, mdl_user_enrolments u_e WHERE u.id = r_a.userid AND (r_a.roleid = 4 OR r_a.roleid = 3) AND u_e.userid = u.id AND e.id = u_e.enrolid AND u.firstname <> 'DCR' group by e.courseid, u.firstname, u.lastname
-      ) instructors
-      
-      on courses.id = instructors.courseid order by instructors.firstname asc";
+      $sql = "select * from (select * from mdl_course c left outer join (select r.course as course, avg(r.rating) as rating from mdl_block_rate_course r group by r.course) r on c.id = r.course left outer join (select cfd.instanceid as courseid, cfd.value as department from mdl_course c, mdl_customfield_field cf, mdl_customfield_data cfd where cfd.instanceid = c.id) x on x.courseid = c.id) courses left outer join (SELECT c.id as courseid, u.firstname, u.lastname,r.shortname FROM mdl_course c JOIN mdl_context ct ON c.id = ct.instanceid JOIN mdl_role_assignments ra ON ra.contextid = ct.id JOIN mdl_user u ON u.id = ra.userid JOIN mdl_role r ON r.id = ra.roleid where r.shortname = 'coursedirector') instructors on courses.id = instructors.courseid ORDER BY `instructors`.`firstname` ASC";
     }
   }
 
   else {
     $on_demand_flag = 0;
-    $sql = "select * from mdl_course c left outer join (select r.course as course, avg(r.rating) as rating from mdl_block_rate_course r group by r.course) r on c.id = r.course left outer join (select cfd.instanceid as courseid, cfd.value as department from mdl_course c, mdl_customfield_field cf, mdl_customfield_data cfd where cfd.instanceid = c.id) x on x.courseid = c.id order by startdate asc";
+    $sql = "select * from mdl_course c left outer join (select r.course as course, avg(r.rating) as rating from mdl_block_rate_course r group by r.course) r on c.id = r.course order by startdate asc";
   }
 }
 
@@ -468,7 +425,7 @@ else //if tsort is not set at all, also default to sort by startdate
 
 {
   $on_demand_flag = 0;
-  $sql = "select * from mdl_course c left outer join (select r.course as course, avg(r.rating) as rating from mdl_block_rate_course r group by r.course) r on c.id = r.course left outer join (select cfd.instanceid as courseid, cfd.value as department from mdl_course c, mdl_customfield_field cf, mdl_customfield_data cfd where cfd.instanceid = c.id) x on x.courseid = c.id order by startdate asc";
+  $sql = "select * from mdl_course c left outer join (select r.course as course, avg(r.rating) as rating from mdl_block_rate_course r group by r.course) r on c.id = r.course order by startdate asc";
 }
 
 if ((isset($_GET['competency']) && $_GET['competency'] != '' ) || (isset($_GET['department']) && $_GET['department'] != '' ) || (isset($_GET['programs']) && $_GET['programs'] != '' ) || (isset($_GET['role']) && $_GET['role'] != '' ) || (isset($_GET['level']) && $_GET['level'] != '' ) || (isset($_GET['format']) && $_GET['format'] != '') || (isset($_GET['search']) && $_GET['search'] != '' ) ){
@@ -504,16 +461,6 @@ if ($on_demand_flag == 0){
       }
     }
     
-    if (isset($_GET['month'])){ //this one is to filter out courses that don't match the month
-        if ($course->category == $online_course_category_id){ //category 32 corresponds to online courses
-        }
-        else if ($_GET['month'] != date('M', $course->startdate)){
-          if ($_GET['month'] != ''){
-            continue;
-          }
-          
-        }
-    }
     if (isset($_GET['competency'])){ //this one is to filter out courses that don't contain a particular tag we passed
         //echo $_GET['tags'];
         $sql = "SELECT t.name 
@@ -525,7 +472,7 @@ if ($on_demand_flag == 0){
 
         foreach ($tags as $tag){
           if ($_GET['competency'] == $tag->name){ //if we find a match, we set the flag to 1
-              $match_flag = 1;              ;
+              $match_flag = 1;
           }
         }
         if ($match_flag == 0){ //if we didn't find a match, skiip this iteration in the loop
@@ -546,7 +493,7 @@ if ($on_demand_flag == 0){
       $match_flag = 0; //as we iterate through all the tags assigned to a particular course, we wanna find a match
       foreach ($tags as $tag){
         if ($_GET['programs'] == $tag->name){ //if we find a match, we set the flag to 1
-            $match_flag = 1;
+          $match_flag = 1;
         }
       }
       if ($match_flag == 0){ //if we didn't find a match, skiip this iteration in the loop
@@ -597,23 +544,14 @@ if ($on_demand_flag == 0){
         }
       }
     }
-    
-    if (isset($_GET['year'])){ //this one is to filter out anything that doesn't match the year
-        if ($course->category == $online_course_category_id){ //category 32 corresponds to online courses
-        }
-        else if ($_GET['year'] != date('Y', $course->startdate)) {
-          if ($_GET['year'] != ''){
-            continue;
-          }
-        }
-    }
 
     if (isset($_GET['format'])){ //this one is to filter out anything that doesn't match the On Demand or Live Courses
-      if ($course->category == $live_online_course_category_id || $online_course_category_id){ //category 32 corresponds to online courses
+      if ($_GET['format'] == 'on demand' && $course->category != $online_course_category_id){ //category 32 corresponds to online courses
+        continue;
       }
-        else if ($_GET['format'] != ''){
-          continue;
-        }
+      else if ($_GET['format'] == 'live courses' && $course->category != $live_online_course_category_id) {
+        continue;
+      }
     }
       
 
@@ -663,8 +601,6 @@ if ($on_demand_flag == 0){
     if ($course->category == $online_course_category_id){ //category
       continue;
     }
-    //bringing the categories into context
-    $category = $DB->get_record('course_categories',array('id'=>$course->category));
     
     /*We're checking to see if a course category holds the name On demand, if it deems true
     we replace the date with On Demand label. 
@@ -686,23 +622,23 @@ if ($on_demand_flag == 0){
       }
       */
       //end
-
-    $sql = "SELECT u.firstname, u.lastname
-            FROM {user} u, {role_assignments} r_a, {role} r, {enrol} e, {user_enrolments} u_e
-            WHERE e.courseid = ". $course->id ." AND u.id = r_a.userid AND (r_a.roleid = 4 OR r_a.roleid = 3) AND u_e.userid = u.id AND e.id = u_e.enrolid AND 
-            u.firstname <> 'DCR'";
-            
     echo '<td>';
-    $teachers = $DB->get_records_sql($sql); 
-    foreach($teachers as $teacher){
-  
-      echo $teacher->firstname;
-      echo ' ';
-      echo $teacher->lastname;   
-      echo ' ';
-      break;
+    if ($teacher_sort_flag == 0) {
+      $sql = "SELECT c.id as courseid, u.firstname, u.lastname,r.shortname FROM mdl_course c JOIN mdl_context ct ON c.id = ct.instanceid JOIN mdl_role_assignments ra ON ra.contextid = ct.id JOIN mdl_user u ON u.id = ra.userid JOIN mdl_role r ON r.id = ra.roleid where r.shortname = 'coursedirector'";
+      $teachers = $DB->get_records_sql($sql);
+        
+      foreach($teachers as $teacher) {
+        if ($teacher->courseid == $course->id){
+          echo $teacher->firstname . " " . $teacher->lastname;
+          break;
+        }
+      }
+      
+    } else {
+      echo $course->firstname . " " . $course->lastname;
     }
     echo '</td>';
+  
 
     $sql = "SELECT t.name 
             FROM {tag} t, {tag_instance} t_i
@@ -849,6 +785,100 @@ if ($on_demand_flag == 0){
         }
       }
     }
+
+    if (isset($_GET['competency'])){ //this one is to filter out courses that don't contain a particular tag we passed
+      //echo $_GET['tags'];
+      $sql = "SELECT t.name 
+        FROM {tag} t, {tag_instance} t_i
+        WHERE t.id = t_i.tagid AND t_i.itemid = ". $course->id;
+
+      $tags = $DB->get_records_sql($sql);
+      $match_flag = 0; //as we iterate through all the competency assigned to a particular course, we wanna find a match
+
+      foreach ($tags as $tag){
+        if ($_GET['competency'] == $tag->name){ //if we find a match, we set the flag to 1
+            $match_flag = 1;
+        }
+      }
+      if ($match_flag == 0){ //if we didn't find a match, skiip this iteration in the loop
+        if ($_GET['competency'] != ''){
+          continue;
+        }
+      }
+  }
+
+  //newly added tag named programs
+  if (isset($_GET['programs'])){ //this one is to filter out courses that don't contain a particular tag we passed
+    //echo $_GET['tags'];
+    $sql = "SELECT t.name 
+      FROM {tag} t, {tag_instance} t_i
+      WHERE t.id = t_i.tagid AND t_i.itemid = ". $course->id;
+
+    $tags = $DB->get_records_sql($sql);
+    $match_flag = 0; //as we iterate through all the tags assigned to a particular course, we wanna find a match
+    foreach ($tags as $tag){
+      if ($_GET['programs'] == $tag->name){ //if we find a match, we set the flag to 1
+        $match_flag = 1;
+      }
+    }
+    if ($match_flag == 0){ //if we didn't find a match, skiip this iteration in the loop
+      if ($_GET['programs'] != ''){
+        continue;
+      }
+    }
+  }
+
+    //newly added tag named roles
+    if (isset($_GET['role'])){ //this one is to filter out courses that don't contain a particular tag we passed
+      //echo $_GET['tags'];
+      $sql = "SELECT t.name 
+        FROM {tag} t, {tag_instance} t_i
+        WHERE t.id = t_i.tagid AND t_i.itemid = ". $course->id;
+
+      $tags = $DB->get_records_sql($sql);
+      $match_flag = 0; //as we iterate through all the tags assigned to a particular course, we wanna find a match
+      foreach ($tags as $tag){
+        if ($_GET['role'] == $tag->name){ //if we find a match, we set the flag to 1
+            $match_flag = 1;
+        }
+      }
+      if ($match_flag == 0){ //if we didn't find a match, skiip this iteration in the loop
+        if ($_GET['role'] != ''){
+          continue;
+        }
+      }
+    }
+
+  //newly added tag named level
+  if (isset($_GET['level'])){ //this one is to filter out courses that don't contain a particular tag we passed
+    //echo $_GET['tags'];
+    $sql = "SELECT t.name 
+      FROM {tag} t, {tag_instance} t_i
+      WHERE t.id = t_i.tagid AND t_i.itemid = ". $course->id;
+
+    $tags = $DB->get_records_sql($sql);
+    $match_flag = 0; //as we iterate through all the tags assigned to a particular course, we wanna find a match
+    foreach ($tags as $tag){
+      if ($_GET['level'] == $tag->name){ //if we find a match, we set the flag to 1
+          $match_flag = 1;
+      }
+    }
+    if ($match_flag == 0){ //if we didn't find a match, skiip this iteration in the loop
+      if ($_GET['level'] != ''){
+        continue;
+      }
+    }
+  }
+
+  if (isset($_GET['format'])){ //this one is to filter out anything that doesn't match the On Demand or Live Courses
+    if ($_GET['format'] == 'on demand' && $course->category != $online_course_category_id){ //category 32 corresponds to online courses
+      continue;
+    }
+    else if ($_GET['format'] == 'live courses' && $course->category != $live_online_course_category_id) {
+      continue;
+    }
+  }
+
     if ($course->id == 1){
       continue;
     }
@@ -863,24 +893,23 @@ if ($on_demand_flag == 0){
     else{
       echo '<td>'.date('M-d-Y h:i A', $course->startdate). '</td>';
     }
-    
-    $sql = "SELECT u.firstname, u.lastname
-            FROM {user} u, {role_assignments} r_a, {role} r, {enrol} e, {user_enrolments} u_e
-            WHERE e.courseid = ". $course->id ." AND u.id = r_a.userid AND (r_a.roleid = 4 OR r_a.roleid = 3) AND u_e.userid = u.id AND e.id = u_e.enrolid AND 
-            u.firstname <> 'DCR'";
-            
+
     echo '<td>';
-    $teachers = $DB->get_records_sql($sql); 
-    foreach($teachers as $teacher){
-  
-      echo $teacher->firstname;
-      echo ' ';
-      echo $teacher->lastname;   
-      echo ' ';
-      break;
+    if ($teacher_sort_flag == 0) {
+      $sql = "SELECT c.id as courseid, u.firstname, u.lastname,r.shortname FROM mdl_course c JOIN mdl_context ct ON c.id = ct.instanceid JOIN mdl_role_assignments ra ON ra.contextid = ct.id JOIN mdl_user u ON u.id = ra.userid JOIN mdl_role r ON r.id = ra.roleid where r.shortname = 'coursedirector'";
+      $teachers = $DB->get_records_sql($sql);
+        
+      foreach($teachers as $teacher) {
+        if ($teacher->courseid == $course->id){
+          echo $teacher->firstname . " " . $teacher->lastname;
+          break;
+        }
+      }
+      
+    } else {
+      echo $course->firstname . " " . $course->lastname;
     }
     echo '</td>';
-
     
     $sql = "SELECT t.name 
             FROM {tag} t, {tag_instance} t_i
@@ -953,30 +982,25 @@ else
         }
     }
     if (isset($_GET['competency'])){ //this one is to filter out courses that don't contain a particular tag we passed
-        //echo $_GET['tags'];
-        $sql = "SELECT t.name 
-          FROM {tag} t, {tag_instance} t_i
-          WHERE t.id = t_i.tagid AND t_i.itemid = ". $course->id;
+      //echo $_GET['tags'];
+      $sql = "SELECT t.name 
+        FROM {tag} t, {tag_instance} t_i
+        WHERE t.id = t_i.tagid AND t_i.itemid = ". $course->id;
 
-        $tags = $DB->get_records_sql($sql);
-        $match_flag = 0; //as we iterate through all the tags assigned to a particular course, we wanna find a match
-        foreach ($tags as $tag){
-          if ($_GET['competency'] == $tag->name){ //if we find a match, we set the flag to 1
-            if ($course->category == $online_course_category_id){//checking if course in context has an on demand tag and also has a releavant competency
-              $match_flag = 1;
-            }
-            else{
-              $match_flag = 1;
+      $tags = $DB->get_records_sql($sql);
+      $match_flag = 0; //as we iterate through all the competency assigned to a particular course, we wanna find a match
 
-            }
-          }
+      foreach ($tags as $tag){
+        if ($_GET['competency'] == $tag->name){ //if we find a match, we set the flag to 1
+            $match_flag = 1;
         }
-        if ($match_flag == 0){ //if we didn't find a match, skiip this iteration in the loop
-          if ($_GET['competency'] != ''){
-            continue;
-          }
+      }
+      if ($match_flag == 0){ //if we didn't find a match, skiip this iteration in the loop
+        if ($_GET['competency'] != ''){
+          continue;
         }
-    }
+      }
+  }
     if (isset($_GET['year'])){ //this one is to filter out anything that doesn't match the year
         if ($course->category == $online_course_category_id){ //category 32 corresponds to online courses
         }
@@ -1028,6 +1052,101 @@ else
         }
       }
     }
+
+    if (isset($_GET['competency'])){ //this one is to filter out courses that don't contain a particular tag we passed
+      //echo $_GET['tags'];
+      $sql = "SELECT t.name 
+        FROM {tag} t, {tag_instance} t_i
+        WHERE t.id = t_i.tagid AND t_i.itemid = ". $course->id;
+
+      $tags = $DB->get_records_sql($sql);
+      $match_flag = 0; //as we iterate through all the competency assigned to a particular course, we wanna find a match
+
+      foreach ($tags as $tag){
+        if ($_GET['competency'] == $tag->name){ //if we find a match, we set the flag to 1
+            $match_flag = 1;
+        }
+      }
+      if ($match_flag == 0){ //if we didn't find a match, skiip this iteration in the loop
+        if ($_GET['competency'] != ''){
+          continue;
+        }
+      }
+  }
+
+  //newly added tag named programs
+  if (isset($_GET['programs'])){ //this one is to filter out courses that don't contain a particular tag we passed
+    //echo $_GET['tags'];
+    $sql = "SELECT t.name 
+      FROM {tag} t, {tag_instance} t_i
+      WHERE t.id = t_i.tagid AND t_i.itemid = ". $course->id;
+
+    $tags = $DB->get_records_sql($sql);
+    $match_flag = 0; //as we iterate through all the tags assigned to a particular course, we wanna find a match
+    foreach ($tags as $tag){
+      if ($_GET['programs'] == $tag->name){ //if we find a match, we set the flag to 1
+        $match_flag = 1;
+      }
+    }
+    if ($match_flag == 0){ //if we didn't find a match, skiip this iteration in the loop
+      if ($_GET['programs'] != ''){
+        continue;
+      }
+    }
+  }
+
+    //newly added tag named roles
+    if (isset($_GET['role'])){ //this one is to filter out courses that don't contain a particular tag we passed
+      //echo $_GET['tags'];
+      $sql = "SELECT t.name 
+        FROM {tag} t, {tag_instance} t_i
+        WHERE t.id = t_i.tagid AND t_i.itemid = ". $course->id;
+
+      $tags = $DB->get_records_sql($sql);
+      $match_flag = 0; //as we iterate through all the tags assigned to a particular course, we wanna find a match
+      foreach ($tags as $tag){
+        if ($_GET['role'] == $tag->name){ //if we find a match, we set the flag to 1
+            $match_flag = 1;
+        }
+      }
+      if ($match_flag == 0){ //if we didn't find a match, skiip this iteration in the loop
+        if ($_GET['role'] != ''){
+          continue;
+        }
+      }
+    }
+
+  //newly added tag named level
+  if (isset($_GET['level'])){ //this one is to filter out courses that don't contain a particular tag we passed
+    //echo $_GET['tags'];
+    $sql = "SELECT t.name 
+      FROM {tag} t, {tag_instance} t_i
+      WHERE t.id = t_i.tagid AND t_i.itemid = ". $course->id;
+
+    $tags = $DB->get_records_sql($sql);
+    $match_flag = 0; //as we iterate through all the tags assigned to a particular course, we wanna find a match
+    foreach ($tags as $tag){
+      if ($_GET['level'] == $tag->name){ //if we find a match, we set the flag to 1
+          $match_flag = 1;
+      }
+    }
+    if ($match_flag == 0){ //if we didn't find a match, skiip this iteration in the loop
+      if ($_GET['level'] != ''){
+        continue;
+      }
+    }
+  }
+
+  if (isset($_GET['format'])){ //this one is to filter out anything that doesn't match the On Demand or Live Courses
+    if ($_GET['format'] == 'on demands' && $course->category != $online_course_category_id){ //category 32 corresponds to online courses
+      continue;
+    }
+    else if ($_GET['format'] == 'live courses' && $course->category != $live_online_course_category_id) {
+      continue;
+    }
+  }
+
+
     if ($course->id == 1){
       continue;
     }
@@ -1043,22 +1162,24 @@ else
     else{
       echo '<td>'.date('M-d-Y h:i A', $course->startdate). '</td>';
     }
-
-    $sql = "SELECT u.firstname, u.lastname
-            FROM {user} u, {role_assignments} r_a, {role} r, {enrol} e, {user_enrolments} u_e
-            WHERE e.courseid = ". $course->id ." AND u.id = r_a.userid AND (r_a.roleid = 4 OR r_a.roleid = 3) AND u_e.userid = u.id AND e.id = u_e.enrolid AND 
-            u.firstname <> 'DCR'";
             
     echo '<td>';
-    $teachers = $DB->get_records_sql($sql); 
-    foreach($teachers as $teacher){
-      echo $teacher->firstname;
-      echo ' ';
-      echo $teacher->lastname;   
-      echo ' ';
-      break;
+    if ($teacher_sort_flag == 0) {
+      $sql = "SELECT c.id as courseid, u.firstname, u.lastname,r.shortname FROM mdl_course c JOIN mdl_context ct ON c.id = ct.instanceid JOIN mdl_role_assignments ra ON ra.contextid = ct.id JOIN mdl_user u ON u.id = ra.userid JOIN mdl_role r ON r.id = ra.roleid where r.shortname = 'coursedirector'";
+      $teachers = $DB->get_records_sql($sql);
+        
+      foreach($teachers as $teacher) {
+        if ($teacher->courseid == $course->id){
+          echo $teacher->firstname . " " . $teacher->lastname;
+          break;
+        }
+      }
+      
+    } else {
+      echo $course->firstname . " " . $course->lastname;
     }
     echo '</td>';
+
 
     $sql = "SELECT t.name 
             FROM {tag} t, {tag_instance} t_i
@@ -1200,6 +1321,15 @@ else
         }
       }
     }
+    if (isset($_GET['format'])){ //this one is to filter out anything that doesn't match the On Demand or Live Courses
+      if ($_GET['format'] == 'on demand' && $course->category != $online_course_category_id){ //category 32 corresponds to online courses
+        continue;
+      }
+      else if ($_GET['format'] == 'live courses' && $course->category != $live_online_course_category_id) {
+        continue;
+      }
+    }
+
     if ($course->id == 1){
       continue;
     }
@@ -1217,22 +1347,23 @@ else
       echo '<td>'.date('M-d-Y h:i A', $course->startdate). '</td>';
     }
 
-    $sql = "SELECT u.firstname, u.lastname
-            FROM {user} u, {role_assignments} r_a, {role} r, {enrol} e, {user_enrolments} u_e
-            WHERE e.courseid = ". $course->id ." AND u.id = r_a.userid AND (r_a.roleid = 4 OR r_a.roleid = 3) AND u_e.userid = u.id AND e.id = u_e.enrolid AND 
-            u.firstname <> 'DCR'";
-            
     echo '<td>';
-    $teachers = $DB->get_records_sql($sql); 
-    foreach($teachers as $teacher){
-  
-      echo $teacher->firstname;
-      echo ' ';
-      echo $teacher->lastname;   
-      echo ' ';
-      break;
+    if ($teacher_sort_flag == 0) {
+      $sql = "SELECT c.id as courseid, u.firstname, u.lastname,r.shortname FROM mdl_course c JOIN mdl_context ct ON c.id = ct.instanceid JOIN mdl_role_assignments ra ON ra.contextid = ct.id JOIN mdl_user u ON u.id = ra.userid JOIN mdl_role r ON r.id = ra.roleid where r.shortname = 'coursedirector'";
+      $teachers = $DB->get_records_sql($sql);
+        
+      foreach($teachers as $teacher) {
+        if ($teacher->courseid == $course->id){
+          echo $teacher->firstname . " " . $teacher->lastname;
+          break;
+        }
+      }
+      
+    } else {
+      echo $course->firstname . " " . $course->lastname;
     }
     echo '</td>';
+
 
     $sql = "SELECT t.name 
             FROM {tag} t, {tag_instance} t_i
