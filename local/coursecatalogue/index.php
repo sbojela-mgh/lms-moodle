@@ -564,13 +564,13 @@ if ($on_demand_flag == 0){
         $course_name_flag = 1;
       }
       
-      $sql = "SELECT u.firstname, u.lastname
-            FROM {user} u, {role_assignments} r_a, {role} r, {enrol} e, {user_enrolments} u_e
-            WHERE e.courseid = ". $course->id ." AND u.id = r_a.userid AND (r_a.roleid = 4 OR r_a.roleid = 3) AND u_e.userid = u.id AND e.id = u_e.enrolid";
+      $sql = "SELECT c.id as courseid, u.firstname, u.lastname,r.shortname FROM mdl_course c JOIN mdl_context ct ON c.id = ct.instanceid JOIN mdl_role_assignments ra ON ra.contextid = ct.id JOIN mdl_user u ON u.id = ra.userid JOIN mdl_role r ON r.id = ra.roleid where r.shortname = 'coursedirector'";
       $teachers = $DB->get_records_sql($sql);  
       foreach($teachers as $teacher){
-        if ( (preg_match($regex_mode, $teacher->firstname) == 1) || (preg_match($regex_mode, $teacher->lastname) == 1)){
-          $instructor_name_flag = 1;
+        if ($teacher->courseid == $course->id){
+          if ( (preg_match($regex_mode, $teacher->firstname) == 1) || (preg_match($regex_mode, $teacher->lastname) == 1)){
+            $instructor_name_flag = 1;
+          }
         }
         
       }
@@ -754,13 +754,13 @@ if ($on_demand_flag == 0){
         $course_name_flag = 1;
       }
       
-      $sql = "SELECT u.firstname, u.lastname
-            FROM {user} u, {role_assignments} r_a, {role} r, {enrol} e, {user_enrolments} u_e
-            WHERE e.courseid = ". $course->id ." AND u.id = r_a.userid AND (r_a.roleid = 4 OR r_a.roleid = 3) AND u_e.userid = u.id AND e.id = u_e.enrolid";
+      $sql = "SELECT c.id as courseid, u.firstname, u.lastname,r.shortname FROM mdl_course c JOIN mdl_context ct ON c.id = ct.instanceid JOIN mdl_role_assignments ra ON ra.contextid = ct.id JOIN mdl_user u ON u.id = ra.userid JOIN mdl_role r ON r.id = ra.roleid where r.shortname = 'coursedirector'";
       $teachers = $DB->get_records_sql($sql);  
       foreach($teachers as $teacher){
-        if ( (preg_match($regex_mode, $teacher->firstname) == 1) || (preg_match($regex_mode, $teacher->lastname) == 1)){
-          $instructor_name_flag = 1;
+        if ($teacher->courseid == $course->id){
+          if ( (preg_match($regex_mode, $teacher->firstname) == 1) || (preg_match($regex_mode, $teacher->lastname) == 1)){
+            $instructor_name_flag = 1;
+          }
         }
         
       }
@@ -1019,13 +1019,13 @@ else
         $course_name_flag = 1;
       }
       
-      $sql = "SELECT u.firstname, u.lastname
-            FROM {user} u, {role_assignments} r_a, {role} r, {enrol} e, {user_enrolments} u_e
-            WHERE e.courseid = ". $course->id ." AND u.id = r_a.userid AND (r_a.roleid = 4 OR r_a.roleid = 3) AND u_e.userid = u.id AND e.id = u_e.enrolid";
+      $sql = "SELECT c.id as courseid, u.firstname, u.lastname,r.shortname FROM mdl_course c JOIN mdl_context ct ON c.id = ct.instanceid JOIN mdl_role_assignments ra ON ra.contextid = ct.id JOIN mdl_user u ON u.id = ra.userid JOIN mdl_role r ON r.id = ra.roleid where r.shortname = 'coursedirector'";
       $teachers = $DB->get_records_sql($sql);  
       foreach($teachers as $teacher){
-        if ( (preg_match($regex_mode, $teacher->firstname) == 1) || (preg_match($regex_mode, $teacher->lastname) == 1)){
-          $instructor_name_flag = 1;
+        if ($teacher->courseid == $course->id){
+          if ( (preg_match($regex_mode, $teacher->firstname) == 1) || (preg_match($regex_mode, $teacher->lastname) == 1)){
+            $instructor_name_flag = 1;
+          }
         }
         
       }
@@ -1292,13 +1292,13 @@ else
         $course_name_flag = 1;
       }
       
-      $sql = "SELECT u.firstname, u.lastname
-            FROM {user} u, {role_assignments} r_a, {role} r, {enrol} e, {user_enrolments} u_e
-            WHERE e.courseid = ". $course->id ." AND u.id = r_a.userid AND (r_a.roleid = 4 OR r_a.roleid = 3) AND u_e.userid = u.id AND e.id = u_e.enrolid";
+      $sql = "SELECT c.id as courseid, u.firstname, u.lastname,r.shortname FROM mdl_course c JOIN mdl_context ct ON c.id = ct.instanceid JOIN mdl_role_assignments ra ON ra.contextid = ct.id JOIN mdl_user u ON u.id = ra.userid JOIN mdl_role r ON r.id = ra.roleid where r.shortname = 'coursedirector'";
       $teachers = $DB->get_records_sql($sql);  
       foreach($teachers as $teacher){
-        if ( (preg_match($regex_mode, $teacher->firstname) == 1) || (preg_match($regex_mode, $teacher->lastname) == 1)){
-          $instructor_name_flag = 1;
+        if ($teacher->courseid == $course->id){
+          if ( (preg_match($regex_mode, $teacher->firstname) == 1) || (preg_match($regex_mode, $teacher->lastname) == 1)){
+            $instructor_name_flag = 1;
+          }
         }
         
       }
