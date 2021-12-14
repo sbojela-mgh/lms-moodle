@@ -15,18 +15,14 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Reminder plugin version information
- *
- * @package    local_reminders
- * @author     Isuru Weerarathna <uisurumadushanka89@gmail.com>
- * @copyright  2012 Isuru Madushanka Weerarathna
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   local_edwiserbridge
+ * @copyright 2019, Wisdmlabs <support@wisdmlabs.com>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2021092600;
-$plugin->requires  = 2018051700;        // Require moodle 3.5 or higher.
-$plugin->release   = '2.5';
+$plugin->version   = 2021090900;
+$plugin->component = 'local_edwiserbridge';
 $plugin->maturity  = MATURITY_STABLE;
-$plugin->component = 'local_reminders';
+$plugin->release   = '2.1.2';
