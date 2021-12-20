@@ -120,7 +120,10 @@ if ($course->category == $online_course_category_id){
     font-size: 18px;">'.'Date/Time:'.'</span>'. ' On Demand'.'</tr>';
 } else {
     echo '<tr>'.'<span style = "font-weight: bold;
-    font-size: 18px;">'.'Date/Time:'.'</span>'. date(' M-d-Y hA', $course->startdate).'</tr>';
+    font-size: 18px;">'.'Start:'.'</span>'. date(' M-d-Y h:i A', $course->startdate).'</tr>';
+    echo '</br>';
+    echo '<tr>'.'<span style = "font-weight: bold;
+    font-size: 18px;">'.'End:'.'</span>'. date(' M-d-Y h:i A', $course->enddate).'</tr>';
 }
 /*Retrieving the context instanceid to bring context into context for the 
 the other retrievals to come*/
@@ -133,18 +136,22 @@ $role = $DB->get_record_select('role', 'id =?', array($role_assignments->roleid)
 $user = $DB->get_record_select('user', 'id =?', array($role_assignments->userid ));
 */
 echo '</br>';
-$sql = "SELECT u.firstname, u.lastname
-            FROM {user} u, {role_assignments} r_a, {role} r, {enrol} e, {user_enrolments} u_e
-            WHERE e.courseid = ". $course->id ." AND u.id = r_a.userid AND (r_a.roleid = 4 OR r_a.roleid = 3) AND u_e.userid = u.id AND e.id = u_e.enrolid AND
-            u.id <> 3";
-            
-            $teachers = $DB->get_records_sql($sql); 
-            foreach($teachers as $teacher){
-          
-if ($teachers != null){
-    echo '<span style= "font-weight: bold; font-size: 18px;">' .'Instructor:'. '</span>'.' '. $teacher->firstname. ' '.$teacher->lastname;
-}
-            }
+//The script stems from an effort made by Miguel Castrillo
+//The purpose if to grab the user with the Course director role
+if ($teacher_sort_flag == 0) {
+    $sql = "SELECT c.id as courseid, u.firstname, u.lastname,r.shortname FROM mdl_course c JOIN mdl_context ct ON c.id = ct.instanceid JOIN mdl_role_assignments ra ON ra.contextid = ct.id JOIN mdl_user u ON u.id = ra.userid JOIN mdl_role r ON r.id = ra.roleid where r.shortname = 'coursedirector'";
+    $teachers = $DB->get_records_sql($sql);
+      
+    foreach($teachers as $teacher) {
+      if ($teacher->courseid == $course->id){
+        echo '<span style="font-weight: bold; color black;">Course Director:</span>'.' '.$teacher->firstname . " " . $teacher->lastname;
+        break;
+      }
+    }
+    
+  } else {
+    echo '<span style="font-weight: bold; color black;">Course Director:</span>'.' '.$course->firstname . " " . $course->lastname;
+  }
 /*
 $sql = "SELECT firstname FROM {user} as u
 JOIN {role_assignments} as ra ON ra.userid = u.id

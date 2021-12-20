@@ -1,0 +1,5 @@
+div.potentialidplist div.potentialidp a[href="?saml=on"] img {
+  height: 24px;
+  width: auto;
+  max-width: 100%;
+}
