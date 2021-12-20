@@ -53,9 +53,9 @@ BEGIN:VEVENT
 DTEND:' . dateToCal($event['dateend']) . '
 UID:' . md5($event['title']) . '
 DTSTAMP:' . time() . '
-DESCRIPTION:' . addslashes($event['']) . '
-URL: '.$event['url'] . '
-LOCATION:' . addslashes($CFG->wwwroot.'/course/view.php?id='.$course->id) . '
+DESCRIPTION:' . $event['url']  . 
+//URL: '.$event['url'] . ' Added the event url in the description field above exchanged this : addslashes($event[''])  for $event['url'] 
+'LOCATION:' . addslashes($CFG->wwwroot.'/course/view.php?id='.$course->id) . '
 SUMMARY:' . addslashes($event['title']) . ' 
 DTSTART:' . dateToCal($event['datestart']) . '
 END:VEVENT
