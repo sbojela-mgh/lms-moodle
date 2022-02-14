@@ -24,6 +24,6 @@
  */
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version = 2020061503; // Plugin version.
+$plugin->version = 2020061504; // Plugin version.
 $plugin->component = 'block_learnerscript'; // Full name of the plugin (used for diagnostics)
 $plugin->dependencies = array();
