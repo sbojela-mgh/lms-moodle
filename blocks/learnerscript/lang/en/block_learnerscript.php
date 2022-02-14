@@ -63,7 +63,7 @@ $string['report_userbadges'] = 'User Badges';
 $string['report_usercourses'] = 'Course Learner\'s Summary';
 $string['report_userprofile'] = "Users profile";
 $string['report_userquizzes'] = 'Learner\'s Quizzes summary';
-$string['report_ls_users'] = "Users";
+$string['report_users'] = "Users";
 $string['report_usersresources'] = 'Learner\'s Resources Summary';
 $string['report_usersscorm'] = 'Learner\'s Scorm Summary';
 
@@ -806,7 +806,7 @@ $string['activitystats'] = 'Activity Stats';
 $string['gradepass'] = 'Pass Grade';
 $string['grademin'] = 'Min Grade';
 $string['gradedactivity'] = 'Graded Activities';
-$string['ls_usercolumns'] = 'User Columns';
+$string['usercolumns'] = 'User Columns';
 $string['enabled'] = 'Enabled';
 $string['disabled'] = 'Disabled';
 $string['timespentcolumns'] = 'TimeSpent Columns';
@@ -989,4 +989,6 @@ $string['activestudents'] = 'Active students';
 $string['report_activestudents_help'] = '<p><strong>Description: </strong>This report provides the information of learners joined the selected session.</p>'; 
 
 $string['activestudentscolumns'] = 'Active students columns';
-$string['report_ls_users_help'] = 'Active students columns';
+$string['report_courseparticipation'] = 'Course Participation';
+$string['courseparticipationcolumns'] = 'Course Participation Columns';
+$string['report_courseparticipation_help'] = 'Course Participation';
