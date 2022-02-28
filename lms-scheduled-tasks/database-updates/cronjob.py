@@ -31,8 +31,9 @@ with open(f, 'r') as config:
 config = {
   'user': uname,
   'password': pword,
-  'host': 'mysql4.research.partners.org',#have to get rid of the ':3306' at the end of the string
+  'host': 'mysql-test.partners.org',
   'database': dbname,
+  'port': 6446,
   'raise_on_warnings': True,
 }
 
