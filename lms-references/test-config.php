@@ -8,12 +8,12 @@ unset($CFG);
 global $CFG;
 $CFG = new stdClass();
 
-$CFG->dbtype    = 'mysqli';
+$CFG->dbtype    = 'MariaDB';
 $CFG->dblibrary = 'native';
-$CFG->dbhost    = 'mysql4.research.partners.org:3306';
-$CFG->dbname    = 'lmsqa';
-$CFG->dbuser    = 'headmaster';
-$CFG->dbpass    = 'g@Me_P*cK+!bC=617';
+$CFG->dbhost    = 'localhost';
+$CFG->dbname    = 'moodle_2';
+$CFG->dbuser    = 'root';
+$CFG->dbpass    = '';
 $CFG->prefix    = 'mdl_';
 $CFG->dboptions = array (
   'dbpersist' => 0,
@@ -22,8 +22,8 @@ $CFG->dboptions = array (
   'dbcollation' => 'utf8mb4_general_ci',
 );
 
-$CFG->wwwroot   = 'https://rc-lmsqa.partners.org';
-$CFG->dataroot  = '/var/www/moodledata/';
+$CFG->wwwroot   = 'http://localhost/lms-moodle';
+$CFG->dataroot  = 'C:\xampp\htdocs\moodledata';
 $CFG->admin     = 'admin';
 
 $CFG->directorypermissions = 0777;

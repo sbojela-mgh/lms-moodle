@@ -1,5 +1,18 @@
-require(['core/first', 'jquery', 'jqueryui', 'core/ajax'], function(core, $, bootstrap, ajax) {
+//These requires are set for our use
+require(['core/first', 'jquery','jqueryui', 'core/ajax'], function(core, $, bootstrap, ajax) {
+   
+    $(document).ready(function(){
+       
+        $('#search').click(function(){
+            searchusers();
+        });
 
+<<<<<<< HEAD
+        function searchusers() {
+            console.log('search users');
+            window.open("/local/coursecatalogue/index.php?month=" + $('#month').val() + "&year=" + $('#year').val(), '_self');
+        }
+=======
   //Using Jquery, when the page loads, this function will load
   $(document).ready(function() {
   
@@ -17,12 +30,6 @@ require(['core/first', 'jquery', 'jqueryui', 'core/ajax'], function(core, $, boo
       }
     $('#search').click(function(){
       searchcourses();
+>>>>>>> origin/lms-test
     });
-    
-    function searchcourses() {
-      console.log('search courses')
-      window.open("/../local/coursecatalogue/index.php?month=" + $('#month').val() + "&year=" + $('#year').val(), '_self')
-      
-    }
-  });
 });
