@@ -28,7 +28,7 @@ $PAGE->set_context(context_system::instance());
 require_login();
 
 $strpagetitle = get_string('pluginname', 'local_coursecatalogue');
-$strpageheading = get_string('headername', 'local_coursecatalogue');
+$strpageheading = get_string('coursecatalogue', 'local_coursecatalogue');
 
 $PAGE->set_title($strpagetitle);
 $PAGE->set_heading($strpageheading);
