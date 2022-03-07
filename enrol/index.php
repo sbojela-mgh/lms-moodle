@@ -34,11 +34,21 @@ if (!isloggedin()) {
         // A user that is not logged in has arrived directly on this page,
         // they should be redirected to the course page they are trying to enrol on after logging in.
         $SESSION->wantsurl = "$CFG->wwwroot/course/view.php?id=$id";
+        //"$CFG->wwwroot/enrol/confirmation.php?id=$course->id"
     }
     // do not use require_login here because we are usually coming from it,
     // it would also mess up the SESSION->wantsurl
     redirect(get_login_url());
 }
+$online_course_category_id = 0;
+$sql = "SELECT * from {course_categories} where name = 'On Demand'";
+$categories = $DB->get_records_sql($sql);
+foreach ($categories as $category){
+
+  $online_course_category_id = $category->id;
+  
+}
+
 
 $course = $DB->get_record('course', array('id'=>$id), '*', MUST_EXIST);
 $context = context_course::instance($course->id, MUST_EXIST);
@@ -83,9 +93,11 @@ foreach($enrolinstances as $instance) {
 // Check if user already enrolled
 if (is_enrolled($context, $USER, '', true)) {
     if (!empty($SESSION->wantsurl)) {
-        $destination = $SESSION->wantsurl;
+        $destination = "$CFG->wwwroot/enrol/confirmation.php?id=$course->id";
         unset($SESSION->wantsurl);
     } else {
+        //$destination = "$CFG->wwwroot/enrol/confirmation.php?id=$course->id";
+        //Original below
         $destination = "$CFG->wwwroot/course/view.php?id=$course->id";
     }
     redirect($destination);   // Bye!
@@ -103,21 +115,43 @@ $block = block_instance('rate_course');
 $block->display_rating($course->id);
 echo '</span>';
 echo '<br/>';
-echo '<tr>'.'<span style = "font-weight: bold;
-font-size: 18px;">'.'Date/Time:'.'</span>'. date(' M-d-Y hA', $course->startdate).'</tr>';
+if ($course->category == $online_course_category_id){
+    echo '<tr>'.'<span style = "font-weight: bold;
+    font-size: 18px;">'.'Date/Time:'.'</span>'. ' On Demand'.'</tr>';
+} else {
+    echo '<tr>'.'<span style = "font-weight: bold;
+    font-size: 18px;">'.'Start:'.'</span>'. date(' M-d-Y h:i A', $course->startdate).'</tr>';
+    echo '</br>';
+    echo '<tr>'.'<span style = "font-weight: bold;
+    font-size: 18px;">'.'End:'.'</span>'. date(' M-d-Y h:i A', $course->enddate).'</tr>';
+}
 /*Retrieving the context instanceid to bring context into context for the 
 the other retrievals to come*/
-$context = $DB->get_record_select('context', 'instanceid =?', array($course->id));
+/*$context = $DB->get_record_select('context', 'instanceid =?', array($course->id));
 //retrieving role assignments to bring into context all associated role_assignments
 $role_assignments = $DB->get_record_select('role_assignments', 'contextid =?', array($context->id));
 
 $role = $DB->get_record_select('role', 'id =?', array($role_assignments->roleid));
 
-$user = $DB->get_record_select('user', 'id =?', array($role_assignments->userid));
-
-echo '<br>';
-echo '<span style= "font-weight: bold; font-size: 18px;">' .'Instructor(s):'. '</span>'.' '. $user->firstname. ' '.$user->lastname;
-
+$user = $DB->get_record_select('user', 'id =?', array($role_assignments->userid ));
+*/
+echo '</br>';
+//The script stems from an effort made by Miguel Castrillo
+//The purpose if to grab the user with the Course director role
+if ($teacher_sort_flag == 0) {
+    $sql = "SELECT c.id as courseid, u.firstname, u.lastname,r.shortname FROM mdl_course c JOIN mdl_context ct ON c.id = ct.instanceid JOIN mdl_role_assignments ra ON ra.contextid = ct.id JOIN mdl_user u ON u.id = ra.userid JOIN mdl_role r ON r.id = ra.roleid where r.shortname = 'coursedirector'";
+    $teachers = $DB->get_records_sql($sql);
+      
+    foreach($teachers as $teacher) {
+      if ($teacher->courseid == $course->id){
+        echo '<span style="font-weight: bold; color black;">Course Director:</span>'.' '.$teacher->firstname . " " . $teacher->lastname;
+        break;
+      }
+    }
+    
+  } else {
+    echo '<span style="font-weight: bold; color black;">Course Director:</span>'.' '.$course->firstname . " " . $course->lastname;
+  }
 /*
 $sql = "SELECT firstname FROM {user} as u
 JOIN {role_assignments} as ra ON ra.userid = u.id
