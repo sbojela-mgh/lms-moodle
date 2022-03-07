@@ -19,8 +19,6 @@
 $plugin->version  = 2021022508;
 $plugin->requires = 2020061501.05;
 
-$plugin->version = 2021021001;
-$plugin->requires = 2020061501.05;
 $plugin->component = 'local_coursecatalogue';
 
 $plugin->cron = 0;

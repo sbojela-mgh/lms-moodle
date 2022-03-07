@@ -15,18 +15,18 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Reminder plugin version information
+ * Version details.
  *
- * @package    local_reminders
- * @author     Isuru Weerarathna <uisurumadushanka89@gmail.com>
- * @copyright  2012 Isuru Madushanka Weerarathna
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   format_multitopic
+ * @copyright 2019 James Calder and Otago Polytechnic
+ * @copyright based on work by 1999 onwards Martin Dougiamas (http://dougiamas.com)
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2021092600;
-$plugin->requires  = 2018051700;        // Require moodle 3.5 or higher.
-$plugin->release   = '2.2.3';
-$plugin->maturity  = MATURITY_RC;
-$plugin->component = 'local_reminders';
+$plugin->version   = 2022012102;        // The current plugin version (Date: YYYYMMDDXX).
+$plugin->requires  = 2018051700;        // Requires this Moodle version.
+$plugin->component = 'format_multitopic';    // Full name of the plugin (used for diagnostics). // CHANGED: format name.
+$plugin->maturity  = MATURITY_STABLE;
+$plugin->release   = 'v3.0.0';

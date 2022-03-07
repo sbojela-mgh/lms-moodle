@@ -15,18 +15,17 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Reminder plugin version information
  *
- * @package    local_reminders
- * @author     Isuru Weerarathna <uisurumadushanka89@gmail.com>
- * @copyright  2012 Isuru Madushanka Weerarathna
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   	local_course_change_name
+ * @Author		Hieu Han(hieu.van.han@gmail.com)
+ * @license    	http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
+defined('MOODLE_INTERNAL') || die;
 
-$plugin->version   = 2021092600;
-$plugin->requires  = 2018051700;        // Require moodle 3.5 or higher.
-$plugin->release   = '2.2.3';
-$plugin->maturity  = MATURITY_RC;
-$plugin->component = 'local_reminders';
+
+$plugin->version  = 2022021901;
+$plugin->requires = 2019111801;  // Requires this Moodle version 3.8
+$plugin->maturity = MATURITY_STABLE;
+$plugin->component = 'local_course_change_name'; // Full name of the plugin (used for diagnostics)
+
