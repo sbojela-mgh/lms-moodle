@@ -15,15 +15,21 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+//$plugin->version = yyyymmddxx;
+
 /**
- * Language EN
+ * MOODLE VERSION INFORMATION
  *
- * @package    local_coursecatalogue
- * @copyright  2021 MGH DCR 
+ * This file defines the current version of the core Moodle code being used.
+ * This is compared against the values stored in the database to determine
+ * whether upgrades should be performed (see lib/db/*.php)
+ *
+ * @package    core
+ * @copyright  1999 onwards Martin Dougiamas (http://dougiamas.com)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
- //This is to allow for more dynamic changes across this cutom plugin
+//language file is important to help optimize text changes
 
 $string['pluginname'] = 'Course Catalogue';
 $string['headername'] = 'Course Catalogue';
