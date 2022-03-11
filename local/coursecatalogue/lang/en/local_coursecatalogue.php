@@ -31,5 +31,5 @@
 
 //language file is important to help optimize text changes
 
-$string['pluginname'] = 'Course Catalogue'; //managing what the actual text means
-$string['coursecatalogue'] = 'Course Catalogue';
+$string['pluginname'] = 'Course Catalogue';
+$string['headername'] = 'Course Catalogue';
