@@ -15,14 +15,30 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package   local_edwiserbridge
- * @copyright 2019, Wisdmlabs <support@wisdmlabs.com>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
+ * @package     local_course_change_name
+ * @Author      Hieu Han(hieu.van.han@gmail.com)
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2021090900;
-$plugin->component = 'local_edwiserbridge';
-$plugin->maturity  = MATURITY_STABLE;
-$plugin->release   = '2.1.2';
+
+$capabilities = array(
+
+    'local/course_change_name:view' => array(
+        'captype' => 'read',
+        'contextlevel' => CONTEXT_SYSTEM,
+        'archetypes' => array(
+            'manager' => CAP_ALLOW
+        ),
+    ),
+
+    'local/course_change_name:edit' => array(
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_SYSTEM,
+        'archetypes' => array(
+            'manager' => CAP_ALLOW
+        ),
+    ),
+);
