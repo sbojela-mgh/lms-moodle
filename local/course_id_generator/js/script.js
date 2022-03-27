@@ -103,8 +103,8 @@ jQuery(document).ready(function($) {
 	if ($('body#page-course-edit').length > 0) {
 		$("input[id=id_shortname]").focusout(function() {
 	  		var current_val = $(this).val().trim();
-	  		// check if (001) is already appended
-	  		if (current_val != '' && !current_val.endsWith("(001)")) {
+	  		// check if an instance number (001) is already appended => /\([0-9]{3}\)$/;
+	  		if ( current_val != '' && !current_val.match(/\([0-9]{3}\)$/g) ) {
 	  			$(this).val(current_val + " (001)");
 	  		}
 		});
