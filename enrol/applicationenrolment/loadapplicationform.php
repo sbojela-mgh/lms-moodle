@@ -182,7 +182,9 @@ if ($button_clicked == 'Save' || $button_clicked == 'Submit') {
     }
     else if ($button_clicked == 'Submit') {
         if (!empty($formdata)) {
-            $emailtemplate = empty(trim($application_record->customtext4)) ? get_string('emailtemplate_submitconfirm', 'enrol_applicationenrolment') : $application_record->customtext4;
+
+            $emailtemplate = $DB->get_field('enrol', 'customtext4', ['enrol' => 'applicationenrolment', 'courseid' => $courseid]);
+            $emailtemplate = empty(trim($emailtemplate)) ? get_string('emailtemplate_submitconfirm', 'enrol_applicationenrolment') : $emailtemplate;
             $subject = 'Application Submitted - ';
             send_email_and_log($USER->id, $courseid, $subject, $emailtemplate);
             redirect($course_url->out(false));
