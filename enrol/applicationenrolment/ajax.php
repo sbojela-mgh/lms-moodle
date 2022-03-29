@@ -66,7 +66,7 @@ if (confirm_sesskey()) {
                     }
 
                     echo "
-                            <h2>Enrolment options</h2>
+                            <h2>Enrollment options</h2>
                             <div class='wrapper_apply_content'>
                                 <p class='title'>$course->fullname</p>
                                 <p>Start: ". ($course->startdate != 0 ? userdate($course->startdate, '%B %d, %Y %I:%M %p') : '') ."</p>

@@ -162,7 +162,7 @@ class enrol_applicationenrolment_plugin extends enrol_plugin {
         $mform->addElement('editor', 'customtext1', get_string('emailtemplate_approved', 'enrol_applicationenrolment'), ['rows' => 10], []);
         $mform->setType('customtext1', PARAM_RAW);
         $emailtemplate_approved = get_string('emailtemplate_approvedcontent', 'enrol_applicationenrolment');
-        if($instanceid == 0) {
+        if($instanceid == 0 || empty(trim($instance->customtext1))) {
             $mform->setDefault('customtext1', ['text' => $emailtemplate_approved, 'format' => FORMAT_HTML]);
         }
         else {
@@ -173,7 +173,7 @@ class enrol_applicationenrolment_plugin extends enrol_plugin {
         $mform->setDefault('customtext2', 0);
         $mform->setType('customtext2', PARAM_RAW);
         $emailtemplate_denied = get_string('emailtemplate_deniedcontent', 'enrol_applicationenrolment');
-        if($instanceid == 0) {
+        if($instanceid == 0 || empty(trim($instance->customtext2))) {
             $mform->setDefault('customtext2', ['text' => $emailtemplate_denied, 'format' => FORMAT_HTML]);
         }
         else {
@@ -184,11 +184,22 @@ class enrol_applicationenrolment_plugin extends enrol_plugin {
         $mform->setDefault('customtext3', 0);
         $mform->setType('customtext3', PARAM_RAW);
         $emailtemplate_reminder = get_string('emailtemplate_remindercontent', 'enrol_applicationenrolment');
-        if($instanceid == 0) {
+        if($instanceid == 0 || empty(trim($instance->customtext3))) {
             $mform->setDefault('customtext3', ['text' => $emailtemplate_reminder, 'format' => FORMAT_HTML]);
         }
         else {
             $mform->setDefault('customtext3', ['text' => $instance->customtext3, 'format' => FORMAT_HTML]);
+        }
+
+        $mform->addElement('editor', 'customtext4', get_string('emailtemplate_submitted', 'enrol_applicationenrolment'), ['rows' => 10], []);
+        $mform->setDefault('customtext4', 0);
+        $mform->setType('customtext4', PARAM_RAW);
+        $emailtemplate_submitconfirm = get_string('emailtemplate_submitconfirm', 'enrol_applicationenrolment');
+        if($instanceid == 0 || empty(trim($instance->customtext4))) {
+            $mform->setDefault('customtext4', ['text' => $emailtemplate_submitconfirm, 'format' => FORMAT_HTML]);
+        }
+        else {
+            $mform->setDefault('customtext4', ['text' => $instance->customtext4, 'format' => FORMAT_HTML]);
         }
 
         $mform->addElement('html', '</div>');
