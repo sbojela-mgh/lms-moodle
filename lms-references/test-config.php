@@ -1,29 +1,25 @@
 <?php  // Moodle configuration file
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 unset($CFG);
 global $CFG;
 $CFG = new stdClass();
 
-$CFG->dbtype    = 'MariaDB';
+$CFG->dbtype    = 'mysqli';
 $CFG->dblibrary = 'native';
-$CFG->dbhost    = 'localhost';
-$CFG->dbname    = 'moodle_2';
-$CFG->dbuser    = 'root';
-$CFG->dbpass    = '';
+$CFG->dbhost    = 'mysql-test.partners.org';
+$CFG->dbname    = 'lmsqa';
+$CFG->dbuser    = 'headmaster-qa';
+$CFG->dbpass    = 'cFzTYag5F7ynDHvP!';
 $CFG->prefix    = 'mdl_';
 $CFG->dboptions = array (
   'dbpersist' => 0,
-  'dbport' => '',
+  'dbport' => 6446,
   'dbsocket' => '',
-  'dbcollation' => 'utf8mb4_general_ci',
+  'dbcollation' => 'utf8mb4_unicode_ci',
 );
 
-$CFG->wwwroot   = 'http://localhost/lms-moodle';
-$CFG->dataroot  = 'C:\xampp\htdocs\moodledata';
+$CFG->wwwroot   = 'https://rc-lmsqa-c7.partners.org';
+$CFG->dataroot  = '/var/www/moodledata';
 $CFG->admin     = 'admin';
 
 $CFG->directorypermissions = 0777;
