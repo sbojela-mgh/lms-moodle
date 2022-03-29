@@ -422,6 +422,9 @@ class enrol_applicationenrolment_plugin extends enrol_plugin {
         $customtext3 = $fields['customtext3'];
         $fields['customtext3'] = $customtext3['text'];
 
+        $customtext4 = $fields['customtext4'];
+        $fields['customtext4'] = $customtext4['text'];
+
         if ($DB->record_exists('enrol', array('courseid' => $course->id, 'enrol' => 'applicationenrolment'))) {
             // Only one instance allowed, sorry.
             return null;
@@ -504,6 +507,9 @@ class enrol_applicationenrolment_plugin extends enrol_plugin {
 
         $customtext3 = $data->customtext3;
         $data->customtext3 = $customtext3['text'];
+
+        $customtext4 = $data->customtext4;
+        $data->customtext4 = $customtext4['text'];
 
         $this->populate_event($instance, 'applicationenrolment');
 
@@ -649,6 +655,8 @@ function send_reminder_emails () {
 
     $PAGE->set_context(\context_system::instance());
 
+    $now = time();
+
     $sql = "SELECT  u.id as studentid,
                     u.firstname,
                     u.lastname,
@@ -664,8 +672,8 @@ function send_reminder_emails () {
             JOIN {course} c ON c.id = e.courseid
             WHERE e.enrol = 'applicationenrolment'
                 AND sac.application_button_state = 'Started'
-                AND e.enrolenddate > now()
-                AND e.enrolenddate - 259200 < now()";   // => 259200 = 60*60*24*3 (3 days)
+                AND e.enrolenddate > $now
+                AND e.enrolenddate - 259200 < $now";   // => 259200 = 60*60*24*3 (3 days)
     $records = $DB->get_records_sql($sql, []);
 
     foreach($records as $record) {

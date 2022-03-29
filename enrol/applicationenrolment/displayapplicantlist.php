@@ -68,7 +68,8 @@ else if (!empty(optional_param('button_deny', '', PARAM_RAW))) {
 
     $DB->update_record('student_apply_course', $obj);
 
-    $emailtemplate = empty(trim($obj->customtext2)) ? get_string('emailtemplate_deniedcontent', 'enrol_applicationenrolment') : $obj->customtext4;
+    $emailtemplate = $DB->get_field('enrol', 'customtext2', ['id' => $enrolid]);
+    $emailtemplate = empty(trim($emailtemplate)) ? get_string('emailtemplate_deniedcontent', 'enrol_applicationenrolment') : $emailtemplate;
 
     $url_appform = new \moodle_url('/enrol/applicationenrolment/loadapplicationform.php',
                             ['courseid' => $courseid, 'applicationid' => $applicationid]);
@@ -109,7 +110,8 @@ else if (!empty(optional_param('button_approve', '', PARAM_RAW))) {
     $user = $DB->get_record('user', ['id' => $obj->studentid]);
     $plugin->enrol($instance, $user);
 
-    $emailtemplate = empty(trim($obj->customtext1)) ? get_string('emailtemplate_approvedcontent', 'enrol_applicationenrolment') : $obj->customtext1;
+    $emailtemplate = $DB->get_field('enrol', 'customtext1', ['id' => $enrolid]);
+    $emailtemplate = empty(trim($emailtemplate)) ? get_string('emailtemplate_approvedcontent', 'enrol_applicationenrolment') : $emailtemplate;
     $subject = 'Congratulations and Welcome to ';
     send_email_and_log($obj->studentid, $courseid, $subject, $emailtemplate);
 }
@@ -317,7 +319,13 @@ else {
             $html .= "<td>Started</td>";
         }
         $html .= "<td order='$application->timecreated'>$timecreated</td>";
-        $html .= "<td order='$application->timemodified'>$timemodified</td>";
+
+        if ($application->application_state == 'Incomplete') {
+            $html .= "<td></td>";
+        }
+        else {
+            $html .= "<td order='$application->timemodified'>$timemodified</td>";
+        }
 
         if (!empty($application->assessment_state)) {
             $html .= "<td>$application->assessment_state</td>";
