@@ -68,10 +68,12 @@ else if (!empty(optional_param('button_deny', '', PARAM_RAW))) {
 
     $DB->update_record('student_apply_course', $obj);
 
-    $emailtemplate = get_string('emailtemplate_deniedcontent', 'enrol_applicationenrolment');
+    $emailtemplate = empty(trim($obj->customtext2)) ? get_string('emailtemplate_deniedcontent', 'enrol_applicationenrolment') : $obj->customtext4;
+
     $url_appform = new \moodle_url('/enrol/applicationenrolment/loadapplicationform.php',
                             ['courseid' => $courseid, 'applicationid' => $applicationid]);
-    $emailtemplate = str_ireplace('[HYPERLINK_APPLICATION_FORM]', $url_appform->out(false), $emailtemplate);
+    $emailtemplate = str_ireplace('[HYPERLINK_APPLICATION_FORM]',
+                                    '<a href="'.$url_appform->out(false).'">application</a>', $emailtemplate);
     $subject = 'Your application for ';
     send_email_and_log($obj->studentid, $courseid, $subject, $emailtemplate);
 }
@@ -98,7 +100,7 @@ else if (!empty(optional_param('button_approve', '', PARAM_RAW))) {
     $instance = $plugin->get_instance_record($courseid);
 
     if (empty($instance)) {
-        // No Administrate Enrol instance found for plugin.
+        // No ApplicationEnrollment instance found for plugin.
         throw new moodle_exception('No Application Enrollment plugin instance found for course id:'.$courseid,
             'enrol_applicationenrolment', '', null);
         exit;
@@ -107,7 +109,7 @@ else if (!empty(optional_param('button_approve', '', PARAM_RAW))) {
     $user = $DB->get_record('user', ['id' => $obj->studentid]);
     $plugin->enrol($instance, $user);
 
-    $emailtemplate = get_string('emailtemplate_approvedcontent', 'enrol_applicationenrolment');
+    $emailtemplate = empty(trim($obj->customtext1)) ? get_string('emailtemplate_approvedcontent', 'enrol_applicationenrolment') : $obj->customtext1;
     $subject = 'Congratulations and Welcome to ';
     send_email_and_log($obj->studentid, $courseid, $subject, $emailtemplate);
 }
