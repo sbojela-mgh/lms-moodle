@@ -136,6 +136,10 @@ class enrol_applicationenrolment_plugin extends enrol_plugin {
             $instanceid = $instance->id;
         }
 
+        if (!empty($instance) && (empty($instance->customint2) && empty($instance->customint3) && empty($instance->customint4))) {
+            $instance->customint2 = 1;
+        }
+
         $options = array('optional' => true);
         $mform->addElement('date_time_selector', 'enrolstartdate', get_string('enrolstartdate', 'enrol_applicationenrolment'), $options);
         $mform->setDefault('enrolstartdate', 0);
@@ -143,6 +147,16 @@ class enrol_applicationenrolment_plugin extends enrol_plugin {
         $options = array('optional' => true);
         $mform->addElement('date_time_selector', 'enrolenddate', get_string('enrolduedate', 'enrol_applicationenrolment'), $options);
         $mform->setDefault('enrolenddate', 0);
+
+        /* Send reminder */
+        $mform->addElement('advcheckbox', 'customint2', 'Send reminder<br><span class="sublabel5days">Default: 5 days</span>', '<label>5 days before due date</label>');
+        $mform->setType('customint2', PARAM_INT);
+        $mform->addElement('advcheckbox', 'customint3', '<label>3 days before due date</label>');
+        $mform->setType('customint3', PARAM_INT);
+        $mform->addElement('advcheckbox', 'customint4', '<label>1 day before due date</label>');
+        $mform->setType('customint4', PARAM_INT);
+        $mform->addElement('text', 'customint5', 'Send reminder<br><span class="sublabelcustom">Custom</span>');
+        $mform->setType('customint5', PARAM_INT);
 
         $mform->addElement('text', 'customint1', get_string('max_submissions', 'enrol_applicationenrolment'));
         $mform->setType('customint1', PARAM_INT);
@@ -213,6 +227,11 @@ class enrol_applicationenrolment_plugin extends enrol_plugin {
 
         $html = '
             <style type="text/css">
+                .sendmail5days { margin-top: 30px; margin-bottom: 0; }
+                .sendmail5days + div, .sendmail5days + div+div{ margin-bottom: 0; }
+                .sendmail5days + div+div{ margin-top: -6px; }
+                .sendmail5days label, .sendmailcustom label { display: inline-block; position: relative; }
+                .sublabel5days, .sublabelcustom { font-size: 12px; position: absolute; white-space: nowrap; right: 0; }
                 #fgroup_id_buttonar { margin-top: 20px; }
                 .legend_app a { color: #094478; text-decoration: none; }
                 .legend_app .icon { font-size: 20px; color: #a99; margin-left: 0; }
@@ -253,6 +272,9 @@ class enrol_applicationenrolment_plugin extends enrol_plugin {
                             notification.alert("Info", "Your changes were saved successfully", "Ok");
                         });
                     }
+
+                    $(".sublabel5days").closest("div.row").addClass("sendmail5days");
+                    $(".sublabelcustom").closest("div.row").addClass("sendmailcustom");
                 });
             </script>
         ';
@@ -650,11 +672,6 @@ class enrol_applicationenrolment_plugin extends enrol_plugin {
 }
 
 function send_reminder_emails () {
-
-    global $CFG, $DB, $PAGE;
-
-    $PAGE->set_context(\context_system::instance());
-
     $now = time();
 
     $sql = "SELECT  u.id as studentid,
@@ -666,74 +683,128 @@ function send_reminder_emails () {
                     c.fullname as coursefullname,
                     e.id as enrolid,
                     e.enrolenddate,
-                    e.customtext3 as reminder_email
+                    e.customtext3 as reminder_email,
+                    [DAYS_BEFORE_DUE_NR] as daysbeforedue,
+                    sac.id as applicationid,
+                    sac.emailsents
             FROM {user} u JOIN {student_apply_course} sac ON u.id = sac.studentid
             JOIN {enrol} e ON e.courseid = sac.courseid
             JOIN {course} c ON c.id = e.courseid
             WHERE e.enrol = 'applicationenrolment'
                 AND sac.application_button_state = 'Started'
+                AND e.[DAYS_BEFORE_DUE] > 0
                 AND e.enrolenddate > $now
-                AND e.enrolenddate - 259200 < $now";   // => 259200 = 60*60*24*3 (3 days)
+                AND e.enrolenddate - [DAYS_BEFORE_DUE_MILISEC] < $now";   // => 259200 = 60*60*24*3 (3 days)
+
+    // 5 days before due
+    $sql5days = $sql;
+    $sql5days = str_replace('[DAYS_BEFORE_DUE_NR]', 5, $sql5days);
+    $sql5days = str_replace('[DAYS_BEFORE_DUE]', 'customint2', $sql5days);
+    $sql5days = str_replace('[DAYS_BEFORE_DUE_MILISEC]', 60*60*24*5, $sql5days);
+    process_send_reminder_emails ($sql5days);
+
+    // 3 days before due
+    $sql3days = $sql;
+    $sql3days = str_replace('[DAYS_BEFORE_DUE_NR]', 3, $sql3days);
+    $sql3days = str_replace('[DAYS_BEFORE_DUE]', 'customint3', $sql3days);
+    $sql3days = str_replace('[DAYS_BEFORE_DUE_MILISEC]', 60*60*24*3, $sql3days);
+    process_send_reminder_emails ($sql3days);
+
+    // 1 days before due
+    $sql1day = $sql;
+    $sql1day = str_replace('[DAYS_BEFORE_DUE_NR]', 1, $sql1day);
+    $sql1day = str_replace('[DAYS_BEFORE_DUE]', 'customint4', $sql1day);
+    $sql1day = str_replace('[DAYS_BEFORE_DUE_MILISEC]', 60*60*24*1, $sql1day);
+    process_send_reminder_emails ($sql1day);
+
+    // custom days before due
+    $sqlcust = $sql;
+    $sqlcust = str_replace('[DAYS_BEFORE_DUE_NR]', 'e.customint5', $sqlcust);
+    $sqlcust = str_replace('[DAYS_BEFORE_DUE]', 'customint5', $sqlcust);
+    $sqlcust = str_replace('[DAYS_BEFORE_DUE_MILISEC]', '86400*e.customint5', $sqlcust);    // => 86400 = 60*60*24
+    process_send_reminder_emails ($sqlcust);
+}
+
+function process_send_reminder_emails ($sql) {
+
+    global $CFG, $DB, $PAGE;
+
+    $PAGE->set_context(\context_system::instance());
+
     $records = $DB->get_records_sql($sql, []);
 
     foreach($records as $record) {
 
-        $template_reminder_email = $record->reminder_email;
-        if(empty(trim($template_reminder_email))) {
-            $template_reminder_email = get_string('emailtemplate_remindercontent', 'enrol_applicationenrolment');
+        $emailsents = [];
+        if (!empty($record->emailsents)) {
+            $emailsents = json_decode($record->emailsents);
         }
 
-        $url_course = new moodle_url('/course/view.php', ['id' => $record->courseid]);
-        $url_course = $url_course->out(false);
-        $url_course = '<a href="'. $url_course .'">' . $record->coursefullname . '</a>';
+        if (!in_array($record->daysbeforedue, $emailsents)) {
+            $template_reminder_email = $record->reminder_email;
+            if(empty(trim($template_reminder_email))) {
+                $template_reminder_email = get_string('emailtemplate_remindercontent', 'enrol_applicationenrolment');
+            }
 
-        $duedate = userdate($record->enrolenddate, '%B %d, %Y %I:%M %p');
+            $url_course = new moodle_url('/course/view.php', ['id' => $record->courseid]);
+            $url_course = $url_course->out(false);
+            $url_course = '<a href="'. $url_course .'">' . $record->coursefullname . '</a>';
 
-        $template_reminder_email = str_replace('[Student First Name]', $record->firstname, $template_reminder_email);
-        $template_reminder_email = str_replace('[Course Fullname]', $record->coursefullname, $template_reminder_email);
-        $template_reminder_email = str_replace('[Course URL]', $url_course, $template_reminder_email);
-        $template_reminder_email = str_replace('[Due Date]', $duedate, $template_reminder_email);
+            $duedate = userdate($record->enrolenddate, '%B %d, %Y %I:%M %p');
 
-        // echo $template_reminder_email;
-        // $email_user = $DB->get_record('user', ['id' => $record->studentid]);
+            $template_reminder_email = str_replace('[Student First Name]', $record->firstname, $template_reminder_email);
+            $template_reminder_email = str_replace('[Course Fullname]', $record->coursefullname, $template_reminder_email);
+            $template_reminder_email = str_replace('[Course URL]', $url_course, $template_reminder_email);
+            $template_reminder_email = str_replace('[Due Date]', $duedate, $template_reminder_email);
 
-        $email_user = new stdClass;
-        $email_user->email       = $record->email;
-        $email_user->firstname   = $record->firstname;
-        $email_user->lastname    = $record->lastname;
-        $email_user->id          = $record->studentid;
-        $email_user->username    = $record->username;
-        $email_user->middlename   = '';
-        $email_user->alternatename     = '';
-        $email_user->firstnamephonetic = '';
-        $email_user->lastnamephonetic  = '';
-        $email_user->maildisplay = true;
-        $email_user->mailformat  = 1; // 0 (zero) text-only emails, 1 (one) for HTML/Text emails.
+            // echo $template_reminder_email;
+            // $email_user = $DB->get_record('user', ['id' => $record->studentid]);
 
-        $from_user = new stdClass;
-        $from_user->id          = -99;
-        $from_user->email       = 'DCRCCRE@partners.org';
-        $from_user->firstname   = 'DCRCCRE@partners.org';
-        $from_user->lastname    = '';
-        $from_user->middlename  = '';
-        $from_user->alternatename     = '';
-        $from_user->firstnamephonetic = '';
-        $from_user->lastnamephonetic  = '';
+            $email_user = new stdClass;
+            $email_user->email       = $record->email;
+            $email_user->firstname   = $record->firstname;
+            $email_user->lastname    = $record->lastname;
+            $email_user->id          = $record->studentid;
+            $email_user->username    = $record->username;
+            $email_user->middlename   = '';
+            $email_user->alternatename     = '';
+            $email_user->firstnamephonetic = '';
+            $email_user->lastnamephonetic  = '';
+            $email_user->maildisplay = true;
+            $email_user->mailformat  = 1; // 0 (zero) text-only emails, 1 (one) for HTML/Text emails.
 
-        $subject = 'Application Incomplete - ' . $record->coursefullname;
+            $from_user = new stdClass;
+            $from_user->id          = -99;
+            $from_user->email       = 'DCRCCRE@partners.org';
+            $from_user->firstname   = 'DCRCCRE@partners.org';
+            $from_user->lastname    = '';
+            $from_user->middlename  = '';
+            $from_user->alternatename     = '';
+            $from_user->firstnamephonetic = '';
+            $from_user->lastnamephonetic  = '';
 
-        $result = email_to_user($email_user, $from_user, $subject, $template_reminder_email);
+            $subject = 'Application Incomplete - ' . $record->coursefullname;
 
-        $log_info = ['status'   => $result,
-                    'recipient' => $email_user,
-                    'sender'    => 'DCRCCRE@partners.org',
-                    'subject'   => $subject,
-                    'content'   => $template_reminder_email];
+            $result = email_to_user($email_user, $from_user, $subject, $template_reminder_email);
 
-        $event = \enrol_applicationenrolment\event\email_action::create(
-                                                            array('other' => json_encode($log_info),
-                                                            'context' => \context_system::instance()));
-        $event->trigger();
+            $log_info = ['status'   => $result,
+                        'recipient' => $email_user,
+                        'sender'    => 'DCRCCRE@partners.org',
+                        'subject'   => $subject,
+                        'content'   => $template_reminder_email];
+
+            $event = \enrol_applicationenrolment\event\email_action::create(
+                                                                array('other' => json_encode($log_info),
+                                                                'context' => \context_system::instance()));
+            $event->trigger();
+
+            $emailsents[] = $record->daysbeforedue;
+
+            $dataobject = new stdClass;
+            $dataobject->id = $record->applicationid;
+            $dataobject->emailsents = json_encode($emailsents);
+            $DB->update_record('student_apply_course', $dataobject);
+        }
     }
 
 }

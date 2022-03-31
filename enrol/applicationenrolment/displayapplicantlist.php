@@ -71,10 +71,13 @@ else if (!empty(optional_param('button_deny', '', PARAM_RAW))) {
     $emailtemplate = $DB->get_field('enrol', 'customtext2', ['id' => $enrolid]);
     $emailtemplate = empty(trim($emailtemplate)) ? get_string('emailtemplate_deniedcontent', 'enrol_applicationenrolment') : $emailtemplate;
 
-    $url_appform = new \moodle_url('/enrol/applicationenrolment/loadapplicationform.php',
-                            ['courseid' => $courseid, 'applicationid' => $applicationid]);
+    // $url_appform = new \moodle_url('/enrol/applicationenrolment/loadapplicationform.php',
+    //                         ['courseid' => $courseid, 'applicationid' => $applicationid]);
+    // $emailtemplate = str_ireplace('[HYPERLINK_APPLICATION_FORM]',
+    //                                 '<a href="'.$url_appform->out(false).'">application</a>', $emailtemplate);
+
     $emailtemplate = str_ireplace('[HYPERLINK_APPLICATION_FORM]',
-                                    '<a href="'.$url_appform->out(false).'">application</a>', $emailtemplate);
+                                    '<a href="'.$course_url->out(false).'">application</a>', $emailtemplate);
     $subject = 'Your application for ';
     send_email_and_log($obj->studentid, $courseid, $subject, $emailtemplate);
 }
