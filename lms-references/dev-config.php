@@ -6,16 +6,16 @@ $CFG = new stdClass();
 
 $CFG->dbtype    = 'mysqli';
 $CFG->dblibrary = 'native';
-$CFG->dbhost    = 'mysql4.research.partners.org';
+$CFG->dbhost    = 'mysql-test.partners.org';
 $CFG->dbname    = 'lmsdev';
-$CFG->dbuser    = 'headmaster';
-$CFG->dbpass    = 'HeadtQxO8YXvyMR7I13';
+$CFG->dbuser    = 'headmaster-dev';
+$CFG->dbpass    = '**C@fee123**';
 $CFG->prefix    = 'mdl_';
 $CFG->dboptions = array (
   'dbpersist' => 0,
-  'dbport' => 3306,
+  'dbport' => 6446,
   'dbsocket' => '',
-  'dbcollation' => 'utf8mb4_general_ci',
+  'dbcollation' => 'utf8mb4_0900_ai_ci',
 );
 
 $CFG->wwwroot   = 'https://rc-lmsdev.partners.org';
