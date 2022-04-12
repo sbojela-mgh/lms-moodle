@@ -21,12 +21,9 @@
  * @author: eAbyas Info Solutions
  * @date: 2017
  */
-namespace block_learnerscript\lsreports;
 define('REPORT_CUSTOMSQL_MAX_RECORDS', 5000);
 use block_learnerscript\local\ls;
 use block_learnerscript\local\reportbase;
-use stdclass;
-use html_table;
 
 class report_sql extends reportbase {
     public $tablehead;
@@ -97,45 +94,15 @@ class report_sql extends reportbase {
         $sql = str_replace('%%COURSEID%%', $COURSE->id, $sql);
         $sql = str_replace('%%CATEGORYID%%', $COURSE->category, $sql);
 
-        // Current timestamp
-        $date = new \DateTime();
-        $timestamp = $date->getTimestamp(); 
-        $sql = str_replace('%%UNIXTIME%%', $timestamp, $sql);
-
-        //TOP & LIMIT
-        if ($CFG->dbtype == 'sqlsrv') {
-            $sql = str_replace('%%TOP%%', 'TOP 10', $sql);
-        } else {
-            $sql = str_replace('%%LIMIT%%', 'LIMIT 10', $sql);
-        }
-
-        if (preg_match("/%%FILTER_USER:([^%]+)%%/i", $sql, $output) && $this->params['filter_users'] > 1) {
-            $replace = ' AND ' . $output[1] . ' = ' . $this->params['filter_users'];
+        if (preg_match("/%%FILTER_USER:([^%]+)%%/i", $sql, $output) && $this->filteruserid>1) {
+            $replace = ' AND ' . $output[1] . ' = ' . $this->filteruserid;
             $sql = str_replace('%%FILTER_USER:' . $output[1] . '%%', $replace, $sql);
         }
-        if (preg_match("/%%FILTER_CATEGORIES:([^%]+)%%/i", $sql, $output) && $this->params['filter_categories']>=0) {
-            $replace = ' AND ' . $output[1] . ' = ' . $this->params['filter_categories'];
-            $sql = str_replace('%%FILTER_CATEGORIES:' . $output[1] . '%%', $replace, $sql);
-        }
-        if (preg_match("/%%FILTER_COURSES:([^%]+)%%/i", $sql, $output) && $this->params['filter_courses']>0) {
-            $replace = ' AND ' . $output[1] . ' = ' . $this->params['filter_courses'];
+
+        if (preg_match("/%%FILTER_COURSES:([^%]+)%%/i", $sql, $output) && $this->courseid>1) {
+            $replace = ' AND ' . $output[1] . ' = ' . $this->courseid;
             $sql = str_replace('%%FILTER_COURSES:' . $output[1] . '%%', $replace, $sql);
         }
-        if (preg_match("/%%FILTER_ACTIVITIES:([^%]+)%%/i", $sql, $output) && $this->params['filter_activities']>0) {
-            $replace = ' AND ' . $output[1] . ' = ' . $this->params['filter_activities'];
-            $sql = str_replace('%%FILTER_ACTIVITIES:' . $output[1] . '%%', $replace, $sql);
-        }
-        if (preg_match("/%%FILTER_MODULE:([^%]+)%%/i", $sql, $output) && $this->params['filter_modules']>0) {
-            $replace = ' AND ' . $output[1] . ' = ' . $this->params['filter_modules'];
-            $sql = str_replace('%%FILTER_MODULE:' . $output[1] . '%%', $replace, $sql);
-        }
-        if (preg_match("/%%FILTER_COHORT:([^%]+)%%/i", $sql, $output) && $this->params['filter_cohort']>0) {
-            $replace = ' AND ' . $output[1] . ' = ' . $this->params['filter_cohort'];
-            $sql = str_replace('%%FILTER_COHORT:' . $output[1] . '%%', $replace, $sql);
-        }        
-        
-        $userfullname = $DB->sql_concat('u.firstname', "' '", 'u.lastname') ; 
-        $sql = str_replace('%%USERFULLNAME%%', $userfullname, $sql);
 
         // See http://en.wikipedia.org/wiki/Year_2038_problem
         $sql = str_replace(array('%%STARTTIME%%', '%%ENDTIME%%'), array('0', '2145938400'), $sql);
@@ -143,7 +110,8 @@ class report_sql extends reportbase {
         $sql = preg_replace('/%{2}[^%]+%{2}/i', '', $sql);
 
         $sql = str_replace('?', '[[QUESTIONMARK]]', $sql);
-       return $sql;
+
+        return $sql;
     }
 
     function get_all_elements() {
@@ -234,7 +202,7 @@ class report_sql extends reportbase {
                 foreach ($reportfilters as $f) {
                     if ($f['formdata']->value) {
                         require_once $CFG->dirroot . '/blocks/learnerscript/components/filters/' . $f['pluginname'] . '/plugin.class.php';
-                        $classname = 'block_learnerscript\lsreports\plugin_' . $f['pluginname'];
+                        $classname = 'plugin_' . $f['pluginname'];
                         $class = new $classname($this->config);
 
                         $sql = $class->execute($sql, $f['formdata'], $this->params);
@@ -271,25 +239,8 @@ class report_sql extends reportbase {
                     $r = array();
                     foreach ($selectedcolumns as $k => $v) {
                         if (!empty($v)) {
-                            if (in_array($v, $selectedcolumns)) { 
-                                if ($this->config->name == 'Avg time spent by learners and teachers on course' && $this->reporttype == 'table') {
-                                    if ($v == 'teachertimespent' && $row->$v != 0) {
-                                        $row->$v = (new ls)->strTime(ROUND($row->$v, 2));
-                                    }
-                                    if ($v == 'studenttimespent' && $row->$v != 0) {
-                                        $row->$v = (new ls)->strTime(ROUND($row->$v, 2));
-                                    }
-                                }
-                                if($this->config->name == 'Need grading' && $this->reporttype == 'table'){
-                                    if ($v == 'datesubmitted' ) {
-                                        $row->$v = userdate($row->$v, '%Y-%m-%d %H:%M:%S');
-                                    }
-                                    if ($v == 'delay' && $row->$v != 0) {
-                                        $row->$v = (new ls)->strTime(ROUND($row->$v, 2));
-                                    }
-                                }
-                                $row->$v = format_text($row->$v, FORMAT_HTML, array('trusted' => true, 'noclean' => true, 'para' => false));
-                                $r[$k] = str_replace('[[QUESTIONMARK]]', '?', $row->$v);
+                            if (in_array($v, $selectedcolumns)) {
+                                $r[$k] = $row->$v;
                                 $i++;
                             }
                         }
@@ -329,6 +280,23 @@ class report_sql extends reportbase {
         if ($blockinstanceid == null) {
             $blockinstanceid = $this->config->id;
         }
+
+        // if (isset($config->querysql)) {
+        //     $sql = $config->querysql;
+        //     if (!empty($reportfilters)) {
+        //         foreach ($reportfilters as $f) {
+        //             require_once $CFG->dirroot . '/blocks/learnerscript/components/filters/' . $f['pluginname'] . '/plugin.class.php';
+        //             $classname = 'plugin_' . $f['pluginname'];
+        //             $class = new $classname($this->config);
+        //             $sql = $class->execute($sql, $f['formdata'], $this->params);
+        //         }
+        //     }
+        //     $sql = $this->prepare_sql($sql);
+        //     // Calcs
+        //     // list($calclelements, $calctotalrecords) = $this->get_all_elements($sql);
+        //     // $this->calcdata = $this->get_rows($calclelements, $sqlorder);
+        // }
+        // $finalcalcs = $this->get_calcs($this->calcdata, $tablehead);
 
         $finalheadcalcs = $this->get_calcs($finaldata['finaltable'], $tablehead);
         $finalcalcs = $finalheadcalcs->data;

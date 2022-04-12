@@ -15,26 +15,10 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-<<<<<<< HEAD
-<<<<<<< HEAD:local/course_change_name/version.php
-=======
->>>>>>> lms-test
  *
  * @package   	local_course_change_name
  * @Author		Hieu Han(hieu.van.han@gmail.com)
  * @license    	http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
-<<<<<<< HEAD
-=======
- * Version details
- *
- * @package    theme_adaptable
- * @copyright 2015 Jeremy Hopkins (Coventry University)
- * @copyright 2015 Fernando Acedo (3-bits.com)
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- *
->>>>>>> lms-test:theme/adaptable/db/caches.php
-=======
->>>>>>> lms-test
  */
 
 defined('MOODLE_INTERNAL') || die;
@@ -45,14 +29,3 @@ $plugin->requires = 2019111801;  // Requires this Moodle version 3.8
 $plugin->maturity = MATURITY_STABLE;
 $plugin->component = 'local_course_change_name'; // Full name of the plugin (used for diagnostics)
 
-<<<<<<< HEAD
-<<<<<<< HEAD:local/course_change_name/version.php
-=======
-$definitions = array(
-    'userdata' => array(
-        'mode' => cache_store::MODE_SESSION
-    )
-);
->>>>>>> lms-test:theme/adaptable/db/caches.php
-=======
->>>>>>> lms-test

@@ -2,21 +2,18 @@
   <table class="table table-striped">
     <thead>
       <tr>
-        <th>Course Name</th>
-        <th>Course ID</th>
+        <th>Course</th>
+        <th></th>
         <th>Start Date</th>
-        <th>Tags</th>
         <th>Instructor</th>
-      </tr>
+        <th>Tags</th>
+        <th>Ratings</th>
+      
     </thead>
-    {{#data}} 
+    {{#data}}
       <tr>
-      <td>{{{CourseName}}}</td>
-      <td>{{{CourseID}}}</td>
-      <td>{{{StartDate}}}</td>
-      <td>{{Tags}}</td>
-      <td>{{Instructor}}</td>
-      <td></td>
+        <td>{{{firstname}}}</td>
+      <td style="width:20px;"><a href="/local/coursecatalogue/graderdetail.php?grader={{id}}&month={{month}}&year={{year}}"><i class="fa fa-arrow-circle-right fa-2x"></i></td>
       </tr>
     {{/data}}
   </table>
