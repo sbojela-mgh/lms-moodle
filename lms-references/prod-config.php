@@ -10,14 +10,14 @@ $CFG = new stdClass();
 
 $CFG->dbtype    = 'mysqli';
 $CFG->dblibrary = 'native';
-$CFG->dbhost    = 'mysql4.research.partners.org:3306';
-$CFG->dbname    = 'lmsprod';
+$CFG->dbhost    = 'mysql-prod.partners.org'; 
+$CFG->dbname    = 'lmsprd';                  
 $CFG->dbuser    = 'headmaster';
-$CFG->dbpass    = '1qazxsw2!QAZXSW@';
+$CFG->dbpass    = 'w7hQB2KsUdAwNga*';        
 $CFG->prefix    = 'mdl_';
 $CFG->dboptions = array (
   'dbpersist' => 0,
-  'dbport' => '',
+  'dbport' => 6446,
   'dbsocket' => '',
   'dbcollation' => 'utf8mb4_general_ci',
 );
