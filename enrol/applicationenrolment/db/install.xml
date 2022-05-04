@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?xml version="1.0" encoding="UTF-8" ?>
 <XMLDB PATH="enrol/applicationenrolment/db" VERSION="20220301" COMMENT="XMLDB file for Moodle mod/customcert"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -40,3 +41,47 @@
     </TABLE>
   </TABLES>
 </XMLDB>
+=======
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="enrol/applicationenrolment/db" VERSION="20220301" COMMENT="XMLDB file for Moodle mod/customcert"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+  <TABLES>
+    <TABLE NAME="student_apply_course" COMMENT="Defines the enrollment application between students and courses">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="studentid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="evaluatorid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="application_state" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="assessment_state" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="application_button_state" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="comment" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="question_answer" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="emailsents" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for student_apply_course"/>
+        <KEY NAME="applycourseid" TYPE="foreign" FIELDS="courseid" REFTABLE="course" REFFIELDS="courseid"/>
+        <KEY NAME="studentid" TYPE="foreign" FIELDS="studentid" REFTABLE="user" REFFIELDS="studentid"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="application_question" COMMENT="Stores all questions for enrollment applications">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="categoryid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="question_content" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="required" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Field required"/>
+        <FIELD NAME="allow_attachments" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="required_attachments" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for application_question"/>
+      </KEYS>
+    </TABLE>
+  </TABLES>
+</XMLDB>
+>>>>>>> 50f475fc90ed57a62c9dd5bf62b657f8b9598e76
